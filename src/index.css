@@ -1,0 +1,58 @@
+.onLine {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.quarterback {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.runningback {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+  padding: 5px;
+  margin: 15px;
+  text-align: center;
+  max-width: 120px;
+  max-height: 360px;
+  display: inline-block;
+  background-color: #0076b6;
+  position: relative;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.card .picture {
+  max-width: 90%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+}
+
+.card .name {
+  margin: 10px;
+  font-weight: 500;
+  font-size: 120%;
+  color: #b0b7bc;
+}
+.card .number {
+  margin: 10px;
+  font-size: 150%;
+  font-weight: 500;
+  color: #b0b7bc;
+}
+.card .position {
+  color: #b0b7bc;
+  font-weight: 500;
+}
