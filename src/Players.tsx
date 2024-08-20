@@ -1,7 +1,7 @@
 type PlayerProp = {
   name: string;
   number: number;
-  position: string; // Define the style prop type
+  position: string; // Define the style prop type d
   top?: string;
   image: string;
 };
