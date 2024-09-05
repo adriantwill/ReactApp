@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .onLine {
   display: flex;
   justify-content: center;
@@ -22,6 +26,7 @@
   margin: 15px;
   text-align: center;
   max-width: 120px;
+  min-width: 120px;
   max-height: 360px;
   display: inline-block;
   background-color: #0076b6;
@@ -34,25 +39,26 @@
 }
 
 .card .picture {
-  max-width: 90%;
-  height: auto;
+  max-width: 95%;
   border-radius: 10px;
   box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+  background-color: #b0b7bc;
+  border: 0.5px solid black;
 }
 
 .card .name {
-  margin: 10px;
   font-weight: 500;
+  margin-bottom: 5px;
   font-size: 120%;
-  color: #b0b7bc;
+  color: white;
 }
 .card .number {
-  margin: 10px;
-  font-size: 150%;
+  margin-bottom: 10px;
+  font-size: 250%;
   font-weight: 500;
-  color: #b0b7bc;
+  color: white;
 }
 .card .position {
-  color: #b0b7bc;
+  color: white;
   font-weight: 500;
 }

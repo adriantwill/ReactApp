@@ -1,12 +1,13 @@
-import Card from "./Players";
+import Card from "./components/Players";
 import "./index.css";
-import frankRagnow from "./assets/frankragnow.jpeg";
-import kevinZeitler from "./assets/kevinzeitler.jpg";
-import peneiSewell from "./assets/peneisewell.jpg";
-import taylorDecker from "./assets/taylordecker.jpg";
-import grahamgLasgow from "./assets/grahamglasgow.jpg";
+import frankRagnow from "./assets/frankheadshot.png";
+import kevinZeitler from "./assets/kevinheadshot.png";
+import peneiSewell from "./assets/peneiheadshot.png";
+import taylorDecker from "./assets/taylorheadshot.png";
+import grahamgLasgow from "./assets/grahamheadshot.png";
+import jaredGoff from "./assets/goffheadshot.png";
 
-export default function App() {
+function App() {
   return (
     <div className="offense">
       <div className="onLine">
@@ -17,8 +18,13 @@ export default function App() {
         <Card name="Sewell" number={58} position="Right Tackle" top={"20px"} image={peneiSewell} />
       </div>
       <div className="quarterback">
-        <Card name="Sewell" number={58} position="Right Tackle" image={peneiSewell} />
+        <Card name="Goff" number={16} position="Quarterback" image={jaredGoff} />
+      </div>
+      <div className="runningback">
+        <Card name="Goff" number={16} position="Quarterback" image={jaredGoff} />
       </div>
     </div>
   );
 }
+
+export default App;
