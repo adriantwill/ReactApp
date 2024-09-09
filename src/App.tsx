@@ -10,18 +10,18 @@ import jaredGoff from "./assets/goffheadshot.png";
 function App() {
   return (
     <div className="offense">
-      <div className="onLine">
-        <Card name="Decker" number={88} position="Left Tackle" top={"20px"} image={taylorDecker} />
-        <Card name="Glasgow" number={60} position="Left Guard" top={"10px"} image={grahamgLasgow} />
+      <div className="flex justify-center items-center">
+        <Card name="Decker" number={88} position="Left Tackle" image={taylorDecker} tailwind="top-6" />
+        <Card name="Glasgow" number={60} position="Left Guard" image={grahamgLasgow} tailwind="top-3" />
         <Card name="Ragnow" number={77} position="Center" image={frankRagnow} />
-        <Card name="Zeitler" number={71} position="Right Guard" top={"10px"} image={kevinZeitler} />
-        <Card name="Sewell" number={58} position="Right Tackle" top={"20px"} image={peneiSewell} />
+        <Card name="Zeitler" number={71} position="Right Guard" image={kevinZeitler} tailwind="top-3" />
+        <Card name="Sewell" number={58} position="Right Tackle" image={peneiSewell} tailwind="top-6" />
       </div>
-      <div className="quarterback">
+      <div className="flex justify-center items-center">
         <Card name="Goff" number={16} position="Quarterback" image={jaredGoff} />
       </div>
-      <div className="runningback">
-        <Card name="Goff" number={16} position="Quarterback" image={jaredGoff} />
+      <div className="flex justify-center items-center">
+        <Card name="Goff" number={16} position="Quarterback" image={jaredGoff} tailwind="left-30" />
       </div>
     </div>
   );
