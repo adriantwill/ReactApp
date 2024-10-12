@@ -10,28 +10,40 @@ import jaredGoff from "./assets/goffheadshot.png";
 
 function App() {
   return (
-    <>
-      <Title />
-      <div>
-        <div className="flex justify-center items-center">
-          <Card name="Decker" number={88} position="Left Tackle" image={taylorDecker} tailwind="top-6" />
-          <Card name="Decker" number={88} position="Left Tackle" image={taylorDecker} tailwind="top-8" />
-          <Card name="Decker" number={88} position="Left Tackle" image={taylorDecker} tailwind="top-6" />
-          <Card name="Glasgow" number={60} position="Left Guard" image={grahamgLasgow} tailwind="top-3" />
-          <Card name="Ragnow" number={77} position="Center" image={frankRagnow} />
-          <Card name="Zeitler" number={71} position="Right Guard" image={kevinZeitler} tailwind="top-3" />
-          <Card name="Sewell" number={58} position="Right Tackle" image={peneiSewell} tailwind="top-6" />
-          <Card name="Sewell" number={58} position="Right Tackle" image={peneiSewell} tailwind="top-9" />
-          <Card name="Sewell" number={58} position="Right Tackle" image={peneiSewell} tailwind="top-6" />
+    <div className="w-11/12 h-5/6 m-auto">
+      <Title teamName="Detroit Lions" />
+      <div className="bg-[url('./assets/background.jpg')] bg-no-repeat bg-cover overflow-hidden">
+        <div className="flex justify-center">
+          <Card
+            name="Decker"
+            number={88}
+            position="LT"
+            image={taylorDecker}
+            tailwind="top-6 mr-auto left-6"
+          />
+          <Card name="Decker" number={88} position="LT" image={taylorDecker} tailwind="top-12 right-14" />
+          <Card name="Decker" number={88} position="LT" image={taylorDecker} tailwind="top-6" />
+          <Card name="Glasgow" number={60} position="LG" image={grahamgLasgow} tailwind="top-3" />
+          <Card name="Ragnow" number={77} position="C" image={frankRagnow} />
+          <Card name="Zeitler" number={71} position="RG" image={kevinZeitler} tailwind="top-3" />
+          <Card name="Sewell" number={58} position="RT" image={peneiSewell} tailwind="top-6" />
+          <Card name="Sewell" number={58} position="RT" image={peneiSewell} tailwind="top-16" />
+          <Card
+            name="Sewell"
+            number={58}
+            position="RT"
+            image={peneiSewell}
+            tailwind="top-6 ml-auto right-6"
+          />
         </div>
-        <div className="flex justify-center items-center">
-          <Card name="Goff" number={16} position="Quarterback" image={jaredGoff} />
-        </div>
-        <div className="flex justify-center items-center">
-          <Card name="Goff" number={16} position="Quarterback" image={jaredGoff} tailwind="left-30" />
+        <div className="flex justify-center">
+          <Card name="Goff" number={16} position="QB" image={jaredGoff} tailwind="mb-14" />
+          <div className="flex absolute ml-64 mt-10">
+            <Card name="Goff" number={16} position="RB" image={jaredGoff} />
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
