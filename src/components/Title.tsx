@@ -12,7 +12,7 @@ function Title(props: PlayerProp) {
         src={logo}
         className="absolute left-2/4 top-2/4 -translate-y-1/2 -translate-x-1/2 w-1/3 -z-10 opacity-50"
       />
-    </div>
+    </div >
   );
 }
 export default Title;
