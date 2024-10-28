@@ -4,14 +4,14 @@ type PlayerProp = {
   position: string; // Define the style prop type ded
   image: string;
   tailwind?: string;
+  handleClick: () => void;
 };
 
 function Card(props: PlayerProp) {
-  const handleClick = () => console.log("test");
   return (
     <div
       className={`border-black border drop-shadow-xl text-center w-24 h-44 inline bg-[#0076b6] relative m-4 p-1.5 rounded-xl border-solid hover:cursor-pointer hover:scale-110 transition duration-500 ease-in-out mt-20 ${props.tailwind}`}
-      onClick={handleClick}
+      onClick={props.handleClick}
     >
       <img
         className=" drop-shadow-xl bg-[#b0b7bc] rounded-xl border-[0.5px] border-solid border-black"
