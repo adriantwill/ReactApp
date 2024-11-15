@@ -16,7 +16,8 @@ type PlayerProp = {
 function Title(props: PlayerProp) {
   return (
     <div
-      className={`relative bg-[#${props.teamName.color}] p-16 mt-8 overflow-hidden flex justify-center items-center`}
+      style={{ backgroundColor: `#${props.teamName.color}` }}
+      className={`relative p-16 mt-8 overflow-hidden flex justify-center items-center`}
     >
       <h1 className=" text-white font-bold text-7xl z-10">
         {props.teamName.displayName}

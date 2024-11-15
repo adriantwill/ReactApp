@@ -28,14 +28,16 @@ type PlayerProp = {
 function Card(props: PlayerProp) {
   return (
     <div
-      className={`border-black border drop-shadow-xl text-center w-24 h-44 inline bg-[#${props.team.color}] relative m-4 p-1.5 rounded-xl border-solid hover:cursor-pointer hover:scale-110 transition duration-500 ease-in-out mt-20 ${props.tailwind}`}
+      style={{ backgroundColor: `#${props.team.color}` }}
+      className={`border-black border drop-shadow-xl text-center w-24 h-44 inline relative m-4 p-1.5 rounded-xl border-solid hover:cursor-pointer hover:scale-110 transition duration-500 ease-in-out mt-20 ${props.tailwind}`}
       onClick={props.handleClick}
     >
       <img
-        className={`drop-shadow-xl bg-[#${props.team.alternateColor}] rounded-xl border-[0.5px] border-solid border-black`}
+        style={{ backgroundColor: `#${props.team.alternateColor}` }}
+        className={`drop-shadow-xl rounded-xl border-[0.5px] border-solid border-black`}
         src={props.data.headshot.href}
       ></img>
-      <div className="font-normal text-lg text-white mb-1.5">
+      <div className="font-normal text-lg text-white mb-1.5 overflow-hidden whitespace-nowrap">
         {props.data.lastName}
       </div>
       <div className="text-3xl font-medium text-white mb-2.5">
