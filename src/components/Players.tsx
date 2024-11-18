@@ -23,6 +23,7 @@ type PlayerProp = {
   data: PlayerInfo;
   team: TeamInfo;
   handleClick: () => void;
+  setCurrentPlayer: () => void;
 };
 
 function Card(props: PlayerProp) {
@@ -30,7 +31,10 @@ function Card(props: PlayerProp) {
     <div
       style={{ backgroundColor: `#${props.team.color}` }}
       className={`border-black border drop-shadow-xl text-center w-24 h-44 inline relative m-4 p-1.5 rounded-xl border-solid hover:cursor-pointer hover:scale-110 transition duration-500 ease-in-out mt-20 ${props.tailwind}`}
-      onClick={props.handleClick}
+      onClick={() => {
+        props.handleClick();
+        props.setCurrentPlayer();
+      }}
     >
       <img
         style={{ backgroundColor: `#${props.team.alternateColor}` }}
