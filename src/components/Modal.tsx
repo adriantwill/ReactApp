@@ -73,13 +73,14 @@ function Modal(props: MoadlProps) {
           <FontAwesomeIcon icon={faX} style={{ color: "white" }} />
         </button>
         <div className="absolute top-1/3 left-[70%] w-1/3 flex justify-center items-center ">
-          {playerImages[Number(props.player.id)] && (
+          {playerImages[props.player.id] ? (
             <img
-              src={playerImages[Number(props.player.id)]}
+              src={playerImages[props.player.id]}
               className="rounded-lg h-[36rem]"
             />
+          ) : (
+            <img src={props.player.headshot.href} />
           )}
-          <img src={props.player.headshot.href} />
         </div>
       </div>
     </div>
