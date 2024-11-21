@@ -36,6 +36,7 @@ function App() {
   useEffect(() => {
     const fetchInitialUrl = async () => {
       try {
+        console.log("team");
         const response = await fetch(initialUrl);
         const result = await response.json();
         setFetchedUrl(result.items[2].positions);
@@ -52,6 +53,8 @@ function App() {
     const fetchData = async () => {
       const allResults: any[] = [];
       for (const element of positions) {
+        console.log(element);
+
         const response = await fetch(
           fetchedUrl[element].athletes[0].athlete.$ref
         );
@@ -78,7 +81,6 @@ function App() {
     fetchData();
   }, [fetchedUrl]);
 
-  console.log(data);
   return (
     <>
       {modal && (
@@ -88,7 +90,7 @@ function App() {
           player={currentPlayer}
         ></Modal>
       )}
-      {data.length > 0 && (
+      {data.length > 0 && teamData && (
         <div className="flex justify-center ">
           <div className="w-11/12">
             <Dropdown setTeamUrl={setTeamUrl} setInitialUrl={setInitialUrl} />
