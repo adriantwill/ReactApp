@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 type PlayerInfo = {
   id: string;
@@ -9,14 +10,15 @@ type PlayerInfo = {
   weight: number;
   displayHeight: string;
   age: number;
-  collegeAthlete: collegeAthlete;
+  debutYear: number;
+  college: college;
   position: Position;
   headshot: Headshot;
   draft: Draft;
 };
 
-type collegeAthlete = {
-  href: string;
+type college = {
+  $ref: string;
 };
 
 type Headshot = {
@@ -33,7 +35,6 @@ type Logos = {
 
 type Draft = {
   year: string;
-  round: string;
   selection: string;
 };
 
@@ -50,6 +51,25 @@ interface MoadlProps {
 }
 
 function Modal(props: MoadlProps) {
+  const teamUrl = props.player.college.$ref;
+  console.log(teamUrl);
+  const [college, setCollege] = useState("");
+  if (!props.player.draft) {
+    props.player.draft = {
+      year: props.player.debutYear.toString(),
+      selection: "UDFA",
+    };
+  }
+  const fetchTeamUrl = async () => {
+    try {
+      const response = await fetch(teamUrl);
+      const result = await response.json();
+      setCollege(result.abbrev);
+    } catch (error) {
+      console.error("Error fetching initial URL:", error);
+    }
+  };
+  fetchTeamUrl();
   return (
     <div className="flex items-center justify-center fixed inset-0 z-20">
       <div
@@ -80,10 +100,10 @@ function Modal(props: MoadlProps) {
         >
           <FontAwesomeIcon icon={faX} style={{ color: "white" }} />
         </button>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-start">
           <div className="w-1/3">
-            <div className="rounded-t-xl mx-4 pb-4 pt-2 -my-2 opacity-50 bg-slate-200 font-medium">
-              <p className="text-center text-3xl">Draft Profile</p>
+            <div className="rounded-t-xl mx-4 pb-4 pt-2 -my-2 bg-[rgba(255,255,255,0.5)] font-medium">
+              <p className="text-center text-3xl text-white">Draft Profile</p>
             </div>
             <div className="rounded-xl bg-gray-200 mx-4 p-4 pt-2">
               <div className="grid grid-cols-3 p-2 font-semibold opacity-60 text-3xl">
@@ -92,15 +112,15 @@ function Modal(props: MoadlProps) {
                 <p className="text-center">Pick</p>
               </div>
               <div className="grid grid-cols-3 p-2 font-semibold text-4xl">
-                <p className="text-center">CAL</p>
+                <p className="text-center">{college}</p>
                 <p className="text-center">{props.player.draft.year}</p>
                 <p className="text-center">{props.player.draft.selection}</p>
               </div>
             </div>
           </div>
           <div className="w-1/3">
-            <div className="rounded-t-xl mx-4 pb-4 pt-2 -my-2 opacity-50 bg-slate-200 font-medium">
-              <p className="text-center text-3xl">Player Profile</p>
+            <div className="rounded-t-xl mx-4 pb-4 pt-2 -my-2 bg-[rgba(255,255,255,0.5)] font-medium">
+              <p className="text-center text-3xl text-white">Player Profile</p>
             </div>
             <div className="rounded-xl bg-gray-200 mx-4 p-4 pt-2">
               <div className="grid grid-cols-3 p-2 font-semibold opacity-60 text-3xl">
@@ -115,6 +135,9 @@ function Modal(props: MoadlProps) {
               </div>
             </div>
           </div>
+        </div>
+        <div className="flex justify-start">
+          <div className="rounded-xl bg-gray-200 mx-4 p-4 pt-2 w-1/2"></div>
         </div>
         <div className="absolute bottom-0 right-0 w-1/3 flex justify-center items-center ">
           <img
