@@ -1,5 +1,3 @@
-import React from "react";
-
 type PlayerInfo = {
   item1: string;
   item2: string;
