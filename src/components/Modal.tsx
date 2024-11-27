@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import InfoBox from "./InfoBox";
 
 type PlayerInfo = {
   id: string;
@@ -50,26 +51,61 @@ interface MoadlProps {
   player: PlayerInfo;
 }
 
+type GameLog = {
+  labels: [
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string
+  ];
+  events: [Game];
+};
+
+type Game = {
+  week: number;
+  opponent: string;
+  stats: [string];
+};
+
 function Modal(props: MoadlProps) {
   const teamUrl = props.player.college.$ref;
-  console.log(teamUrl);
+  const gameLogUrl = `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${props.player.id}/gamelog`;
   const [college, setCollege] = useState("");
+  const [gameLog, setGameLog] = useState<GameLog | null>(null);
   if (!props.player.draft) {
     props.player.draft = {
       year: props.player.debutYear.toString(),
       selection: "UDFA",
     };
   }
-  const fetchTeamUrl = async () => {
-    try {
-      const response = await fetch(teamUrl);
-      const result = await response.json();
-      setCollege(result.abbrev);
-    } catch (error) {
-      console.error("Error fetching initial URL:", error);
-    }
-  };
-  fetchTeamUrl();
+  if (!college && !gameLog) {
+    const fetchTeamUrl = async () => {
+      try {
+        const response = await fetch(teamUrl);
+        const result = await response.json();
+        setCollege(result.abbrev);
+        const responseLog = await fetch(gameLogUrl);
+        const resultLog = await responseLog.json();
+        setGameLog(resultLog);
+      } catch (error) {
+        console.error("Error fetching initial URL:", error);
+      }
+    };
+    fetchTeamUrl();
+    // const sortedGameLog = gameLog ? [...gameLog].sort((a, b) => a.week - b.week) : [];
+  }
+
   return (
     <div className="flex items-center justify-center fixed inset-0 z-20">
       <div
@@ -100,44 +136,53 @@ function Modal(props: MoadlProps) {
         >
           <FontAwesomeIcon icon={faX} style={{ color: "white" }} />
         </button>
-        <div className="flex justify-start">
-          <div className="w-1/3">
-            <div className="rounded-t-xl mx-4 pb-4 pt-2 -my-2 bg-[rgba(255,255,255,0.5)] font-medium">
-              <p className="text-center text-3xl text-white">Draft Profile</p>
-            </div>
-            <div className="rounded-xl bg-gray-200 mx-4 p-4 pt-2">
-              <div className="grid grid-cols-3 p-2 font-semibold opacity-60 text-3xl">
-                <p className="text-center">College</p>
-                <p className="text-center">Year</p>
-                <p className="text-center">Pick</p>
-              </div>
-              <div className="grid grid-cols-3 p-2 font-semibold text-4xl">
-                <p className="text-center">{college}</p>
-                <p className="text-center">{props.player.draft.year}</p>
-                <p className="text-center">{props.player.draft.selection}</p>
-              </div>
-            </div>
-          </div>
-          <div className="w-1/3">
-            <div className="rounded-t-xl mx-4 pb-4 pt-2 -my-2 bg-[rgba(255,255,255,0.5)] font-medium">
-              <p className="text-center text-3xl text-white">Player Profile</p>
-            </div>
-            <div className="rounded-xl bg-gray-200 mx-4 p-4 pt-2">
-              <div className="grid grid-cols-3 p-2 font-semibold opacity-60 text-3xl">
-                <p className="text-center">Weight</p>
-                <p className="text-center">Height</p>
-                <p className="text-center">Age</p>
-              </div>
-              <div className="grid grid-cols-3 p-2 font-semibold text-4xl">
-                <p className="text-center">{props.player.weight}</p>
-                <p className="text-center">{props.player.displayHeight}</p>
-                <p className="text-center">{props.player.age}</p>
-              </div>
-            </div>
-          </div>
+        <div className="flex justify-center">
+          <InfoBox
+            item1={college}
+            item2={props.player.draft.year}
+            item3={props.player.draft.selection}
+          />
+          <InfoBox
+            item1={String(props.player.weight)}
+            item2={props.player.displayHeight}
+            item3={String(props.player.age)}
+          />
         </div>
         <div className="flex justify-start">
-          <div className="rounded-xl bg-gray-200 mx-4 p-4 pt-2 w-1/2"></div>
+          <div className="rounded-xl bg-gray-200 mx-4 p-4 w-2/3">
+            <div className="overflow-auto max-h-64">
+              <table className="table-auto w-full">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2">Wk</th>
+                    <th className="px-4 py-2">OPP</th>
+                    {gameLog?.labels && (
+                      <>
+                        <th className="px-4 py-2">{gameLog.labels[0]}</th>
+                        <th className="px-4 py-2">{gameLog.labels[1]}</th>
+                        <th className="px-4 py-2">{gameLog.labels[2]}</th>
+                      </>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 19 }).map((_, index) => (
+                    <tr key={index}>
+                      <td className="border text-center">{`Week ${index}`}</td>
+                      <td className="border  text-center">-</td>
+                      {gameLog?.labels && (
+                        <>
+                          <td className="border  text-center">-</td>
+                          <td className="border  text-center">-</td>
+                          <td className="border  text-center">-</td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
         <div className="absolute bottom-0 right-0 w-1/3 flex justify-center items-center ">
           <img
