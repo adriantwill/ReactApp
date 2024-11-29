@@ -36,7 +36,6 @@ function App() {
   useEffect(() => {
     const fetchInitialUrl = async () => {
       try {
-        console.log("team");
         const response = await fetch(initialUrl);
         const result = await response.json();
         setFetchedUrl(result.items[2].positions);
@@ -53,8 +52,6 @@ function App() {
     const fetchData = async () => {
       const allResults: any[] = [];
       for (const element of positions) {
-        console.log(element);
-
         const response = await fetch(
           fetchedUrl[element].athletes[0].athlete.$ref
         );
@@ -90,9 +87,9 @@ function App() {
           player={currentPlayer}
         ></Modal>
       )}
-      {data.length > 0 && teamData && (
+      {data.length > 10 && teamData ? (
         <div className="flex justify-center ">
-          <div className="w-11/12">
+          <div className="w-[170vh]">
             <Dropdown setTeamUrl={setTeamUrl} setInitialUrl={setInitialUrl} />
             <Title teamName={teamData} />
             <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center">
@@ -107,7 +104,7 @@ function App() {
                 <Card
                   team={teamData}
                   data={data[4]}
-                  tailwind="top-10 right-10"
+                  tailwind="top-10"
                   handleClick={toggleModal}
                   setCurrentPlayer={() => setCurrentPlayer(data[4])}
                 />
@@ -180,6 +177,8 @@ function App() {
             </div>
           </div>
         </div>
+      ) : (
+        <></>
       )}
     </>
   );

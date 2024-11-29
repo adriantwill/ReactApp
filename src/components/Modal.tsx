@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import InfoBox from "./InfoBox";
+import StatsTable from "./StatsTable";
 
 type PlayerInfo = {
   id: string;
@@ -43,6 +44,7 @@ type TeamInfo = {
   color: string;
   alternateColor: string;
   logos: [Logos];
+  displayName: string;
 };
 
 interface MoadlProps {
@@ -52,6 +54,7 @@ interface MoadlProps {
 }
 
 type GameLog = {
+  categories: [CategoriesLabels];
   labels: [
     string,
     string,
@@ -69,13 +72,43 @@ type GameLog = {
     string,
     string
   ];
-  events: [Game];
+  seasonTypes: [SeasonTypes];
+  events: Record<string, EventDetail>;
 };
 
-type Game = {
+type CategoriesLabels = {
+  name: string;
+  displayName: string;
+  count: number;
+};
+
+type SeasonTypes = {
+  categories: [Categories];
+};
+
+type Categories = {
+  events: [Events];
+};
+
+type Events = {
+  stats: [string, string, string, string, string, string, string, string];
+  eventId: string;
+};
+
+type EventDetail = {
+  id: string;
   week: number;
-  opponent: string;
-  stats: [string];
+  atVs: string;
+  homeTeamScore: string;
+  awayTeamScore: string;
+  gameResult: string;
+  gameDate: string;
+  opponent: Opponent;
+};
+
+type Opponent = {
+  id: string;
+  abbreviation: string;
 };
 
 function Modal(props: MoadlProps) {
@@ -83,6 +116,9 @@ function Modal(props: MoadlProps) {
   const gameLogUrl = `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${props.player.id}/gamelog`;
   const [college, setCollege] = useState("");
   const [gameLog, setGameLog] = useState<GameLog | null>(null);
+  if (!props.player.debutYear) {
+    props.player.debutYear = 2024;
+  }
   if (!props.player.draft) {
     props.player.draft = {
       year: props.player.debutYear.toString(),
@@ -103,95 +139,78 @@ function Modal(props: MoadlProps) {
       }
     };
     fetchTeamUrl();
-    // const sortedGameLog = gameLog ? [...gameLog].sort((a, b) => a.week - b.week) : [];
   }
 
-  return (
+  return gameLog ? (
     <div className="flex items-center justify-center fixed inset-0 z-20">
       <div
         onClick={props.toggleModal}
         className="bg-black bg-opacity-30 w-screen h-screen absolute inset-0"
-      ></div>
+      />
       <div
-        className="relative rounded-lg bg-white w-10/12 h-[90%] drop-shadow-xl overflow-hidden"
+        className="rounded-lg bg-white w-[150vh] h-[90%] drop-shadow-xl overflow-auto"
         style={{ backgroundColor: `#${props.team.color}` }}
       >
-        <h1 className="text-white text-6xl font-bold text-center m-5">
-          {" "}
-          {props.player.displayName}{" "}
-        </h1>
-        <div
-          className="h-14 rounded-md my-5"
-          style={{ backgroundColor: `#${props.team.alternateColor}` }}
-        >
-          <div className="flex items-center justify-center h-full">
-            <h2 className="text-white text-3xl font-bold text-center">
-              {props.player.position.name + " - #" + props.player.jersey}
-            </h2>
-          </div>
-        </div>
         <button
-          className="absolute px-4 py-2 right-4 top-4"
+          className="absolute px-4 py-2 right-4 top-4 z-20"
           onClick={props.toggleModal}
         >
           <FontAwesomeIcon icon={faX} style={{ color: "white" }} />
         </button>
-        <div className="flex justify-center">
-          <InfoBox
-            item1={college}
-            item2={props.player.draft.year}
-            item3={props.player.draft.selection}
-          />
-          <InfoBox
-            item1={String(props.player.weight)}
-            item2={props.player.displayHeight}
-            item3={String(props.player.age)}
-          />
+        <div className="w-[70rem] mx-auto">
+          <h1 className="text-white text-6xl font-bold mt-8 mb-4">
+            {props.player.displayName}
+          </h1>
+          <h2 className="text-white text-3xl font-bold">
+            {props.player.position.name + " - #" + props.player.jersey}
+          </h2>
         </div>
-        <div className="flex justify-start">
-          <div className="rounded-xl bg-gray-200 mx-4 p-4 w-2/3">
-            <div className="overflow-auto max-h-64">
-              <table className="table-auto w-full">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">Wk</th>
-                    <th className="px-4 py-2">OPP</th>
-                    {gameLog?.labels && (
-                      <>
-                        <th className="px-4 py-2">{gameLog.labels[0]}</th>
-                        <th className="px-4 py-2">{gameLog.labels[1]}</th>
-                        <th className="px-4 py-2">{gameLog.labels[2]}</th>
-                      </>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from({ length: 19 }).map((_, index) => (
-                    <tr key={index}>
-                      <td className="border text-center">{`Week ${index}`}</td>
-                      <td className="border  text-center">-</td>
-                      {gameLog?.labels && (
-                        <>
-                          <td className="border  text-center">-</td>
-                          <td className="border  text-center">-</td>
-                          <td className="border  text-center">-</td>
-                        </>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div
+          className="h-10 rounded-lg my-8"
+          style={{ backgroundColor: `#${props.team.alternateColor}` }}
+        >
+          <div className="relative w-[70rem] mx-auto">
+            <div className="absolute w-60 bottom-0 right-0">
+              <img
+                src={props.team.logos[0].href}
+                className="absolute opacity-50 -z-10 -bottom-10"
+              />
+              <img src={props.player.headshot.href} />
+            </div>
+          </div>
+          <div className="flex items-center justify-center h-full">
+            <h2 className="text-white text-3xl font-medium text-center">
+              {props.team.displayName}
+            </h2>
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          <div className="w-[70rem]">
+            <div className="flex justify-between">
+              <InfoBox
+                item1={college}
+                item2={props.player.draft.year}
+                item3={props.player.draft.selection}
+                style={"mr-4"}
+              />
+              <InfoBox
+                item1={String(props.player.weight)}
+                item2={props.player.displayHeight}
+                item3={String(props.player.age)}
+                style={"ml-4"}
+              />
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 right-0 w-1/3 flex justify-center items-center ">
-          <img
-            src={props.team.logos[0].href}
-            className="absolute opacity-50 -z-10 -bottom-20"
-          />
-          <img src={props.player.headshot.href} className="" />
+        <div className="flex justify-center">
+          <StatsTable gameLog={gameLog} />
         </div>
       </div>
+    </div>
+  ) : (
+    <div className="bg-black bg-opacity-30 w-screen h-screen flex items-center justify-center fixed inset-0 z-20">
+      <div className="text-white text-4xl">Loading...</div>
     </div>
   );
 }

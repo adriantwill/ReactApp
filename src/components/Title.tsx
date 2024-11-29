@@ -24,7 +24,7 @@ function Title(props: PlayerProp) {
       </h1>
       <img
         src={props.teamName.logos[0].href}
-        className="absolute w-1/3 opacity-50"
+        className="absolute w-[500px] opacity-50"
       />
     </div>
   );
