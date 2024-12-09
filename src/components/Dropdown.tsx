@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ChildComponentProps {
   setTeamUrl: React.Dispatch<React.SetStateAction<string>>;
@@ -7,6 +8,7 @@ interface ChildComponentProps {
 
 function Dropdown(props: ChildComponentProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const nflTeams = [
     { id: 22, name: "Arizona Cardinals" },
     { id: 1, name: "Atlanta Falcons" },
@@ -61,6 +63,7 @@ function Dropdown(props: ChildComponentProps) {
                 props.setTeamUrl(
                   `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${item.id}`
                 );
+                navigate(`/teams/${item.id}`);
               }}
               className="flex w-full p-4 justify-between hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4"
               key={i}

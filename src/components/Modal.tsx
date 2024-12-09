@@ -162,7 +162,7 @@ function Modal(props: MoadlProps) {
             {props.player.displayName}
           </h1>
           <h2 className="text-white text-3xl font-bold">
-            {props.player.position.name + " - #" + props.player.jersey}
+            {props.player.position.name + " | #" + props.player.jersey}
           </h2>
         </div>
         <div
