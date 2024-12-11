@@ -10,4 +10,13 @@
 
 * {
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent; /* Thumb color | Track color */
+  font-family: "Sans";
+}
+
+@font-face {
+  font-family: "Sans", sans-serif;
+  font-weight: 400;
+  src: url("assets/fonts/kumbhsans-regular-webfont.woff2") format("woff2"),
+    url("assets/fonts/src/assets/fonts/kumbhsans-regular-webfont.woff")
+      format("woff");
 }

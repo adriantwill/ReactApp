@@ -11,6 +11,7 @@ type Headshot = {
 
 type Position = {
   abbreviation: string;
+  name: string;
 };
 
 type TeamInfo = {

@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface ChildComponentProps {
-  setTeamUrl: React.Dispatch<React.SetStateAction<string>>;
-  setInitialUrl: React.Dispatch<React.SetStateAction<string>>;
-}
-
-function Dropdown(props: ChildComponentProps) {
+function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const nflTeams = [
@@ -48,22 +43,17 @@ function Dropdown(props: ChildComponentProps) {
     <div className="relative flex flex-col items-center w-[340px] rounded-lg z-10">
       <button
         onClick={() => setIsOpen((prev: any) => !prev)}
-        className="bg-blue-400 p-4 w-full  flx items-center justify-between  font-bold text-lg  rounded-lg tracking-wider border-4  border-transparent active:border-white duration-300 active:tet-whtite"
+        className="p-2 w-44 font-bold text-lg rounded-lg tracking-wider border-4 border-transparent active:border-white duration-200 active:text-white hover:bg-slate-300"
       >
-        Dropdown
+        NFL Teams
       </button>
       {isOpen && (
         <div className="bg-blue-400 absolute top-20 flex flex-col items-start rounded-lg p-2 w-full max-h-96 overflow-y-scroll">
           {nflTeams.map((item, i) => (
             <div
               onClick={() => {
-                props.setInitialUrl(
-                  `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/${item.id}/depthcharts`
-                );
-                props.setTeamUrl(
-                  `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${item.id}`
-                );
                 navigate(`/teams/${item.id}`);
+                //   window.location.reload();
               }}
               className="flex w-full p-4 justify-between hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4"
               key={i}

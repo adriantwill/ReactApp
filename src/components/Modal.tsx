@@ -13,26 +13,20 @@ type PlayerInfo = {
   displayHeight: string;
   age: number;
   debutYear: number;
-  college: college;
+  college: Headshot;
   position: Position;
   headshot: Headshot;
   draft: Draft;
 };
 
-type college = {
-  $ref: string;
-};
-
 type Headshot = {
   href: string;
+  $ref: string;
 };
 
 type Position = {
   name: string;
-};
-
-type Logos = {
-  href: string;
+  abbreviation: string;
 };
 
 type Draft = {
@@ -43,7 +37,7 @@ type Draft = {
 type TeamInfo = {
   color: string;
   alternateColor: string;
-  logos: [Logos];
+  logos: [Headshot];
   displayName: string;
 };
 

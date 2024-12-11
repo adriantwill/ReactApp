@@ -3,11 +3,70 @@ import Card from "./../components/Players";
 import Title from "./../components/Title";
 import Dropdown from "./../components/Dropdown";
 import Modal from "./../components/Modal";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
+type TeamInfo = {
+  color: string;
+  alternateColor: string;
+  logos: [Logos];
+  displayName: string;
+};
 
+type Logos = {
+  $ref: string;
+  href: string;
+};
+
+type AllPositions = {
+  [key: string]: Positions;
+  wr: Positions;
+  lt: Positions;
+  lg: Positions;
+  c: Positions;
+  rg: Positions;
+  rt: Positions;
+  qb: Positions;
+  rb: Positions;
+  te: Positions;
+};
+
+type Positions = {
+  athletes: [Athlete];
+};
+
+type Athlete = {
+  rank: number;
+  athlete: Logos;
+};
+type Position = {
+  name: string;
+  abbreviation: string;
+};
+
+type PlayerInfo = {
+  id: string;
+  lastName: string;
+  jersey: string;
+  displayName: string;
+  weight: number;
+  displayHeight: string;
+  age: number;
+  debutYear: number;
+  college: Logos;
+  position: Position;
+  headshot: Logos;
+  draft: Draft;
+};
+
+type Draft = {
+  year: string;
+  selection: string;
+};
 function Teams() {
   const { id } = useParams();
-  const teamId = id || "1";
+  const teamId = Number(id) || 1;
+  if (!((teamId > 0 && teamId < 31) || teamId == 33 || teamId == 34)) {
+    return <Navigate to="/error" replace />; // Redirect to error route
+  }
   const [modal, setModal] = useState(false);
   const [initialUrl, setInitialUrl] = useState(
     `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/teams/${teamId}/depthcharts`
@@ -15,11 +74,11 @@ function Teams() {
   const [teamUrl, setTeamUrl] = useState(
     `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}`
   );
-  const [fetchedUrl, setFetchedUrl] = useState<any>();
-  const [data, setData] = useState<any[]>([]);
-  const [teamData, setTeamData] = useState<any>(null);
+  const [teamData, setTeamData] = useState<TeamInfo>();
+  const [fetchedUrl, setFetchedUrl] = useState<AllPositions>();
+  const [data, setData] = useState<PlayerInfo[]>([]);
   const positions = ["qb", "rb", "wr", "te", "lt", "lg", "c", "rg", "rt"];
-  const [currentPlayer, setCurrentPlayer] = useState<any>(null);
+  const [currentPlayer, setCurrentPlayer] = useState<PlayerInfo>();
   const toggleModal = () => {
     setModal(!modal);
   };
@@ -29,30 +88,20 @@ function Teams() {
         const response = await fetch(teamUrl);
         const result = await response.json();
         setTeamData(result.team);
+        const responseDepth = await fetch(initialUrl);
+        const resultDepth = await responseDepth.json();
+        setFetchedUrl(resultDepth.items[2].positions);
       } catch (error) {
         console.error("Error fetching initial URL:", error);
       }
     };
     fetchTeamUrl();
-  }, [teamUrl]);
-  useEffect(() => {
-    const fetchInitialUrl = async () => {
-      try {
-        const response = await fetch(initialUrl);
-        const result = await response.json();
-        setFetchedUrl(result.items[2].positions);
-      } catch (error) {
-        console.error("Error fetching initial URL:", error);
-      }
-    };
-    fetchInitialUrl();
-  }, [initialUrl]);
+  }, [teamUrl, initialUrl]);
 
   useEffect(() => {
     if (!fetchedUrl) return;
-
     const fetchData = async () => {
-      const allResults: any[] = [];
+      const allResults: PlayerInfo[] = [];
       for (const element of positions) {
         const response = await fetch(
           fetchedUrl[element].athletes[0].athlete.$ref
@@ -82,7 +131,7 @@ function Teams() {
 
   return (
     <>
-      {modal && (
+      {modal && teamData && currentPlayer && (
         <Modal
           toggleModal={toggleModal}
           team={teamData}
@@ -92,7 +141,6 @@ function Teams() {
       {data.length > 10 && teamData ? (
         <div className="flex justify-center ">
           <div className="w-[170vh]">
-            <Dropdown setTeamUrl={setTeamUrl} setInitialUrl={setInitialUrl} />
             <Title teamName={teamData} />
             <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center">
               <div className="flex justify-center">
