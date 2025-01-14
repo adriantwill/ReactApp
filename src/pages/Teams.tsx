@@ -4,6 +4,8 @@ import Title from "./../components/Title";
 import Dropdown from "./../components/Dropdown";
 import Modal from "./../components/Modal";
 import { Navigate, useParams } from "react-router-dom";
+import LiveCard from "../components/LiveCard";
+import NextGame from "../components/NextGame";
 type TeamInfo = {
   color: string;
   alternateColor: string;
@@ -131,6 +133,7 @@ function Teams() {
 
   return (
     <>
+      <Dropdown />
       {modal && teamData && currentPlayer && (
         <Modal
           toggleModal={toggleModal}
@@ -139,11 +142,16 @@ function Teams() {
         ></Modal>
       )}
       {data.length > 10 && teamData ? (
-        <div className="flex justify-center ">
-          <div className="w-[170vh]">
+        <div className="flex justify-center">
+          <div className="w-full m-10">
             <Title teamName={teamData} />
-            <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center">
-              <div className="flex justify-center">
+            <div className="grid grid-cols-2 gap-4">
+              <NextGame></NextGame>
+              <NextGame></NextGame>
+            </div>
+
+            <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center shadow-lg">
+              <div className="flex justify-center max-m">
                 <Card
                   team={teamData}
                   data={data[3]}
@@ -154,7 +162,7 @@ function Teams() {
                 <Card
                   team={teamData}
                   data={data[4]}
-                  tailwind="top-10"
+                  tailwind="top-10 lg:-translate-x-28"
                   handleClick={toggleModal}
                   setCurrentPlayer={() => setCurrentPlayer(data[4])}
                 />

@@ -7,16 +7,14 @@ import "./index.css";
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<FrontPage />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/teams/:id" element={<Teams />} />
-          <Route path="*" element={<NoPage />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<FrontPage />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/teams/:id" element={<Teams />} />
+        <Route path="*" element={<NoPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

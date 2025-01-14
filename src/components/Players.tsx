@@ -31,7 +31,7 @@ function Card(props: PlayerProp) {
   return (
     <div
       style={{ backgroundColor: `#${props.team.color}` }}
-      className={`drop-shadow-xl text-center min-w-24 max-w-24 h-44 relative m-4 p-2 rounded-xl hover:cursor-pointer hover:scale-110 transition duration-500 ease-in-out mt-20 ${props.tailwind}`}
+      className={`drop-shadow-xl text-center min-w-24 max-w-24 h-44 relative m-4 p-2 rounded-xl hover:cursor-pointer hover:scale-110 transition duration-500 ease-in-out mt-8 ${props.tailwind}`}
       onClick={() => {
         props.handleClick();
         props.setCurrentPlayer();
