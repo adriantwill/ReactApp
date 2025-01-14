@@ -7,6 +7,7 @@ type NextEvent = {
 };
 
 function NextGame(props: NextEvent) {
+  //test
   return (
     <div className="my-2 bg-slate-300 rounded-sm">
       <p className="text-center">Upcoming Game</p>
