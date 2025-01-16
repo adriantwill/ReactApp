@@ -96,7 +96,7 @@ function StatsTable(props: StatsProps) {
           2024 Season Statistics
         </p>
       </div>
-      <div className="rounded-xl bg-gray-200 p-4 w-[70rem]">
+      <div className="rounded-xl bg-primary p-4 w-[70rem]">
         <TableButton
           setTableButton={setActiveStats}
           allCategories={allCategories}

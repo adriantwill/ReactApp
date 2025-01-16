@@ -13,7 +13,7 @@ function InfoBox(props: PlayerInfo) {
           {props.style === "mr-4" ? "Draft Profile" : "Player Information"}
         </p>
       </div>
-      <div className="rounded-xl bg-gray-200">
+      <div className="rounded-xl bg-primary">
         <div className="grid grid-cols-3 font-semibold opacity-60 text-3xl p-4 pb-2">
           <p className="text-center">
             {props.style === "mr-4" ? "College" : "Weight"}

@@ -4,13 +4,45 @@ import Title from "./../components/Title";
 import Dropdown from "./../components/Dropdown";
 import Modal from "./../components/Modal";
 import { Navigate, useParams } from "react-router-dom";
-import LiveCard from "../components/LiveCard";
 import NextGame from "../components/NextGame";
 type TeamInfo = {
   color: string;
   alternateColor: string;
   logos: [Logos];
   displayName: string;
+  nextEvent: NextEvent[];
+};
+
+type NextEvent = {
+  competitions: Competitions[];
+  week: Week;
+};
+
+type Week = {
+  text: string;
+};
+
+type Competitions = {
+  competitors: [Competitors];
+  status: Status;
+};
+
+type Competitors = {
+  team: Team;
+};
+
+type Team = {
+  nickname: string;
+  logos: [Logos];
+};
+
+type Status = {
+  type: Type;
+};
+
+type Type = {
+  shortDetail: string;
+  description: string;
 };
 
 type Logos = {
@@ -145,12 +177,11 @@ function Teams() {
         <div className="flex justify-center">
           <div className="w-full m-10">
             <Title teamName={teamData} />
-            <div className="grid grid-cols-2 gap-4">
-              <NextGame></NextGame>
-              <NextGame></NextGame>
+            <div className="grid grid-cols-2 gap-6">
+              <NextGame nextEvent={teamData.nextEvent}></NextGame>
             </div>
 
-            <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center shadow-lg">
+            <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center shadow-lg rounded-md">
               <div className="flex justify-center max-m">
                 <Card
                   team={teamData}
