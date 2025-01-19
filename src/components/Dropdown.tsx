@@ -20,6 +20,14 @@ function Dropdown() {
         Home
       </button>
       <button
+        className="py-2 px-6 font-bold rounded-md tracking-wider border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
+        onClick={() => {
+          navigate(`/rankings`);
+        }}
+      >
+        Rankings
+      </button>
+      <button
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
         className="py-2 px-6 font-bold rounded-md tracking-wider border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
@@ -30,7 +38,7 @@ function Dropdown() {
       {isOpen && (
         <div className="absolute mt-12 z-20">
           <div
-            className="rounded-md grid grid-flow-row grid-cols-4 bg-primary p-2"
+            className="rounded-md grid grid-flow-row grid-cols-4 bg-slate-50 p-2 shadow-sm"
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
@@ -40,10 +48,13 @@ function Dropdown() {
                   navigate(`/teams/${item.team.id}`);
                   window.location.reload();
                 }}
-                className="py-4 px-2 mx-2 my-1 hover:bg-slate-300 cursor-pointer rounded-sm border-l-transparent hover:border-l-white text-center"
+                className="py-4 px-2 mx-2 my-1 hover:bg-slate-300 cursor-pointer rounded-sm transition duration-300 ease-in-out transform hover:scale-105"
                 key={i}
               >
-                {item.team.name}
+                <div className="flex items-center justify-center text-xl">
+                  {item.team.displayName}
+                  <img src={item.team.logos[0].href} width={40} />
+                </div>
               </div>
             ))}
           </div>

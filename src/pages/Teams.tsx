@@ -5,12 +5,27 @@ import Dropdown from "./../components/Dropdown";
 import Modal from "./../components/Modal";
 import { Navigate, useParams } from "react-router-dom";
 import NextGame from "../components/NextGame";
+import TeamStat from "../components/TeamStat";
 type TeamInfo = {
   color: string;
   alternateColor: string;
   logos: [Logos];
   displayName: string;
   nextEvent: NextEvent[];
+  record: Record;
+};
+
+type Record = {
+  items: Items[];
+};
+
+type Items = {
+  summary: string;
+  stats: Stats[];
+};
+
+type Stats = {
+  value: number;
 };
 
 type NextEvent = {
@@ -175,10 +190,17 @@ function Teams() {
       )}
       {data.length > 10 && teamData ? (
         <div className="flex justify-center">
-          <div className="w-full m-10">
+          <div className="w-full mx-12 my-6">
             <Title teamName={teamData} />
             <div className="grid grid-cols-2 gap-6">
-              <NextGame nextEvent={teamData.nextEvent}></NextGame>
+              <NextGame
+                nextEvent={teamData.nextEvent}
+                color={teamData.color}
+              ></NextGame>
+              <TeamStat
+                item={teamData.record.items[0]}
+                color={teamData.color}
+              ></TeamStat>
             </div>
 
             <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center shadow-lg rounded-md">
@@ -193,7 +215,7 @@ function Teams() {
                 <Card
                   team={teamData}
                   data={data[4]}
-                  tailwind="top-10 lg:-translate-x-28"
+                  tailwind="top-14 mr-auto"
                   handleClick={toggleModal}
                   setCurrentPlayer={() => setCurrentPlayer(data[4])}
                 />
@@ -234,7 +256,7 @@ function Teams() {
                 <Card
                   team={teamData}
                   data={data[5]}
-                  tailwind="top-16"
+                  tailwind="top-16 mr-auto"
                   handleClick={toggleModal}
                   setCurrentPlayer={() => setCurrentPlayer(data[5])}
                 />

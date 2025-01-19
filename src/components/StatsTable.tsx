@@ -103,8 +103,8 @@ function StatsTable(props: StatsProps) {
           activeStats={activeStats}
         />
         <div className="relative overflow-auto shadow-md rounded-lg h-64">
-          <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <table className="w-full text-sm text-center text-gray-500 ">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
               <tr>
                 <th className="px-4 py-2">WK</th>
                 {Array.from({ length: activeStats.count }).map((_, index) => (
@@ -145,9 +145,9 @@ function StatsTable(props: StatsProps) {
                 return (
                   <tr
                     key={index}
-                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                    className="odd:bg-white even:bg-gray-50 border-b "
                   >
-                    <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{`Week ${
+                    <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{`Week ${
                       index + 1
                     }`}</th>
                     {statsexist && activeStats.name === "opponents" ? (
