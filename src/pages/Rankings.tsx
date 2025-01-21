@@ -1,19 +1,7 @@
 import { useEffect, useState } from "react";
 import Dropdown from "../components/Dropdown";
 import RankingCard from "../components/RankingCard";
-
-type AllLeaders = {
-  categories: Categoies[];
-};
-
-type Categoies = {
-  leaders: Leaders[];
-};
-
-type Leaders = {
-  athlete: Team;
-  team: Team;
-};
+import { DragEndEvent } from "@dnd-kit/core";
 
 type Split = {
   stats: string[];
@@ -56,20 +44,28 @@ type Logos = {
 };
 
 function Rankings() {
-  const [leaders, setLeaders] = useState<AllLeaders | null>(null);
   const [data, setData] = useState<Statistics[] | null>(null);
   const [player, setPlayer] = useState<Player[] | null>(null);
   const [team, setTeam] = useState<TeamStats[] | null>(null);
 
+  // function handleDragEnd(event: DragEndEvent){
+  //   const {active, over} = event;
+  //   if (!over) return;
+  //   const taskId = active.id as string;
+  //   const newStatus = over.id as Task["status"];
+
+  // }
+
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const fetchData = async () => {
       try {
         let response = await fetch(
-          "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/types/2/leaders"
+          "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/types/2/leaders",
+          { signal }
         );
         let result = await response.json();
-
-        setLeaders(result);
         if (result) {
           for (let i = 0; i < 5; i++) {
             const athleteRef = result.categories[2].leaders[i].athlete.$ref;
@@ -109,8 +105,11 @@ function Rankings() {
     setPlayer([]);
     setTeam([]);
     fetchData();
+    return () => {
+      controller.abort(); // Cancel the API request
+      console.log("API call cleaned up");
+    };
   }, []);
-
   return (
     <div>
       <Dropdown />
