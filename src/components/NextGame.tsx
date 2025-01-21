@@ -66,6 +66,8 @@ function NextGame(props: Props) {
       <h3 className="text-center text-3xl font-medium m-2">
         {teamInfo.competitions[0].status.type.description === "Scheduled"
           ? "Upcoming Game"
+          : teamInfo.competitions[0].status.type.description === "In Progress"
+          ? "Live Game"
           : "Final Game"}
       </h3>
       <div

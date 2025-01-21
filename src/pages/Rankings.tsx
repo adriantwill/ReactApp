@@ -1,30 +1,133 @@
-import React from "react";
-import headshot from "./../assets/i.png";
-import logo from "./../assets/min.png";
-import RankingStats from "../components/RankingStats";
+import { useEffect, useState } from "react";
+import Dropdown from "../components/Dropdown";
+import RankingCard from "../components/RankingCard";
 
-type Props = {};
+type AllLeaders = {
+  categories: Categoies[];
+};
 
-function Rankings(teamInfo: Props) {
+type Categoies = {
+  leaders: Leaders[];
+};
+
+type Leaders = {
+  athlete: Team;
+  team: Team;
+};
+
+type Split = {
+  stats: string[];
+};
+
+type Statistics = {
+  statistics: {
+    labels: string[];
+    splits: Split[];
+  };
+};
+
+type Player = {
+  team: Team;
+  displayName: string;
+  headshot: Headshot;
+  position: Position;
+};
+
+type Team = {
+  $ref: string;
+};
+
+type Headshot = {
+  href: string;
+};
+
+type Position = {
+  abbreviation: string;
+};
+
+type TeamStats = {
+  displayName: string;
+  logos: Logos[];
+  color: string;
+};
+
+type Logos = {
+  href: string;
+};
+
+function Rankings() {
+  const [leaders, setLeaders] = useState<AllLeaders | null>(null);
+  const [data, setData] = useState<Statistics[] | null>(null);
+  const [player, setPlayer] = useState<Player[] | null>(null);
+  const [team, setTeam] = useState<TeamStats[] | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let response = await fetch(
+          "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/types/2/leaders"
+        );
+        let result = await response.json();
+
+        setLeaders(result);
+        if (result) {
+          for (let i = 0; i < 5; i++) {
+            const athleteRef = result.categories[2].leaders[i].athlete.$ref;
+            const athleteId = athleteRef
+              ? athleteRef.split("/athletes/")[1].split("?")[0]
+              : null;
+            response = await fetch(
+              `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${athleteId}/overview`
+            );
+            let athleteResult = await response.json();
+            setData((prevData) =>
+              prevData ? [...prevData, athleteResult] : [athleteResult]
+            );
+            response = await fetch(
+              result.categories[2].leaders[i].athlete.$ref || ""
+            );
+            let playerResult = await response.json();
+            setPlayer((prevPlayer) =>
+              prevPlayer ? [...prevPlayer, playerResult] : [playerResult]
+            );
+
+            response = await fetch(
+              result.categories[2].leaders[i].team.$ref || ""
+            );
+            let teamResult = await response.json();
+            setTeam((prevTeam) =>
+              prevTeam ? [...prevTeam, teamResult] : [teamResult]
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    setData([]);
+    setPlayer([]);
+    setTeam([]);
+    fetchData();
+  }, []);
+
   return (
     <div>
-      <div className="m-6 bg-primary rounded-sm shadow-lg w-[55rem]">
-        <div className="flex justify-between p-2 px-4 items-center">
-          <div className="text-2xl font-medium ">#1</div>
-          <h3 className="text-3xl font-bold ">Justin Jefferson</h3>
-          <div className="text-2xl font-medium ">WR</div>
-        </div>
-        <div style={{ backgroundColor: `#4F2683` }} className="h-1"></div>
-        <p className="text-center text-2xl font-medium m-2">Vikings</p>
-        <div className="flex justify-between">
-          <RankingStats></RankingStats>
-          <RankingStats></RankingStats>
-          <div className="relative w-48 bottom-0 right-0 overflow-hidden">
-            <img src={logo} className="absolute opacity-50 -bottom-10" />
-            <img src={headshot} className="relative z-10" />
-          </div>
-        </div>
-      </div>
+      <Dropdown />
+      {data &&
+        data.map(
+          (leader, index) =>
+            team &&
+            player && (
+              <RankingCard
+                team={team[index]}
+                data={data[index]}
+                player={player[index]}
+                index={index + 1}
+                key={index}
+              />
+            )
+        )}
     </div>
   );
 }
