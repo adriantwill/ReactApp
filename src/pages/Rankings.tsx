@@ -80,7 +80,7 @@ function Rankings() {
         );
         let result = await response.json();
         if (result) {
-          for (let i = 0; i < 5; i++) {
+          for (let i = 0; i < 25; i++) {
             const athleteRef = result.categories[2].leaders[i].athlete.$ref;
             const athleteId = athleteRef
               ? athleteRef.split("/athletes/")[1].split("?")[0]
@@ -122,20 +122,52 @@ function Rankings() {
   return (
     <div>
       <Dropdown />
-      <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
-        <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
-          {tasks.map((task) => (
-            <RankingCard
-              team={task.team}
-              data={task.data}
-              player={task.player}
-              id={task.id}
-              key={task.id}
-              index={tasks.findIndex((t) => t.id === task.id)}
-            />
-          ))}
-        </SortableContext>
-      </DndContext>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <DndContext
+            onDragEnd={handleDragEnd}
+            collisionDetection={closestCorners}
+          >
+            <SortableContext
+              items={tasks}
+              strategy={verticalListSortingStrategy}
+            >
+              {tasks.slice(0, 5).map((task) => (
+                <RankingCard
+                  team={task.team}
+                  data={task.data}
+                  player={task.player}
+                  id={task.id}
+                  key={task.id}
+                  index={tasks.findIndex((t) => t.id === task.id)}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
+        </div>
+        <div>
+          <DndContext
+            onDragEnd={handleDragEnd}
+            collisionDetection={closestCorners}
+          >
+            <SortableContext
+              items={tasks}
+              strategy={verticalListSortingStrategy}
+            >
+              {tasks.slice(5, 25).map((task) => (
+                <RankingCard
+                  team={task.team}
+                  data={task.data}
+                  player={task.player}
+                  id={task.id}
+                  key={task.id}
+                  index={tasks.findIndex((t) => t.id === task.id)}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
+        </div>
+      </div>
     </div>
   );
 }
