@@ -7,25 +7,9 @@ type StatsProps = {
 };
 
 type GameLog = {
-  categories: [CategoriesLabels];
-  labels: [
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string
-  ];
-  seasonTypes: [SeasonTypes];
+  categories: CategoriesLabels[];
+  labels: string[];
+  seasonTypes: SeasonTypes[];
   events: Record<string, EventDetail>;
 };
 
@@ -36,15 +20,15 @@ type CategoriesLabels = {
 };
 
 type SeasonTypes = {
-  categories: [Categories];
+  categories: Categories[];
 };
 
 type Categories = {
-  events: [Events];
+  events: Events[];
 };
 
 type Events = {
-  stats: [string, string, string, string, string, string, string, string];
+  stats: string[];
   eventId: string;
 };
 
@@ -118,29 +102,15 @@ function StatsTable(props: StatsProps) {
             </thead>
             <tbody>
               {Array.from({ length: 18 }).map((_, index) => {
-                let statsexist = true;
-                let weeklyOpp: EventDetail = {
-                  id: "",
-                  week: 0,
-                  atVs: "",
-                  homeTeamScore: "",
-                  awayTeamScore: "",
-                  gameResult: "",
-                  gameDate: "",
-                  opponent: { id: "", abbreviation: "" },
-                };
-                if (
-                  props.gameLog &&
-                  Object.values(props.gameLog.events).some(
-                    (event) => event.week === index + 1
-                  )
-                ) {
-                  weeklyOpp = Object.values(props.gameLog.events).find(
-                    (event) => event.week === index + 1
-                  )!;
-                } else {
+                const regEvents =
+                  props.gameLog.seasonTypes[
+                    props.gameLog.seasonTypes.length - 1
+                  ].categories[0].events;
+                const event = Object.values(props.gameLog.events).find(
+                  (event) => event.week === index + 1
+                );
+                if (!event) {
                   bye--;
-                  statsexist = false;
                 }
                 return (
                   <tr
@@ -150,31 +120,27 @@ function StatsTable(props: StatsProps) {
                     <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{`Week ${
                       index + 1
                     }`}</th>
-                    {statsexist && activeStats.name === "opponents" ? (
+                    {event && activeStats.name === "opponents" ? (
                       <>
                         <td className="border text-center px-6 py-4">
-                          {formatDate(weeklyOpp.gameDate)}
+                          {formatDate(event.gameDate)}
                         </td>
                         <td className="border text-center px-6 py-4">
-                          {weeklyOpp.atVs === "vs"
-                            ? weeklyOpp.opponent.abbreviation
-                            : "@" + weeklyOpp.opponent.abbreviation}
+                          {event.atVs === "vs"
+                            ? event.opponent.abbreviation
+                            : "@" + event.opponent.abbreviation}
                         </td>
                         <td className="border text-center px-6 py-4">
-                          {weeklyOpp.gameResult +
+                          {event.gameResult +
                             " " +
-                            weeklyOpp.homeTeamScore +
+                            event.homeTeamScore +
                             "-" +
-                            weeklyOpp.awayTeamScore}
+                            event.awayTeamScore}
                         </td>
                       </>
-                    ) : props.gameLog.seasonTypes[0].categories[0].events &&
-                      statsexist &&
-                      activeStats.name !== "opponents" &&
-                      index <=
-                        props.gameLog.seasonTypes[0].categories[0].events
-                          .length -
-                          bye ? (
+                    ) : regEvents &&
+                      event &&
+                      index <= regEvents.length - bye ? (
                       Array.from({ length: activeStats.count }).map(
                         (_, weeklyIndex) => (
                           <td
@@ -182,12 +148,9 @@ function StatsTable(props: StatsProps) {
                             key={weeklyIndex}
                           >
                             {
-                              props.gameLog.seasonTypes[0].categories[0].events[
-                                props.gameLog.seasonTypes[0].categories[0]
-                                  .events.length -
-                                  index -
-                                  bye
-                              ].stats[weeklyIndex + totalCount]
+                              regEvents[regEvents.length - index - bye].stats[
+                                weeklyIndex + totalCount
+                              ]
                             }
                           </td>
                         )

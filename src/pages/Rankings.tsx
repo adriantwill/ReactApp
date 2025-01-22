@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import Dropdown from "../components/Dropdown";
 import RankingCard from "../components/RankingCard";
-import { DragEndEvent } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { closestCorners, DndContext } from "@dnd-kit/core";
 
 type Split = {
   stats: string[];
@@ -43,19 +48,27 @@ type Logos = {
   href: string;
 };
 
+type Card = {
+  id: number;
+  data: Statistics;
+  player: Player;
+  team: TeamStats;
+};
+
 function Rankings() {
-  const [data, setData] = useState<Statistics[] | null>(null);
-  const [player, setPlayer] = useState<Player[] | null>(null);
-  const [team, setTeam] = useState<TeamStats[] | null>(null);
-
-  // function handleDragEnd(event: DragEndEvent){
-  //   const {active, over} = event;
-  //   if (!over) return;
-  //   const taskId = active.id as string;
-  //   const newStatus = over.id as Task["status"];
-
-  // }
-
+  const [team, setTeam] = useState<TeamStats[]>([]);
+  const [tasks, setTasks] = useState<Card[]>([]);
+  const getTaskPos = (id: any) => tasks.findIndex((task) => task.id === id);
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    setTasks((tasks) => {
+      const oldIndex = getTaskPos(active.id);
+      const newIndex = getTaskPos(over.id);
+      console.log(oldIndex, newIndex);
+      return arrayMove(tasks, oldIndex, newIndex);
+    });
+  };
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -75,58 +88,54 @@ function Rankings() {
             response = await fetch(
               `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${athleteId}/overview`
             );
-            let athleteResult = await response.json();
-            setData((prevData) =>
-              prevData ? [...prevData, athleteResult] : [athleteResult]
-            );
+            const athleteResult = await response.json();
+
             response = await fetch(
               result.categories[2].leaders[i].athlete.$ref || ""
             );
-            let playerResult = await response.json();
-            setPlayer((prevPlayer) =>
-              prevPlayer ? [...prevPlayer, playerResult] : [playerResult]
-            );
+            const playerResult = await response.json();
 
             response = await fetch(
               result.categories[2].leaders[i].team.$ref || ""
             );
-            let teamResult = await response.json();
-            setTeam((prevTeam) =>
-              prevTeam ? [...prevTeam, teamResult] : [teamResult]
-            );
+            const teamResult = await response.json();
+            setTeam(teamResult);
+            tasks.push({
+              id: i,
+              data: athleteResult,
+              player: playerResult,
+              team: teamResult,
+            });
           }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
-    setData([]);
-    setPlayer([]);
-    setTeam([]);
     fetchData();
+    console.log(tasks);
     return () => {
-      controller.abort(); // Cancel the API request
+      controller.abort();
       console.log("API call cleaned up");
     };
   }, []);
   return (
     <div>
       <Dropdown />
-      {data &&
-        data.map(
-          (leader, index) =>
-            team &&
-            player && (
-              <RankingCard
-                team={team[index]}
-                data={data[index]}
-                player={player[index]}
-                index={index + 1}
-                key={index}
-              />
-            )
-        )}
+      <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+        <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
+          {tasks.map((task) => (
+            <RankingCard
+              team={task.team}
+              data={task.data}
+              player={task.player}
+              id={task.id}
+              key={task.id}
+              index={tasks.findIndex((t) => t.id === task.id)}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
     </div>
   );
 }
