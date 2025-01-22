@@ -1,6 +1,3 @@
-import React from "react";
-import log from "../assets/min.png";
-
 type Props = {
   nextEvent: NextEvent[];
   color: string;

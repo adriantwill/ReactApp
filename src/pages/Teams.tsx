@@ -117,12 +117,6 @@ function Teams() {
     return <Navigate to="/error" replace />; // Redirect to error route
   }
   const [modal, setModal] = useState(false);
-  const [initialUrl, setInitialUrl] = useState(
-    `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/teams/${teamId}/depthcharts`
-  );
-  const [teamUrl, setTeamUrl] = useState(
-    `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}`
-  );
   const [teamData, setTeamData] = useState<TeamInfo>();
   const [fetchedUrl, setFetchedUrl] = useState<AllPositions>();
   const [data, setData] = useState<PlayerInfo[]>([]);
@@ -134,10 +128,14 @@ function Teams() {
   useEffect(() => {
     const fetchTeamUrl = async () => {
       try {
-        const response = await fetch(teamUrl);
+        const response = await fetch(
+          `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}`
+        );
         const result = await response.json();
         setTeamData(result.team);
-        const responseDepth = await fetch(initialUrl);
+        const responseDepth = await fetch(
+          `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/teams/${teamId}/depthcharts`
+        );
         const resultDepth = await responseDepth.json();
         setFetchedUrl(resultDepth.items[2].positions);
       } catch (error) {
@@ -145,7 +143,7 @@ function Teams() {
       }
     };
     fetchTeamUrl();
-  }, [teamUrl, initialUrl]);
+  }, []);
 
   useEffect(() => {
     if (!fetchedUrl) return;

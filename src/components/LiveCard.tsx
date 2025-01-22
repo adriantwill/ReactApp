@@ -1,5 +1,3 @@
-import React from "react";
-
 function LiveCard() {
   return (
     <div className="bg-slate-200 w-48 rounded-md hover:scale-110 hover:cursor-pointer ">

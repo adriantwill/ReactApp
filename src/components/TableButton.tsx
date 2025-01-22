@@ -1,5 +1,3 @@
-import React from "react";
-
 type PropsState = {
   setTableButton: React.Dispatch<React.SetStateAction<CategoriesLabels>>;
   allCategories: [CategoriesLabels];

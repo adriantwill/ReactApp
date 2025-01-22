@@ -1,5 +1,3 @@
-import React from "react";
-
 type Props = {
   item: Item;
   color: string;
