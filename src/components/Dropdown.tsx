@@ -57,10 +57,16 @@ function Dropdown() {
   const { data, isLoading, error } = useQuery<ApiResponse>(
     "teams",
     async () => {
+      console.log("Fetching teams data...");
       const response = await axios.get(
         "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
       );
       return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     }
   );
 
