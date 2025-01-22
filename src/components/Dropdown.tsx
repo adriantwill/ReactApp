@@ -1,11 +1,71 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import teams from "../assets/Teams.json";
+import { useQuery } from "react-query";
+import axios from "axios";
+
+type ApiResponse = {
+  sports: Sport[];
+};
+
+type Sport = {
+  id: string;
+  uid: string;
+  name: string;
+  slug: string;
+  leagues: League[];
+};
+
+type League = {
+  id: string;
+  uid: string;
+  name: string;
+  abbreviation: string;
+  shortName: string;
+  slug: string;
+  teams: Team[];
+};
+
+type Team = {
+  team: TeamDetails;
+};
+
+type TeamDetails = {
+  id: string;
+  uid: string;
+  slug: string;
+  abbreviation: string;
+  displayName: string;
+  shortDisplayName: string;
+  name: string;
+  nickname: string;
+  location: string;
+  color: string;
+  alternateColor: string;
+  isActive: boolean;
+  isAllStar: boolean;
+  logos: Logo[];
+};
+
+type Logo = {
+  href: string;
+};
 
 function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  const { data, isLoading, error } = useQuery<ApiResponse>(
+    "teams",
+    async () => {
+      const response = await axios.get(
+        "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
+      );
+      return response.data;
+    }
+  );
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading teams</div>;
   return (
     <header className="flex justify-center bg-primary">
       <div className="py-2 px-6 font-bold rounded-md tracking-wider border-4 border-transparent absolute left-0 cursor-pointer">
@@ -42,7 +102,7 @@ function Dropdown() {
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
-            {teams.teams.map((item, i) => (
+            {data?.sports[0].leagues[0].teams.map((item, i) => (
               <div
                 onClick={() => {
                   navigate(`/teams/${item.team.id}`);
