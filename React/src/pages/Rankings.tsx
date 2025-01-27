@@ -80,7 +80,7 @@ function Rankings() {
         );
         let result = await response.json();
         if (result) {
-          for (let i = 0; i < 25; i++) {
+          for (let i = 0; i < 10; i++) {
             const athleteRef = result.categories[2].leaders[i].athlete.$ref;
             const athleteId = athleteRef
               ? athleteRef.split("/athletes/")[1].split("?")[0]
