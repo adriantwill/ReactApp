@@ -109,7 +109,9 @@ export type PlayerInfo = {
 };
 
 function Teams() {
-  const teamId = Number(useParams()) || 1;
+  const { id } = useParams();
+  const teamId = Number(id) || 1;
+  console.log(teamId)
   if (!((teamId > 0 && teamId < 31) || teamId == 33 || teamId == 34)) {
     return <Navigate to="/error" replace />; // Redirect to error route
   }

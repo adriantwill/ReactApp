@@ -20,6 +20,14 @@ type Todo struct {
 	Body string `json:"body"`
 }
 
+type Player struct {
+	ID primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Name string `json:"name"`
+	Age int `json:"age"`
+	Position string `json:"position"`
+	Team string `json:"club"`
+}
+
 var collection *mongo.Collection
 
 func main() {
@@ -40,17 +48,35 @@ func main() {
 	}
 	defer client.Disconnect(context.Background())
 	fmt.Println("Connected to MongoDB!")
-	collection = client.Database("goland_db").Collection("todos")
+	collection = client.Database("nfl").Collection("players")
 	app := fiber.New()
-	app.Get("/api/todos", getTodos)
-	app.Post("/api/todos", createTodos)
-	app.Patch("/api/todos/:id", updateTodo)
-	app.Delete("/api/todos/:id", deleteTodo)
+	// app.Get("/api/todos", getTodos)
+	// app.Post("/api/todos", createTodos)
+	// app.Patch("/api/todos/:id", updateTodo)
+	// app.Delete("/api/todos/:id", deleteTodo)
+	app.Get("/api/players", getPlayers)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4000"
 	}
 	log.Fatal(app.Listen(":" + port))
+}
+
+func getPlayers(c *fiber.Ctx) error {
+	var players []Player
+	cursor,err := collection.Find(context.Background(), bson.M{})
+	if err != nil{
+		return err
+	}
+	defer cursor.Close(context.Background())
+	for cursor.Next(context.Background()){
+		var player Player
+		if err := cursor.Decode(&player); err != nil {
+			return err
+		}
+		players = append(players, player)
+	}
+	return c.JSON(players)
 }
 
 func getTodos(c *fiber.Ctx) error {
