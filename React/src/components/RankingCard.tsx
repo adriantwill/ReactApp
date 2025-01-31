@@ -1,6 +1,7 @@
 import RankingStats from "./RankingStats";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Player, Statistics, TeamStats } from "../pages/Rankings";
 
 type Props = {
   player: Player;
@@ -8,46 +9,6 @@ type Props = {
   data: Statistics;
   id: number;
   index: number;
-};
-
-type Statistics = {
-  statistics: {
-    labels: string[];
-    splits: Split[];
-  };
-};
-
-type Split = {
-  stats: string[];
-};
-
-type Player = {
-  team: Team;
-  displayName: string;
-  headshot: Headshot;
-  position: Position;
-};
-
-type Team = {
-  $ref: string;
-};
-
-type Headshot = {
-  href: string;
-};
-
-type Position = {
-  abbreviation: string;
-};
-
-type TeamStats = {
-  displayName: string;
-  logos: Logos[];
-  color: string;
-};
-
-type Logos = {
-  href: string;
 };
 
 function RankingCard(props: Props) {

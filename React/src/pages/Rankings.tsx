@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Dropdown from "../components/Dropdown";
 import RankingCard from "../components/RankingCard";
 import {
@@ -6,39 +6,34 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { closestCorners, DndContext } from "@dnd-kit/core";
+import { closestCorners, DndContext, DragEndEvent } from "@dnd-kit/core";
+import { useQuery } from "@tanstack/react-query";
 
 type Split = {
   stats: string[];
 };
 
-type Statistics = {
+export type Statistics = {
   statistics: {
     labels: string[];
     splits: Split[];
   };
 };
 
-type Player = {
-  team: Team;
+export type Player = {
+  team: {
+    $ref: string;
+  };
   displayName: string;
-  headshot: Headshot;
-  position: Position;
+  headshot: {
+    href: string;
+  }
+  position: {
+    abbreviation: string;
+  };
 };
 
-type Team = {
-  $ref: string;
-};
-
-type Headshot = {
-  href: string;
-};
-
-type Position = {
-  abbreviation: string;
-};
-
-type TeamStats = {
+export type TeamStats = {
   displayName: string;
   logos: Logos[];
   color: string;
@@ -55,11 +50,19 @@ type Card = {
   team: TeamStats;
 };
 
+type Leader = {
+  athlete: {
+    $ref: string;
+  };
+  team: {
+    $ref: string;
+  };
+}
+
 function Rankings() {
-  const [team, setTeam] = useState<TeamStats[]>([]);
   const [tasks, setTasks] = useState<Card[]>([]);
-  const getTaskPos = (id: any) => tasks.findIndex((task) => task.id === id);
-  const handleDragEnd = (event: any) => {
+  const getTaskPos = (id: string | number) => tasks.findIndex((task) => task.id === id);
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
     setTasks((tasks) => {
@@ -69,56 +72,48 @@ function Rankings() {
       return arrayMove(tasks, oldIndex, newIndex);
     });
   };
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    const fetchData = async () => {
-      try {
-        let response = await fetch(
-          "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/types/2/leaders",
-          { signal }
-        );
-        let result = await response.json();
-        if (result) {
-          for (let i = 0; i < 10; i++) {
-            const athleteRef = result.categories[2].leaders[i].athlete.$ref;
-            const athleteId = athleteRef
-              ? athleteRef.split("/athletes/")[1].split("?")[0]
-              : null;
-            response = await fetch(
-              `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${athleteId}/overview`
-            );
-            const athleteResult = await response.json();
-
-            response = await fetch(
-              result.categories[2].leaders[i].athlete.$ref || ""
-            );
-            const playerResult = await response.json();
-
-            response = await fetch(
-              result.categories[2].leaders[i].team.$ref || ""
-            );
-            const teamResult = await response.json();
-            setTeam(teamResult);
-            tasks.push({
-              id: i,
-              data: athleteResult,
-              player: playerResult,
-              team: teamResult,
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-    console.log(tasks);
-    return () => {
-      controller.abort();
-      console.log("API call cleaned up");
-    };
-  }, []);
+  const fetchLeadersData = async () => {
+    const response = await fetch(
+      "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/types/2/leaders"
+    );
+    const result = await response.json();
+  
+    if (!result) throw new Error("No data received");
+  
+    const leaders = result.categories[2]?.leaders.slice(0, 10) || [];
+  
+    const tasks = await Promise.all(
+      leaders.map(async (leader:Leader, index:number) => {
+        const athleteRef = leader.athlete.$ref;
+        const athleteId = athleteRef
+          ? athleteRef.split("/athletes/")[1].split("?")[0]
+          : null;
+  
+        const [athleteResult, playerResult, teamResult] = await Promise.all([
+          fetch(
+            `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${athleteId}/overview`
+          ).then((res) => res.json()),
+          fetch(leader.athlete.$ref || "").then((res) => res.json()),
+          fetch(leader.team.$ref || "").then((res) => res.json()),
+        ]);
+  
+        return {
+          id: index,
+          data: athleteResult,
+          player: playerResult,
+          team: teamResult,
+        };
+      })
+    );
+    setTasks(tasks);
+    return tasks;
+  };
+  const { isLoading, isError } = useQuery({
+    queryKey: ["leadersData"],
+    queryFn: fetchLeadersData,
+  });
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error fetching data</p>;
   return (
     <div>
       <Dropdown />

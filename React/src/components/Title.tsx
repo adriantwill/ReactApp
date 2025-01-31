@@ -1,7 +1,7 @@
 type TeamInfo = {
   color: string;
   alternateColor: string;
-  logos: [Logos];
+  logos: Logos[];
   displayName: string;
 };
 

@@ -1,45 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 import InfoBox from "./InfoBox";
 import StatsTable from "./StatsTable";
-
-type PlayerInfo = {
-  id: string;
-  lastName: string;
-  jersey: string;
-  displayName: string;
-  weight: number;
-  displayHeight: string;
-  age: number;
-  debutYear: number;
-  college: Headshot;
-  position: Position;
-  headshot: Headshot;
-  draft: Draft;
-};
-
-type Headshot = {
-  href: string;
-  $ref: string;
-};
-
-type Position = {
-  name: string;
-  abbreviation: string;
-};
-
-type Draft = {
-  year: string;
-  selection: string;
-};
-
-type TeamInfo = {
-  color: string;
-  alternateColor: string;
-  logos: [Headshot];
-  displayName: string;
-};
+import { useQuery } from "@tanstack/react-query";
+import { PlayerInfo, TeamInfo } from "../pages/Teams";
 
 interface MoadlProps {
   toggleModal: () => void;
@@ -48,25 +12,9 @@ interface MoadlProps {
 }
 
 type GameLog = {
-  categories: [CategoriesLabels];
-  labels: [
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string
-  ];
-  seasonTypes: [SeasonTypes];
+  categories: CategoriesLabels[];
+  labels: string[];
+  seasonTypes: SeasonTypes[];
   events: Record<string, EventDetail>;
 };
 
@@ -77,15 +25,15 @@ type CategoriesLabels = {
 };
 
 type SeasonTypes = {
-  categories: [Categories];
+  categories: Categories[];
 };
 
 type Categories = {
-  events: [Events];
+  events: Events[];
 };
 
 type Events = {
-  stats: [string, string, string, string, string, string, string, string];
+  stats: string[];
   eventId: string;
 };
 
@@ -106,10 +54,6 @@ type Opponent = {
 };
 
 function Modal(props: MoadlProps) {
-  const teamUrl = props.player.college.$ref;
-  const gameLogUrl = `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${props.player.id}/gamelog`;
-  const [college, setCollege] = useState("");
-  const [gameLog, setGameLog] = useState<GameLog | null>(null);
   if (!props.player.debutYear) {
     props.player.debutYear = 2024;
   }
@@ -119,21 +63,25 @@ function Modal(props: MoadlProps) {
       selection: "UDFA",
     };
   }
-  if (!college && !gameLog) {
-    const fetchTeamUrl = async () => {
-      try {
-        const response = await fetch(teamUrl);
-        const result = await response.json();
-        setCollege(result.abbrev);
-        const responseLog = await fetch(gameLogUrl);
-        const resultLog = await responseLog.json();
-        setGameLog(resultLog);
-      } catch (error) {
-        console.error("Error fetching initial URL:", error);
-      }
-    };
-    fetchTeamUrl();
-  }
+  const { data: gameLog, isLoading, isError } = useQuery<GameLog>({
+    queryKey: ["gameLog"],
+    queryFn: async () => {
+      const response = await fetch(`https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${props.player.id}/gamelog`);
+      const data = await response.json();
+      return data;
+    }
+  })
+  const { data: college } = useQuery<string>({
+    queryKey: ["college"],
+    queryFn: async () => {
+      const response = await fetch(props.player.college.$ref);
+      const data = await response.json();
+      return data.abbrev;
+    }
+  })
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data</p>;
 
   return gameLog ? (
     <div className="flex items-center justify-center fixed inset-0 z-20">
@@ -183,7 +131,7 @@ function Modal(props: MoadlProps) {
           <div className="w-[70rem]">
             <div className="flex justify-between">
               <InfoBox
-                item1={college}
+                item1={college || ''}
                 item2={props.player.draft.year}
                 item3={props.player.draft.selection}
                 style={"mr-4"}

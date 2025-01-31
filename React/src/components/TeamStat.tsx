@@ -1,15 +1,8 @@
+import { Items } from "../pages/Teams";
+
 type Props = {
-  item: Item;
+  item: Items;
   color: string;
-};
-
-type Item = {
-  summary: string;
-  stats: Stats[];
-};
-
-type Stats = {
-  value: number;
 };
 
 function TeamStat(props: Props) {

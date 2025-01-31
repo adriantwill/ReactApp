@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 type ApiResponse = {
@@ -43,32 +43,28 @@ type TeamDetails = {
   alternateColor: string;
   isActive: boolean;
   isAllStar: boolean;
-  logos: Logo[];
-};
-
-type Logo = {
-  href: string;
+  logos: {
+    href: string;
+  }[];
 };
 
 function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useQuery<ApiResponse>(
-    "teams",
-    async () => {
+  const { data, isLoading, error } = useQuery<ApiResponse>({
+    queryKey: ["teams"],
+    queryFn: async () => {
       console.log("Fetching teams data...");
       const response = await axios.get(
         "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
       );
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  );
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading teams</div>;

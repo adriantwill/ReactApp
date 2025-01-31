@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Card from "./../components/Players";
 import Title from "./../components/Title";
 import Dropdown from "./../components/Dropdown";
@@ -6,10 +6,12 @@ import Modal from "./../components/Modal";
 import { Navigate, useParams } from "react-router-dom";
 import NextGame from "../components/NextGame";
 import TeamStat from "../components/TeamStat";
-type TeamInfo = {
+import { useQuery } from "@tanstack/react-query";
+
+export type TeamInfo = {
   color: string;
   alternateColor: string;
-  logos: [Logos];
+  logos: Logos[];
   displayName: string;
   nextEvent: NextEvent[];
   record: Record;
@@ -19,7 +21,7 @@ type Record = {
   items: Items[];
 };
 
-type Items = {
+export type Items = {
   summary: string;
   stats: Stats[];
 };
@@ -28,17 +30,15 @@ type Stats = {
   value: number;
 };
 
-type NextEvent = {
+export type NextEvent = {
   competitions: Competitions[];
-  week: Week;
-};
-
-type Week = {
-  text: string;
+  week: {
+    text: string;
+  }
 };
 
 type Competitions = {
-  competitors: [Competitors];
+  competitors: Competitors[];
   status: Status;
 };
 
@@ -48,7 +48,7 @@ type Competitors = {
 
 type Team = {
   nickname: string;
-  logos: [Logos];
+  logos: Logos[];
 };
 
 type Status = {
@@ -79,19 +79,15 @@ type AllPositions = {
 };
 
 type Positions = {
-  athletes: [Athlete];
+  athletes: Athlete[];
 };
 
 type Athlete = {
   rank: number;
   athlete: Logos;
 };
-type Position = {
-  name: string;
-  abbreviation: string;
-};
 
-type PlayerInfo = {
+export type PlayerInfo = {
   id: string;
   lastName: string;
   jersey: string;
@@ -101,80 +97,85 @@ type PlayerInfo = {
   age: number;
   debutYear: number;
   college: Logos;
-  position: Position;
+  position: {
+    abbreviation: string;
+    name: string
+  }
   headshot: Logos;
-  draft: Draft;
+  draft: {
+    year: string;
+    selection: string;
+  }
 };
 
-type Draft = {
-  year: string;
-  selection: string;
-};
 function Teams() {
-  const { id } = useParams();
-  const teamId = Number(id) || 1;
+  const teamId = Number(useParams()) || 1;
   if (!((teamId > 0 && teamId < 31) || teamId == 33 || teamId == 34)) {
     return <Navigate to="/error" replace />; // Redirect to error route
   }
   const [modal, setModal] = useState(false);
-  const [teamData, setTeamData] = useState<TeamInfo>();
-  const [fetchedUrl, setFetchedUrl] = useState<AllPositions>();
-  const [data, setData] = useState<PlayerInfo[]>([]);
-  const positions = ["qb", "rb", "wr", "te", "lt", "lg", "c", "rg", "rt"];
   const [currentPlayer, setCurrentPlayer] = useState<PlayerInfo>();
   const toggleModal = () => {
     setModal(!modal);
   };
-  useEffect(() => {
-    const fetchTeamUrl = async () => {
-      try {
-        const response = await fetch(
-          `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}`
-        );
-        const result = await response.json();
-        setTeamData(result.team);
-        const responseDepth = await fetch(
-          `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/teams/${teamId}/depthcharts`
-        );
-        const resultDepth = await responseDepth.json();
-        setFetchedUrl(resultDepth.items[2].positions);
-      } catch (error) {
-        console.error("Error fetching initial URL:", error);
-      }
-    };
-    fetchTeamUrl();
-  }, []);
+  const { data: teamData } = useQuery<TeamInfo>({
+    queryKey: ["teamData"],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}`
+      );
+      const data = await response.json();
+      return data.team;
+    }
+  })
+  const { data: fetchedUrl } = useQuery<AllPositions>({
+    queryKey: ["fetchedUrl"],
+    queryFn: async () => {
+      const responseDepth = await fetch(
+        `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/teams/${teamId}/depthcharts`
+      );
+      const data = await responseDepth.json();
+      return data.items[2].positions;
+    }
+  })
 
-  useEffect(() => {
-    if (!fetchedUrl) return;
-    const fetchData = async () => {
-      const allResults: PlayerInfo[] = [];
-      for (const element of positions) {
-        const response = await fetch(
-          fetchedUrl[element].athletes[0].athlete.$ref
-        );
-        const result = await response.json();
-        allResults.push(result);
-        if (element === "wr") {
-          for (let i = 0; i < fetchedUrl[element].athletes.length; i += 1) {
-            if (
-              fetchedUrl[element].athletes[i].rank == 2 ||
-              fetchedUrl[element].athletes[i].rank == 3
-            ) {
-              const response = await fetch(
-                fetchedUrl[element].athletes[i].athlete.$ref
-              );
-              const result = await response.json();
-              allResults.push(result);
-            }
-          }
-        }
+  const fetchPlayerData = async () => {
+    if (!fetchedUrl) return [];
+    const allResults: PlayerInfo[] = [];
+    const positions = ["qb", "rb", "wr", "te", "lt", "lg", "c", "rg", "rt"];
+  
+    for (const element of positions) {
+      console.log(fetchedUrl)
+      const primaryResponse = await fetch(
+        fetchedUrl[element].athletes[0].athlete.$ref
+      );
+      console.log(element)
+      const primaryResult = await primaryResponse.json();
+      allResults.push(primaryResult);
+  
+      if (element === "wr") {
+        const wrRequests = fetchedUrl[element].athletes
+          .filter((athlete: Athlete) => athlete.rank === 2 || athlete.rank === 3)
+          .map((athlete: Athlete) =>
+            fetch(athlete.athlete.$ref).then((res) => res.json())
+          );
+  
+        const wrResults = await Promise.all(wrRequests);
+        allResults.push(...wrResults);
       }
-      setData(allResults);
-    };
+    }
+  
+    return allResults;
+  };
 
-    fetchData();
-  }, [fetchedUrl]);
+  const { data, isLoading, isError } = useQuery<PlayerInfo[]>({
+    queryKey: ["playerData", fetchedUrl],
+    queryFn: fetchPlayerData,
+   // enabled: !!fetchedUrl, // Ensures query only runs when `fetchedUrl` exists
+  });
+
+  if (isLoading) return <p>Loading player data...</p>;
+  if (isError) return <p>Error fetching player data</p>;
 
   return (
     <>
@@ -186,7 +187,7 @@ function Teams() {
           player={currentPlayer}
         ></Modal>
       )}
-      {data.length > 10 && teamData ? (
+      {data && data.length > 10 && teamData && (
         <div className="flex justify-center">
           <div className="w-full mx-12 my-6">
             <Title teamName={teamData} />
@@ -202,7 +203,7 @@ function Teams() {
             </div>
 
             <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center shadow-lg rounded-md">
-              <div className="flex justify-center max-m">
+              <div className="flex">
                 <Card
                   team={teamData}
                   data={data[3]}
@@ -285,10 +286,6 @@ function Teams() {
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div>
-          <h1>Loading...</h1>
         </div>
       )}
     </>

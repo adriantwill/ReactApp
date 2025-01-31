@@ -1,6 +1,6 @@
 type PropsState = {
   setTableButton: React.Dispatch<React.SetStateAction<CategoriesLabels>>;
-  allCategories: [CategoriesLabels];
+  allCategories: CategoriesLabels[];
   activeStats: CategoriesLabels;
 };
 
