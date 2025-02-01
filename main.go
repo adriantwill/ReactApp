@@ -22,10 +22,10 @@ type Todo struct {
 
 type Player struct {
 	ID primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	ESPNID int `json:"espn_id" bson:"_espn_id"`
 	Name string `json:"name"`
-	Age int `json:"age"`
 	Position string `json:"position"`
-	Team string `json:"club"`
+	Team string `json:"team"`
 }
 
 var collection *mongo.Collection
@@ -50,11 +50,8 @@ func main() {
 	fmt.Println("Connected to MongoDB!")
 	collection = client.Database("nfl").Collection("players")
 	app := fiber.New()
-	// app.Get("/api/todos", getTodos)
-	// app.Post("/api/todos", createTodos)
-	// app.Patch("/api/todos/:id", updateTodo)
-	// app.Delete("/api/todos/:id", deleteTodo)
 	app.Get("/api/players", getPlayers)
+	app.Put("/api/players/", upsertPlayer)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4000"
@@ -64,7 +61,7 @@ func main() {
 
 func getPlayers(c *fiber.Ctx) error {
 	var players []Player
-	cursor,err := collection.Find(context.Background(), bson.M{})
+	cursor,err := collection.Find(context.Background(), bson.M{})//can pass in filter here
 	if err != nil{
 		return err
 	}
@@ -79,65 +76,24 @@ func getPlayers(c *fiber.Ctx) error {
 	return c.JSON(players)
 }
 
-func getTodos(c *fiber.Ctx) error {
-	var todos []Todo
-	cursor,err := collection.Find(context.Background(), bson.M{})
-	if err != nil{
+func upsertPlayer(c *fiber.Ctx) error {
+	player := new(Player)
+	if err := c.BodyParser(player); err != nil {
 		return err
 	}
-	defer cursor.Close(context.Background())
-	for cursor.Next(context.Background()){
-		var todo Todo
-		if err := cursor.Decode(&todo); err != nil {
-			return err
-		}
-		todos = append(todos, todo)
+	if player.ESPNID == 0 {
+		return c.Status(400).JSON(fiber.Map{"error": "ESPN param is required"})
 	}
-	return c.JSON(todos)
-}
-
-func createTodos(c *fiber.Ctx) error {
-	todo := new(Todo)
-	if err := c.BodyParser(todo); err != nil {
-		return err
-	}
-	if todo.Body == "" {
-		return c.Status(400).JSON(fiber.Map{"error": "Body is required"})
-	}
-	insertResult,err := collection.InsertOne(context.Background(),todo)
+	filter := bson.M{"_espn_id": player.ESPNID}
+	update := bson.M{"$set": player}
+	opts := options.Update().SetUpsert(true)
+	result, err := collection.UpdateOne(context.Background(), filter, update, opts)
 	if err != nil {
 		return err
 	}
-	todo.ID=insertResult.InsertedID.(primitive.ObjectID)
-	return c.Status(201).JSON(todo)
-}
+	if result.UpsertedID != nil {
+		player.ID = result.UpsertedID.(primitive.ObjectID)
+	}
+	return c.Status(200).JSON(player)
 
-func updateTodo(c *fiber.Ctx) error {
-	id := c.Params("id")
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil{
-		return c.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
-	}
-	filter := bson.M{"_id":objectID}
-	update := bson.M{"$set":bson.M{"completed":true}}
-	_,err = collection.UpdateOne(context.Background(),filter,update)
-	if err != nil {
-		return err
-	}
-	return c.Status(200).JSON(fiber.Map{"success":true})
-
-}
-
-func deleteTodo(c *fiber.Ctx) error {
-	id := c.Params("id")
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil{
-		return c.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
-	}
-	filter := bson.M{"_id":objectID}
-	_,err = collection.DeleteOne(context.Background(),filter)
-	if err != nil {
-		return err
-	}
-	return c.Status(200).JSON(fiber.Map{"success":true})
 }
