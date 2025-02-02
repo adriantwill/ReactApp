@@ -29,6 +29,7 @@ type Player struct {
 	Position string `json:"position"`
 	Team string `json:"team"`
 	YearYards int `json:"year_yards"`
+	Headshot string `json:"headshot"`
 }
 
 var collection *mongo.Collection
@@ -133,6 +134,7 @@ func updateRoster(c *fiber.Ctx) error {
 		update := bson.M{"$set": bson.M{
 			"name": name,
 			"position": position,
+			"headshot": headshot,
 		}}
 		opts := options.Update().SetUpsert(true)
 
