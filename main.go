@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,10 +24,11 @@ type Todo struct {
 
 type Player struct {
 	ID primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	ESPNID int `json:"espn_id" bson:"_espn_id"`
+	ESPNID string `json:"espn_id" bson:"_espn_id"`
 	Name string `json:"name"`
 	Position string `json:"position"`
 	Team string `json:"team"`
+	YearYards int `json:"year_yards"`
 }
 
 var collection *mongo.Collection
@@ -52,6 +55,7 @@ func main() {
 	app := fiber.New()
 	app.Get("/api/players", getPlayers)
 	app.Put("/api/players/", upsertPlayer)
+	app.Get("/api/update-roster", updateRoster)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4000"
@@ -77,23 +81,65 @@ func getPlayers(c *fiber.Ctx) error {
 }
 
 func upsertPlayer(c *fiber.Ctx) error {
-	player := new(Player)
-	if err := c.BodyParser(player); err != nil {
+	updateData := make(map[string]interface{})
+	if err := c.BodyParser(&updateData); err != nil {
 		return err
 	}
-	if player.ESPNID == 0 {
-		return c.Status(400).JSON(fiber.Map{"error": "ESPN param is required"})
+
+	espnID, ok := updateData["espn_id"].(string)
+	if !ok {
+		return c.Status(400).SendString("ESPN ID is required")
 	}
-	filter := bson.M{"_espn_id": player.ESPNID}
-	update := bson.M{"$set": player}
+
+	filter := bson.M{"_espn_id": espnID}
+	update := bson.M{"$set": updateData}
 	opts := options.Update().SetUpsert(true)
-	result, err := collection.UpdateOne(context.Background(), filter, update, opts)
+
+	_, err := collection.UpdateOne(context.Background(), filter, update,opts)
 	if err != nil {
 		return err
 	}
-	if result.UpsertedID != nil {
-		player.ID = result.UpsertedID.(primitive.ObjectID)
-	}
-	return c.Status(200).JSON(player)
 
+	return c.JSON(updateData)
+}
+
+func updateRoster(c *fiber.Ctx) error {
+	resp, err := http.Get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/4/roster")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	var result map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return err
+	}
+
+	athletes, ok := result["athletes"].([]interface{})[0].(map[string]interface{})["items"].([]interface{})
+	if !ok {
+		return fmt.Errorf("unable to parse athletes array")
+	}
+
+	for _, athlete := range athletes {
+		player := athlete.(map[string]interface{})
+		id := player["id"].(string)
+		name := player["fullName"].(string)
+		position := player["position"].(map[string]interface{})["abbreviation"].(string)
+		if position != "WR" {
+			continue
+		}
+		headshot := player["headshot"].(map[string]interface{})["href"].(string)
+		filter := bson.M{"_espn_id": id}
+		update := bson.M{"$set": bson.M{
+			"name": name,
+			"position": position,
+		}}
+		opts := options.Update().SetUpsert(true)
+
+		_, err := collection.UpdateOne(context.Background(), filter, update, opts)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

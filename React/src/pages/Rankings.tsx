@@ -117,7 +117,7 @@ function Rankings() {
   return (
     <div>
       <Dropdown />
-      <div className="grid grid-cols-2 gap-4">
+
         <div>
           <DndContext
             onDragEnd={handleDragEnd}
@@ -140,29 +140,7 @@ function Rankings() {
             </SortableContext>
           </DndContext>
         </div>
-        <div>
-          <DndContext
-            onDragEnd={handleDragEnd}
-            collisionDetection={closestCorners}
-          >
-            <SortableContext
-              items={tasks}
-              strategy={verticalListSortingStrategy}
-            >
-              {tasks.slice(5, 25).map((task) => (
-                <RankingCard
-                  team={task.team}
-                  data={task.data}
-                  player={task.player}
-                  id={task.id}
-                  key={task.id}
-                  index={tasks.findIndex((t) => t.id === task.id)}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
-        </div>
-      </div>
+
     </div>
   );
 }
