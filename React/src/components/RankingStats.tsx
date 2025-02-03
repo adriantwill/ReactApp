@@ -5,10 +5,8 @@ type Props = {
 
 function RankingStats(props: Props) {
   return (
-    <div className="rounded-lg bg-white border border-solid border-black mx-4 mt-0 mb-1 self-start">
-      <div className="text-center font-semibold">
-        {props.type} Stats
-      </div>
+    <div className="rounded-lg bg-white border border-solid border-black mx-4 mt-0 mb-6 self-start">
+      <div className="text-center font-semibold">{props.type} Stats</div>
       <div className="bg-black h-[1px]"></div>
       <div className="flex justify-between items-center font-medium px-10 py-1">
         <div className="flex flex-col items-center">

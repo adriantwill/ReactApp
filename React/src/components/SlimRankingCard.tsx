@@ -2,7 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import RankingCard from "./RankingCard";
+import RankingStats from "./RankingStats";
 import { Player, Statistics, TeamStats } from "../pages/Rankings";
 import { useState } from "react";
 
@@ -19,41 +19,69 @@ function SlimRankingCard(props: {
     transition,
     transform: CSS.Transform.toString(transform),
   };
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleIconClick = (e: React.MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
     setIsExpanded(!isExpanded);
   };
-
-  if (isExpanded) {
-    return (
-      <RankingCard
-        player={props.player}
-        team={props.team}
-        data={props.data}
-        id={props.id}
-        index={props.index}
-      />
-    );
-  }
   return (
     <div
       ref={setNodeRef}
       {...attributes}
       {...listeners}
       style={style}
-      className="relative my-8 bg-primary rounded-md shadow-xl cursor-grab w-[28rem]"
+      className="relative my-8 bg-primary rounded-md shadow-xl cursor-grab"
     >
-      <div className="flex justify-between items-center ">
-        <div className="w-12 text-center text-xl font-medium">
-          {props.index + 1}
+      <div
+        className={`
+            transition-all duration-300 ease-in-out
+            ${isExpanded ? "opacity-100 h-auto" : "opacity-0 h-0"}
+          `}
+      >
+        <div className="flex justify-between items-center overflow-hidden ">
+          <div className="w-12 text-center text-xl font-medium">
+            {props.index + 1}
+          </div>
+          <div className="text-xl font-semibold text-nowrap">
+            {props.player.displayName} | {props.player.position.abbreviation}
+          </div>
+          <img src={props.player.headshot.href} className="w-24 mr-1" />
         </div>
-        <div className="text-xl font-semibold text-nowrap">
-          {props.player.displayName} | {props.player.position.abbreviation}
-        </div>
-        <img src={props.player.headshot.href} className="w-24" />
       </div>
+
+      <div
+        className={`transition-all duration-300 ease-in-out ${
+          !isExpanded ? "opacity-100 h-auto" : "opacity-0 h-0"
+        }`}
+      >
+        <div className="flex justify-between p-1 px-4 items-center gap-4">
+          <div className="text-lg font-semibold">{props.index + 1}</div>
+          <div className="text-2xl font-bold">{props.player?.displayName}</div>
+          <div className="text-lg font-bold">
+            {props.player?.position.abbreviation}
+          </div>
+        </div>
+        <div
+          style={{ backgroundColor: `#${props.team?.color}` }}
+          className="h-1"
+        ></div>
+        <p className="text-center font-medium p-1">{props.team?.displayName}</p>
+        <div className="flex justify-between items-center">
+          <RankingStats
+            values={props.data?.statistics.splits[0]?.stats || []}
+            type="2024"
+          />
+          <div className="relative w-32 overflow-hidden self-end mr-1">
+            <img
+              src={props.team?.logos[0].href}
+              className="absolute opacity-50"
+            />
+            <img src={props.player?.headshot.href} className="relative" />
+          </div>
+        </div>
+      </div>
+
       <FontAwesomeIcon
         icon={faAngleDown}
         className="absolute bottom-0 right-1/2 cursor-pointer fa-lg"

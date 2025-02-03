@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Dropdown from "../components/Dropdown";
-import RankingCard from "../components/RankingCard";
 import {
   arrayMove,
   SortableContext,
@@ -82,7 +81,7 @@ function Rankings() {
 
     if (!result) throw new Error("No data received");
 
-    const leaders = result.categories[2]?.leaders.slice(0, 10) || [];
+    const leaders = result.categories[2]?.leaders.slice(0, 5) || [];
 
     const tasks = await Promise.all(
       leaders.map(async (leader: Leader, index: number) => {
@@ -141,21 +140,6 @@ function Rankings() {
                     index={tasks.findIndex((t) => t.id === task.id)}
                   />
                 </>
-              ))}
-            </div>
-            <div className="m-12 bg-slate-500 w-fit p-6 px-12">
-              <h1 className="text-4xl font-bold text-white mb-6 tracking-wide text-center">
-                2024 NFL Rankings
-              </h1>
-              {tasks.slice(5, 10).map((task) => (
-                <RankingCard
-                  team={task.team}
-                  data={task.data}
-                  player={task.player}
-                  id={task.id}
-                  key={task.id}
-                  index={tasks.findIndex((t) => t.id === task.id)}
-                />
               ))}
             </div>
           </div>
