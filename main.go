@@ -81,6 +81,24 @@ func getPlayers(c *fiber.Ctx) error {
 	return c.JSON(players)
 }
 
+func sortPlayers(c *fiber.Ctx) error {
+	var players []Player
+	opts := options.Find().SetSort(bson.D{{Key: "year_yards", Value: -1}}) // -1 for descending, 1 for ascending
+	cursor, err := collection.Find(context.Background(), bson.M{}, opts)
+	if err != nil {
+		return err
+	}
+	defer cursor.Close(context.Background())
+	for cursor.Next(context.Background()) {
+		var player Player
+		if err := cursor.Decode(&player); err != nil {
+			return err
+		}
+		players = append(players, player)
+	}
+	return c.JSON(players)
+}
+
 func upsertPlayer(c *fiber.Ctx) error {
 	updateData := make(map[string]interface{})
 	if err := c.BodyParser(&updateData); err != nil {
