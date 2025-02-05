@@ -8,6 +8,11 @@ import {
 import { closestCorners, DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useQuery } from "@tanstack/react-query";
 import SlimRankingCard from "../components/SlimRankingCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowRightToBracket,
+  faArrowUpFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 type Split = {
   stats: string[];
@@ -61,6 +66,7 @@ type Leader = {
 
 function Rankings() {
   const [tasks, setTasks] = useState<Card[]>([]);
+  const [activeId, setActiveId] = useState<number | null>(null);
   const getTaskPos = (id: string | number) =>
     tasks.findIndex((task) => task.id === id);
   const handleDragEnd = (event: DragEndEvent) => {
@@ -81,7 +87,7 @@ function Rankings() {
 
     if (!result) throw new Error("No data received");
 
-    const leaders = result.categories[2]?.leaders.slice(0, 5) || [];
+    const leaders = result.categories[2]?.leaders.slice(0, 12) || [];
 
     const tasks = await Promise.all(
       leaders.map(async (leader: Leader, index: number) => {
@@ -125,10 +131,18 @@ function Rankings() {
       <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
         <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
           <div className="flex justify-center items-center">
-            <div className="m-16 bg-slate-500 w-fit p-6 px-12">
-              <h1 className="text-4xl font-bold text-white m-6 tracking-wide text-center">
-                2024 NFL Rankings
-              </h1>
+            <div className="m-16 bg-primary w-fit p-8 pb-6 rounded-lg shadow-lg h-[39rem] flex flex-col justify-between">
+              <div className="flex justify-between bg-secondary items-center -mx-8 -mt-8 p-5 shadow-xl rounded-t-lg">
+                <FontAwesomeIcon
+                  icon={faArrowRightToBracket}
+                  className="fa-xl cursor-pointer"
+                />
+                <h1 className="text-3xl">2024 NFL Rankings</h1>
+                <FontAwesomeIcon
+                  icon={faArrowUpFromBracket}
+                  className="fa-xl cursor-pointer"
+                />
+              </div>
               {tasks.slice(0, 5).map((task) => (
                 <>
                   <SlimRankingCard
@@ -138,6 +152,24 @@ function Rankings() {
                     id={task.id}
                     key={task.id}
                     index={tasks.findIndex((t) => t.id === task.id)}
+                    isExpanded={activeId === task.id}
+                    onExpand={(id) => setActiveId(id === activeId ? null : id)}
+                  />
+                </>
+              ))}
+            </div>
+            <div className="m-16 bg-primary w-fit px-8 rounded-lg shadow-lg h-[39rem] flex flex-col justify-between py-6">
+              {tasks.slice(5, 11).map((task) => (
+                <>
+                  <SlimRankingCard
+                    team={task.team}
+                    data={task.data}
+                    player={task.player}
+                    id={task.id}
+                    key={task.id}
+                    index={tasks.findIndex((t) => t.id === task.id)}
+                    isExpanded={activeId === task.id}
+                    onExpand={(id) => setActiveId(id === activeId ? null : id)}
                   />
                 </>
               ))}

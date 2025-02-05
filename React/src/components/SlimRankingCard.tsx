@@ -4,7 +4,6 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RankingStats from "./RankingStats";
 import { Player, Statistics, TeamStats } from "../pages/Rankings";
-import { useState } from "react";
 
 function SlimRankingCard(props: {
   player: Player;
@@ -12,6 +11,8 @@ function SlimRankingCard(props: {
   data: Statistics;
   id: number;
   index: number;
+  isExpanded: boolean;
+  onExpand: (id: number) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.id });
@@ -19,11 +20,10 @@ function SlimRankingCard(props: {
     transition,
     transform: CSS.Transform.toString(transform),
   };
-  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleIconClick = (e: React.MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
-    setIsExpanded(!isExpanded);
+    props.onExpand(props.id);
   };
   return (
     <div
@@ -31,12 +31,12 @@ function SlimRankingCard(props: {
       {...attributes}
       {...listeners}
       style={style}
-      className="relative my-8 bg-primary rounded-md shadow-xl cursor-grab"
+      className="relative bg-white rounded-md shadow-xl cursor-grab"
     >
       <div
         className={`
             transition-all duration-300 ease-in-out
-            ${isExpanded ? "opacity-100 h-auto" : "opacity-0 h-0"}
+            ${!props.isExpanded ? "opacity-100 h-auto" : "opacity-0 h-0"}
           `}
       >
         <div className="flex justify-between items-center overflow-hidden ">
@@ -52,7 +52,7 @@ function SlimRankingCard(props: {
 
       <div
         className={`transition-all duration-300 ease-in-out ${
-          !isExpanded ? "opacity-100 h-auto" : "opacity-0 h-0"
+          props.isExpanded ? "opacity-100 h-auto" : "opacity-0 h-0"
         }`}
       >
         <div className="flex justify-between p-1 px-4 items-center gap-4">
