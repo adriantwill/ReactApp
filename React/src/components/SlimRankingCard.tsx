@@ -31,7 +31,7 @@ function SlimRankingCard(props: {
       {...attributes}
       {...listeners}
       style={style}
-      className="relative bg-white rounded-md shadow-xl cursor-grab"
+      className="relative bg-white rounded-md shadow-md cursor-grab w-[28rem]"
     >
       <div
         className={`
@@ -43,7 +43,7 @@ function SlimRankingCard(props: {
           <div className="w-12 text-center text-xl font-medium">
             {props.index + 1}
           </div>
-          <div className="text-xl font-semibold text-nowrap">
+          <div className="text-xl font-medium text-nowrap">
             {props.player.displayName} | {props.player.position.abbreviation}
           </div>
           <img src={props.player.headshot.href} className="w-24 mr-1" />

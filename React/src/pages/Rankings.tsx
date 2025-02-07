@@ -13,6 +13,7 @@ import {
   faArrowRightToBracket,
   faArrowUpFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import RankingCard from "../components/RankingCard";
 
 type Split = {
   stats: string[];
@@ -130,9 +131,9 @@ function Rankings() {
 
       <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
         <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center overflow-visible">
             <div className="m-16 bg-primary w-fit p-8 pb-6 rounded-lg shadow-lg h-[39rem] flex flex-col justify-between">
-              <div className="flex justify-between bg-secondary items-center -mx-8 -mt-8 p-5 shadow-xl rounded-t-lg">
+              <div className="flex justify-between bg-secondary items-center -mx-8 -mt-8 p-5 shadow-lg rounded-t-lg">
                 <FontAwesomeIcon
                   icon={faArrowRightToBracket}
                   className="fa-xl cursor-pointer"
@@ -158,18 +159,16 @@ function Rankings() {
                 </>
               ))}
             </div>
-            <div className="m-16 bg-primary w-fit px-8 rounded-lg shadow-lg h-[39rem] flex flex-col justify-between py-6">
+            <div className="m-16 bg-primary w-fit px-8 rounded-lg shadow-lg h-[39rem] flex flex-col gap-8 py-5">
               {tasks.slice(5, 11).map((task) => (
                 <>
-                  <SlimRankingCard
+                  <RankingCard
                     team={task.team}
                     data={task.data}
                     player={task.player}
                     id={task.id}
                     key={task.id}
                     index={tasks.findIndex((t) => t.id === task.id)}
-                    isExpanded={activeId === task.id}
-                    onExpand={(id) => setActiveId(id === activeId ? null : id)}
                   />
                 </>
               ))}
