@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TableButton from "./TableButton";
-import { format, parseISO } from "date-fns";
+import { Temporal } from "@js-temporal/polyfill";
 
 type StatsProps = {
   gameLog: GameLog;
@@ -69,8 +69,8 @@ function StatsTable(props: StatsProps) {
     }
   }
   const formatDate = (dateString: string): string => {
-    const date = parseISO(dateString);
-    return format(date, "M/d"); // M = month, d = day
+    const date = Temporal.PlainDate.from(dateString);
+    return `${date.month}/${date.day}`;
   };
   let bye = 1;
   return (
