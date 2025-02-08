@@ -5,7 +5,7 @@ function LiveCard(props: { image: string; text: string; date: string }) {
   const formattedDate = `${date.month}/${date.day}`;
   // The date is already properly formatted in the line above with `${date.month}/${date.day}`
   return (
-    <div className="bg-primary w-[25rem] h-[12.5rem] rounded-lg flex shadow-xl flex-shrink-0 ml-12 relative">
+    <div className="bg-white w-[25rem] h-[12.5rem] rounded-lg flex drop-shadow-lg flex-shrink-0 ml-12 relative">
       <img
         src={props.image}
         alt="temperature"

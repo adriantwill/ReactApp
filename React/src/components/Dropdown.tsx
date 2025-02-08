@@ -100,7 +100,7 @@ function Dropdown() {
       {isOpen && (
         <div className="absolute mt-12 z-20">
           <div
-            className="rounded-md grid grid-flow-row grid-cols-4 bg-slate-50 p-2 shadow-sm"
+            className="rounded-md grid grid-flow-row grid-cols-4 bg-primary p-2 shadow-lg"
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
