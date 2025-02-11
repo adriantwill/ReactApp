@@ -1,15 +1,14 @@
 import Dropdown from "../components/Dropdown";
-import LiveCard from "../components/LiveCard";
 import { useQuery } from "@tanstack/react-query";
 import { AtpAgent } from "@atproto/api";
-import { Temporal } from "@js-temporal/polyfill";
 import {
   FeedViewPost,
   PostView,
 } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import Gamecard from "../components/Gamecard";
+import BreakingCarosel from "../components/BreakingCarosel";
 
-interface FeedViewPostWithRecord extends FeedViewPost {
+export interface FeedViewPostWithRecord extends FeedViewPost {
   post: PostView & {
     record: {
       text: string;
@@ -23,7 +22,7 @@ interface FeedViewPostWithRecord extends FeedViewPost {
   };
 }
 
-type Games = {
+export type Games = {
   status: Status;
   competitions: Competitions[];
 };
@@ -59,10 +58,9 @@ function FrontPage() {
         identifier: "bigdatapoint.bsky.social",
         password: import.meta.env.VITE_BLUESKY_PASSWORD,
       });
-
       const response = await agent.getActorLikes({
         actor: "did:plc:g7hm5kt7bfgdutda62pygdfk",
-        limit: 7,
+        limit: 10,
       });
       return response.data.feed;
     },
@@ -70,7 +68,7 @@ function FrontPage() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-  const { data: espnData } = useQuery<Games[]>({
+  const { data: nbaData } = useQuery<Games[]>({
     queryKey: ["nbaEvents"],
     queryFn: async () => {
       const response = await fetch(
@@ -103,20 +101,8 @@ function FrontPage() {
       <div className="py-4 px-2 overflow-scroll">
         <p className="px-2 text-xl text-gray-500">NFL</p>
         <div className="flex">
-          {nflData?.map((game, index) => (
-            <Gamecard
-              key={index}
-              event={game.competitions[0].competitors}
-              status={game.status}
-            />
-          ))}
-          {espnData?.map((game, index) => (
-            <Gamecard
-              key={index}
-              event={game.competitions[0].competitors}
-              status={game.status}
-            />
-          ))}
+          <Gamecard data={nflData ?? []} />
+          <Gamecard data={nbaData ?? []} />
         </div>
       </div>
       <div>
@@ -124,42 +110,8 @@ function FrontPage() {
           Breaking
         </h2>
         <div className="flex group overflow-hidden bg-primary p-6 shadow-lg">
-          <div className="flex animate-loop-scroll group-hover:[animation-play-state:paused]">
-            {likes?.map((like) => {
-              const postDate = Temporal.ZonedDateTime.from(
-                like.post.record.createdAt + "[America/New_York]"
-              );
-              const now = Temporal.Now.zonedDateTimeISO("America/New_York");
-              const diff = now.since(postDate, { largestUnit: "days" });
-
-              return diff.days < 3 ? (
-                <LiveCard
-                  key={like.post.uri}
-                  text={like.post.record.text}
-                  image={like.post.embed?.images[0].fullsize}
-                  date={like.post.record.createdAt}
-                ></LiveCard>
-              ) : null;
-            })}
-          </div>
-          <div className="flex animate-loop-scroll group-hover:[animation-play-state:paused]">
-            {likes?.map((like) => {
-              const postDate = Temporal.ZonedDateTime.from(
-                like.post.record.createdAt + "[America/New_York]"
-              );
-              const now = Temporal.Now.zonedDateTimeISO("America/New_York");
-              const diff = now.since(postDate, { largestUnit: "days" });
-
-              return diff.days < 3 ? (
-                <LiveCard
-                  key={like.post.uri}
-                  text={like.post.record.text}
-                  image={like.post.embed?.images[0].fullsize}
-                  date={like.post.record.createdAt}
-                ></LiveCard>
-              ) : null;
-            })}
-          </div>
+          <BreakingCarosel likes={likes} />
+          <BreakingCarosel likes={likes} />
         </div>
       </div>
     </>
