@@ -1,9 +1,9 @@
+import { Competitors, Status } from "../pages/FrontPage";
+
 function GameCardInfo(props: {
+  team: Competitors;
+  status: Status;
   border: string;
-  teamColor: string;
-  teamAbbrev: string;
-  teamImage: string;
-  teamScore: string;
   borderPos: string[];
 }) {
   return (
@@ -12,18 +12,28 @@ function GameCardInfo(props: {
         <div
           className="border-solid"
           style={{
-            borderColor: `#${props.teamColor}`,
+            borderColor: `#${props.team.team.color}`,
             [props.borderPos[0]]: "transparent",
             [props.borderPos[1]]: "12px",
             [props.borderPos[2]]: "8px",
           }}
         ></div>
-        <img src={props.teamImage} className="h-10 mx-1 my-3"></img>
+        <img src={props.team.team.logo} className="h-10 mx-1 my-3"></img>
         <div className="flex items-center font-medium text-xl">
-          {props.teamAbbrev}
+          {props.team.team.abbreviation}
         </div>
       </div>
-      <div className="text-xl font-semibold px-2">{props.teamScore}</div>
+      <div
+        className={`px-2 ${
+          props.status.type.id === "1"
+            ? "font-normal text-lg"
+            : "font-semibold text-xl"
+        }`}
+      >
+        {props.status.type.id === "1"
+          ? props.team.records[0].summary
+          : props.team.score}
+      </div>
     </div>
   );
 }

@@ -30,6 +30,7 @@ export type Games = {
 export type Status = {
   displayClock: string;
   type: {
+    id: string;
     shortDetail: string;
   };
 };
@@ -41,6 +42,9 @@ type Competitions = {
 export type Competitors = {
   team: Team;
   score: string;
+  records: {
+    summary: string;
+  }[];
 };
 
 type Team = {
@@ -60,8 +64,9 @@ function FrontPage() {
       });
       const response = await agent.getActorLikes({
         actor: "did:plc:g7hm5kt7bfgdutda62pygdfk",
-        limit: 10,
+        limit: 14,
       });
+
       return response.data.feed;
     },
     refetchOnWindowFocus: false,
@@ -94,16 +99,18 @@ function FrontPage() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-  const likes = data as FeedViewPostWithRecord[];
+  let likes = data as FeedViewPostWithRecord[];
+  likes = likes?.sort((a, b) => {
+    const dateA = new Date(a.post.record.createdAt);
+    const dateB = new Date(b.post.record.createdAt);
+    return dateB.getTime() - dateA.getTime();
+  });
   return (
     <>
       <Dropdown />
-      <div className="py-4 px-2 overflow-scroll">
-        <p className="px-2 text-xl text-gray-500">NFL</p>
-        <div className="flex">
-          <Gamecard data={nflData ?? []} />
-          <Gamecard data={nbaData ?? []} />
-        </div>
+      <div className="pb-3 pl-2 overflow-scroll flex pt-9">
+        <Gamecard data={nflData ?? []} league={"NFL"} />
+        <Gamecard data={nbaData ?? []} league={"NBA"} />
       </div>
       <div>
         <h2 className="text-2xl text-center font-semibold text-white uppercase bg-[#3C3C3C] p-1">

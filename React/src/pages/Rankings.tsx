@@ -159,7 +159,7 @@ function Rankings() {
                 </>
               ))}
             </div>
-            <div className="m-16 bg-primary w-fit px-8 rounded-lg shadow-lg h-[39rem] flex flex-col gap-8 py-5 ">
+            <div className="m-16 bg-primary w-fit px-8 rounded-lg shadow-lg h-[39rem] flex flex-col gap-8 py-5 overflow-x-auto">
               {tasks.slice(5, 11).map((task) => (
                 <>
                   <RankingCard

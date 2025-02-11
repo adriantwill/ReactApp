@@ -69,12 +69,9 @@ function Dropdown() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading teams</div>;
   return (
-    <header className="flex justify-center bg-primary">
-      <div className="py-2 px-6 font-bold rounded-md tracking-wider border-4 border-transparent absolute left-0 cursor-pointer">
-        Adrian
-      </div>
+    <header className="flex justify-center bg-primary font-bold tracking-wider">
       <button
-        className="py-2 px-6 font-bold rounded-md tracking-wider border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
+        className="py-2 px-6  rounded-md border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
         onClick={() => {
           navigate(`/`);
         }}
@@ -82,7 +79,7 @@ function Dropdown() {
         Home
       </button>
       <button
-        className="py-2 px-6 font-bold rounded-md tracking-wider border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
+        className="py-2 px-6  rounded-md border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
         onClick={() => {
           navigate(`/rankings`);
         }}
@@ -92,7 +89,7 @@ function Dropdown() {
       <button
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
-        className="py-2 px-6 font-bold rounded-md tracking-wider border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
+        className="py-2 px-6  rounded-md border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
       >
         Teams
       </button>

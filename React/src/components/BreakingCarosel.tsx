@@ -16,7 +16,10 @@ function BreakingCarosel(props: { likes: FeedViewPostWithRecord[] }) {
           <LiveCard
             key={index}
             text={like.post.record.text}
-            image={like.post.embed?.images[0].fullsize}
+            image={
+              like.post.embed?.images?.[0]?.fullsize ||
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png"
+            }
             date={like.post.record.createdAt}
           ></LiveCard>
         ) : null;
