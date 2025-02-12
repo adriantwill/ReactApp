@@ -11,7 +11,7 @@ function LiveCard(props: { image: string; text: string; date: string }) {
         alt="temperature"
         className="w-2/5 h-full object-cover rounded-l-md"
       />
-      <div className="w-3/5 overflow-scroll -mb-2 p-2 flex flex-col justify-between">
+      <div className="w-3/5 overflow-auto -mb-2 p-2 flex flex-col justify-between">
         <div className=" text-sm font-light">{props.text}</div>
         <div className=" text-xs text-gray-500 text-right">{formattedDate}</div>
       </div>

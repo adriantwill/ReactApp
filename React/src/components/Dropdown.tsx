@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 type ApiResponse = {
   sports: Sport[];
@@ -56,10 +55,10 @@ function Dropdown() {
     queryKey: ["teams"],
     queryFn: async () => {
       console.log("Fetching teams data...");
-      const response = await axios.get(
+      const response = await fetch(
         "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
       );
-      return response.data;
+      return await response.json();
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,

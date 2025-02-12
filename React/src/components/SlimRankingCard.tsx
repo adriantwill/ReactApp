@@ -84,7 +84,9 @@ function SlimRankingCard(props: {
 
       <FontAwesomeIcon
         icon={faAngleDown}
-        className="absolute bottom-0 right-1/2 cursor-pointer fa-lg"
+        className={`absolute bottom-0 right-1/2 cursor-pointer fa-lg ${
+          props.isExpanded ? "rotate-180" : ""
+        }`}
         onClick={handleIconClick}
         onPointerDown={(e) => {
           e.stopPropagation();

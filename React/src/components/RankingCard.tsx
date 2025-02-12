@@ -8,6 +8,7 @@ function SlimRankingCard(props: {
   data: Statistics;
   id: number;
   index: number;
+  tailwind: string;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.id });
@@ -22,7 +23,7 @@ function SlimRankingCard(props: {
       {...attributes}
       {...listeners}
       style={style}
-      className="bg-white rounded-md shadow-md cursor-grab w-[28rem] "
+      className={`bg-white rounded-md shadow-md cursor-grab w-[28rem] ${props.tailwind} `}
     >
       <div className="transition-all duration-300 ease-in-out">
         <div className="flex justify-between items-center overflow-hidden">

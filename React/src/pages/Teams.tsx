@@ -3,7 +3,7 @@ import Card from "./../components/Players";
 import Title from "./../components/Title";
 import Dropdown from "./../components/Dropdown";
 import Modal from "./../components/Modal";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router";
 import NextGame from "../components/NextGame";
 import TeamStat from "../components/TeamStat";
 import { useQuery } from "@tanstack/react-query";
@@ -34,7 +34,7 @@ export type NextEvent = {
   competitions: Competitions[];
   week: {
     text: string;
-  }
+  };
 };
 
 type Competitions = {
@@ -99,19 +99,19 @@ export type PlayerInfo = {
   college: Logos;
   position: {
     abbreviation: string;
-    name: string
-  }
+    name: string;
+  };
   headshot: Logos;
   draft: {
     year: string;
     selection: string;
-  }
+  };
 };
 
 function Teams() {
   const { id } = useParams();
   const teamId = Number(id) || 1;
-  console.log(teamId)
+  console.log(teamId);
   if (!((teamId > 0 && teamId < 31) || teamId == 33 || teamId == 34)) {
     return <Navigate to="/error" replace />; // Redirect to error route
   }
@@ -128,8 +128,8 @@ function Teams() {
       );
       const data = await response.json();
       return data.team;
-    }
-  })
+    },
+  });
   const { data: fetchedUrl } = useQuery<AllPositions>({
     queryKey: ["fetchedUrl"],
     queryFn: async () => {
@@ -138,42 +138,44 @@ function Teams() {
       );
       const data = await responseDepth.json();
       return data.items[2].positions;
-    }
-  })
+    },
+  });
 
   const fetchPlayerData = async () => {
     if (!fetchedUrl) return [];
     const allResults: PlayerInfo[] = [];
     const positions = ["qb", "rb", "wr", "te", "lt", "lg", "c", "rg", "rt"];
-  
+
     for (const element of positions) {
-      console.log(fetchedUrl)
+      console.log(fetchedUrl);
       const primaryResponse = await fetch(
         fetchedUrl[element].athletes[0].athlete.$ref
       );
-      console.log(element)
+      console.log(element);
       const primaryResult = await primaryResponse.json();
       allResults.push(primaryResult);
-  
+
       if (element === "wr") {
         const wrRequests = fetchedUrl[element].athletes
-          .filter((athlete: Athlete) => athlete.rank === 2 || athlete.rank === 3)
+          .filter(
+            (athlete: Athlete) => athlete.rank === 2 || athlete.rank === 3
+          )
           .map((athlete: Athlete) =>
             fetch(athlete.athlete.$ref).then((res) => res.json())
           );
-  
+
         const wrResults = await Promise.all(wrRequests);
         allResults.push(...wrResults);
       }
     }
-  
+
     return allResults;
   };
 
   const { data, isLoading, isError } = useQuery<PlayerInfo[]>({
     queryKey: ["playerData", fetchedUrl],
     queryFn: fetchPlayerData,
-   // enabled: !!fetchedUrl, // Ensures query only runs when `fetchedUrl` exists
+    // enabled: !!fetchedUrl, // Ensures query only runs when `fetchedUrl` exists
   });
 
   if (isLoading) return <p>Loading player data...</p>;

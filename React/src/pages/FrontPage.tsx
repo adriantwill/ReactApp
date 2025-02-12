@@ -108,7 +108,7 @@ function FrontPage() {
   return (
     <>
       <Dropdown />
-      <div className="pb-3 pl-2 overflow-scroll flex pt-9">
+      <div className="pb-3 pl-2 overflow-auto flex pt-9">
         <Gamecard data={nflData ?? []} league={"NFL"} />
         <Gamecard data={nbaData ?? []} league={"NBA"} />
       </div>
