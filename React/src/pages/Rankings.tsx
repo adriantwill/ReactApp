@@ -197,7 +197,7 @@ function Rankings() {
                 </div>
                 <div
                   className="bg-primary w-fit rounded-lg shadow-lg h-[39rem] flex flex-col gap-8 p-8 overflow-y-auto overflow-x-hidden"
-                  ref={ref}
+                  ref={ref} //comment
                 >
                   <div className="relative h-20">
                     <input
