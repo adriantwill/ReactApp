@@ -186,7 +186,7 @@ function Rankings() {
                         player={task.player}
                         id={task.id}
                         key={task.id}
-                        index={tasks.findIndex((t) => t.id === task.id)}
+                        index={tasks.findIndex((t) => t.id === task.id)} //comment
                         isExpanded={activeId === task.id}
                         onExpand={(id) =>
                           setActiveId(id === activeId ? null : id)
