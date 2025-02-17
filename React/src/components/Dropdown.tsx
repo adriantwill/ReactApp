@@ -51,6 +51,9 @@ function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  const currentPath = window.location.pathname.split("/")[1];
+  const [selected] = useState(currentPath);
+
   const { data, isLoading, error } = useQuery<ApiResponse>({
     queryKey: ["teams"],
     queryFn: async () => {
@@ -68,9 +71,13 @@ function Dropdown() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading teams</div>;
   return (
-    <header className="flex justify-center bg-primary font-bold tracking-wider">
+    <header className="relative flex justify-center font-medium text-2xl tracking-wider gap-16 py-4">
       <button
-        className="py-2 px-6  rounded-md border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
+        className={
+          selected === ""
+            ? "relative after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-10/12 after:bg-blue-500 after:-translate-x-1/2˝"
+            : ""
+        }
         onClick={() => {
           navigate(`/`);
         }}
@@ -78,7 +85,11 @@ function Dropdown() {
         Home
       </button>
       <button
-        className="py-2 px-6  rounded-md border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
+        className={
+          selected === "rankings"
+            ? "relative after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-10/12 after:bg-blue-500 after:-translate-x-1/2"
+            : ""
+        }
         onClick={() => {
           navigate(`/rankings`);
         }}
@@ -88,7 +99,7 @@ function Dropdown() {
       <button
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
-        className="py-2 px-6  rounded-md border-4 border-transparent active:border-white duration-200 hover:text-white hover:bg-slate-300 active:text-black "
+        className="    "
       >
         Teams
       </button>

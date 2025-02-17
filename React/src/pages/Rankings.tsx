@@ -21,6 +21,7 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import RankingCard from "../components/RankingCard";
+import RankingsDropdown from "../components/RankingsDropdown";
 
 type Split = {
   stats: string[];
@@ -73,8 +74,36 @@ function Rankings() {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [activeDragItem, setActiveDragItem] = useState<Card | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const options = [
+    "Receiving Yards",
+    "Rushing Yards",
+    "Passing Yards",
+    "Total Touchdowns",
+  ];
+  const weeks = [
+    "Season Long",
+    "Week 1",
+    "Week 2",
+    "Week 3",
+    "Week 4",
+    "Week 5",
+    "Week 6",
+    "Week 7",
+    "Week 8",
+    "Week 9",
+    "Week 10",
+    "Week 11",
+    "Week 12",
+    "Week 13",
+    "Week 14",
+    "Week 15",
+    "Week 16",
+    "Week 17",
+    "Week 18",
+  ];
   const getTaskPos = (id: string | number) =>
     tasks.findIndex((task) => task.id === id);
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const draggedTask = tasks.find((task) => task.id === active.id);
@@ -146,14 +175,15 @@ function Rankings() {
   return (
     <>
       <Dropdown />
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center">
+        <h1 className="text-3xl font-light tracking-wide text-center m-5">
+          User Rankings
+        </h1>
         <div className="flex flex-col gap-10">
-          <div className="bg-white shadow-[0_0_8px_0_rgba(0,0,0,0.2)] h-20 rounded-lg">
-            <div className="flex justify-between items-center h-full p-8">
-              <div>
-                <h1 className="text-md font-medium">Rankings</h1>
-                <select></select>
-              </div>
+          <div className="bg-white shadow-[0_0_8px_0_rgba(0,0,0,0.2)] rounded-2xl">
+            <div className="flex gap-6 items-center h-full py-3 px-6">
+              <RankingsDropdown title={"Category"} options={options} />
+              <RankingsDropdown title={"Event"} options={weeks} />
             </div>
           </div>
           <DndContext
@@ -166,8 +196,8 @@ function Rankings() {
               strategy={verticalListSortingStrategy}
             >
               <div className="flex gap-24">
-                <div className="bg-primary w-fit p-8 pb-6 rounded-lg shadow-lg h-[39rem] flex flex-col gap-8">
-                  <div className="flex justify-between bg-secondary items-center -mx-8 -mt-8  p-5 shadow-lg rounded-t-lg h-72">
+                <div className="bg-primary w-fit p-8 pb-6 rounded-lg shadow-lg h-[39rem] flex flex-col justify-between">
+                  <div className="flex justify-between bg-secondary items-center -mx-8 -mt-8  p-5 shadow-lg rounded-t-lg h-20">
                     <FontAwesomeIcon
                       icon={faArrowRightToBracket}
                       className="fa-xl cursor-pointer"
@@ -196,14 +226,11 @@ function Rankings() {
                   ))}
                 </div>
                 <div
-                  className="bg-primary w-fit rounded-lg shadow-lg h-[39rem] flex flex-col gap-8 p-8 overflow-y-auto overflow-x-hidden"
+                  className="bg-primary w-fit rounded-lg shadow-lg h-[39rem] flex flex-col gap-7 p-8 overflow-y-auto overflow-x-hidden"
                   ref={ref} //comment
                 >
-                  <div className="relative h-20">
-                    <input
-                      className="bg-secondary p-3 text-xl -mt-1 shadow-lg rounded-xl w-full pr-10"
-                      placeholder="Search for a player"
-                    />
+                  <div className="relative -mt-2 mb-2">
+                    <input className="bg-secondary p-3 text-xl drop-shadow-xl rounded-xl w-full pr-10" />
                     <FontAwesomeIcon
                       icon={faMagnifyingGlass}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 fa-lg"
