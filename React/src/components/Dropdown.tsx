@@ -69,7 +69,7 @@ function Dropdown() {
   });
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading teams</div>;
+  if (error) return <div>Error loading teams</div>; //
   return (
     <header className="relative flex justify-center font-medium text-2xl tracking-wider gap-16 py-4">
       <button
