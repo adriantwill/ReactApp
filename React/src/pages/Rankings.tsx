@@ -22,6 +22,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import RankingCard from "../components/RankingCard";
 import RankingsDropdown from "../components/RankingsDropdown";
+import { supabase } from "../supabase-client";
 
 type Split = {
   stats: string[];
@@ -123,7 +124,6 @@ function Rankings() {
     setTasks((tasks) => {
       const oldIndex = getTaskPos(active.id);
       const newIndex = getTaskPos(over.id);
-      console.log(oldIndex, newIndex);
       return arrayMove(tasks, oldIndex, newIndex);
     });
   };
@@ -170,6 +170,31 @@ function Rankings() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
+  const addPlayer = async () => {
+    const newPlayersData = tasks.slice(0, 5).map((task) => ({
+      name: task.player.displayName,
+      position: task.player.position.abbreviation,
+    }));
+    const { data, error } = await supabase
+      .from("Players")
+      .insert(newPlayersData);
+    if (error) {
+      console.error("Error adding player", error);
+    } else {
+      console.log("Player added successfully", data);
+    }
+  };
+  const deleteAll = async () => {
+    const { data, error } = await supabase
+      .from("Players")
+      .delete()
+      .neq("id", 0);
+    if (error) {
+      console.error("Error deleting players", error);
+    } else {
+      console.log("Players deleted successfully", data);
+    }
+  };
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error fetching data</p>;
   return (
@@ -201,11 +226,13 @@ function Rankings() {
                     <FontAwesomeIcon
                       icon={faArrowRightToBracket}
                       className="fa-xl cursor-pointer"
+                      onClick={addPlayer}
                     />
                     <h1 className="text-3xl">Week 6 Receiving Rankings</h1>
                     <FontAwesomeIcon
                       icon={faArrowUpFromBracket}
                       className="fa-xl cursor-pointer"
+                      onClick={deleteAll}
                     />
                   </div>
                   {tasks.slice(0, 5).map((task) => (
