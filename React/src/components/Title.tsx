@@ -17,7 +17,7 @@ function Title(props: PlayerProp) {
   return (
     <div
       style={{ backgroundColor: `#${props.teamName.color}` }}
-      className="relative p-16 overflow-hidden flex justify-center items-center shadow-lg rounded-md"
+      className="relative p-16 overflow-hidden flex justify-center items-center"
     >
       <h1 className=" text-white font-bold text-7xl z-10">
         {props.teamName.displayName}

@@ -88,11 +88,11 @@ function Dropdown() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading teams</div>; //
   return (
-    <header className="relative flex justify-center font-medium text-2xl tracking-wider gap-16 py-4">
+    <header className="relative flex justify-center font-medium text-2xl tracking-wider gap-16 py-4 mb-1">
       <button
         className={
           selected === ""
-            ? "relative after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-10/12 after:bg-blue-500 after:-translate-x-1/2˝"
+            ? "relative after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-10/12 after:bg-blue-500 after:-translate-x-1/2"
             : ""
         }
         onClick={() => {
@@ -115,9 +115,13 @@ function Dropdown() {
       </button>
       <button
         // onMouseEnter={() => setIsOpen(true)}
-        //onMouseLeave={() => setIsOpen(false)}
+        // onMouseLeave={() => setIsOpen(false)}
         //  onClick={addAllTeams}
-        className="    "
+        className={
+          selected === "teams"
+            ? "relative after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-10/12 after:bg-blue-500 after:-translate-x-1/2"
+            : ""
+        }
       >
         Teams
       </button>

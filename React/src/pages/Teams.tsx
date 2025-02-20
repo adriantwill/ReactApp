@@ -192,9 +192,18 @@ function Teams() {
         ></Modal>
       )}
       {data && data.length > 10 && teamData && (
-        <div className="flex justify-center">
-          <div className="w-full mx-12 my-6">
-            <Title teamName={teamData} />
+        <div className="flex justify-center flex-col">
+          <Title teamName={teamData} />
+
+          <nav className="flex justify-center space-x-4 py-3 shadow-[0_0_8px_0_rgba(0,0,0,0.2)]">
+            <button className="px-4 text-xl font-semibold ">Home</button>
+            <button className="px-4 text-xl font-semibold ">Schedule</button>
+            <button className="px-4 text-xl font-semibold ">Roster</button>
+            <button className="px-4 text-xl font-semibold ">Stats</button>
+            <button className="px-4 text-xl font-semibold ">News</button>
+          </nav>
+
+          <div className=" mx-12 my-6">
             <div className="grid grid-cols-2 gap-6">
               <NextGame
                 nextEvent={teamData.nextEvent}
@@ -205,7 +214,6 @@ function Teams() {
                 color={teamData.color}
               ></TeamStat>
             </div>
-
             <div className="bg-[url('./assets/background.jpg')] bg-cover bg-center shadow-lg rounded-md">
               <div className="flex">
                 <Card
@@ -289,6 +297,7 @@ function Teams() {
                 </div>
               </div>
             </div>
+            d
           </div>
         </div>
       )}
