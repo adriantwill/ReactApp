@@ -36,6 +36,7 @@ export type Statistics = {
 };
 
 export type Player = {
+  id: string;
   team: {
     $ref: string;
   };
@@ -174,6 +175,17 @@ function Rankings() {
     const newPlayersData = tasks.slice(0, 5).map((task) => ({
       name: task.player.displayName,
       position: task.player.position.abbreviation,
+      team: task.team.displayName,
+      headshot: task.player.headshot.href,
+      espnid: task.player.id,
+    }));
+    const newPlayerStats = tasks.slice(0, 5).map((task) => ({
+      playerid: task.player.id,
+      receptions: parseInt(task.data?.statistics.splits[0]?.stats[0]),
+      receiving_yards: parseInt(
+        task.data?.statistics.splits[0]?.stats[2].replace(/,/g, "")
+      ),
+      receiving_touchdowns: parseInt(task.data?.statistics.splits[0]?.stats[4]),
     }));
     const { data, error } = await supabase
       .from("Players")
@@ -183,16 +195,33 @@ function Rankings() {
     } else {
       console.log("Player added successfully", data);
     }
+    const { data: statsData, error: statsError } = await supabase
+      .from("Stats")
+      .insert(newPlayerStats);
+    if (statsError) {
+      console.error("Error adding player stats", statsError);
+    } else {
+      console.log("Player stats added successfully", statsData);
+    }
   };
   const deleteAll = async () => {
     const { data, error } = await supabase
       .from("Players")
       .delete()
       .neq("id", 0);
+    const { data: stats, error: statserr } = await supabase
+      .from("Stats")
+      .delete()
+      .neq("id", 0);
     if (error) {
       console.error("Error deleting players", error);
     } else {
       console.log("Players deleted successfully", data);
+    }
+    if (statserr) {
+      console.error("Error deleting players", statserr);
+    } else {
+      console.log("Players deleted successfully", stats);
     }
   };
   if (isLoading) return <p>Loading...</p>;
