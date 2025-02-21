@@ -117,6 +117,9 @@ function Dropdown() {
         // onMouseEnter={() => setIsOpen(true)}
         // onMouseLeave={() => setIsOpen(false)}
         //  onClick={addAllTeams}
+        onClick={() => {
+          navigate(`/teams`);
+        }}
         className={
           selected === "teams"
             ? "relative after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-10/12 after:bg-blue-500 after:-translate-x-1/2"
@@ -126,6 +129,18 @@ function Dropdown() {
         Teams
       </button>
 
+      <button
+        className={
+          selected === "players"
+            ? "relative after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-10/12 after:bg-blue-500 after:-translate-x-1/2"
+            : ""
+        }
+        onClick={() => {
+          navigate(`/players`);
+        }}
+      >
+        Players
+      </button>
       {isOpen && (
         <div className="absolute mt-12 z-20">
           <div
