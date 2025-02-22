@@ -5,6 +5,7 @@ import logo from "../assets/DET.webp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import StatsSection from "../components/StatsSection";
+import TimelinePoint from "../components/TimelinePoint";
 
 function Players() {
   const { id } = useParams();
@@ -20,6 +21,10 @@ function Players() {
     { label: "Pressure to Sack %", value: 20 },
     { label: "Avg Time to Throw", value: 20 },
     { label: "Interception %", value: 20 },
+    { label: "Interception %", value: 20 },
+    { label: "Interception %", value: 20 },
+    { label: "Interception %", value: 20 },
+    { label: "Interception %", value: 20 },
   ];
 
   const rushingStats = [
@@ -28,7 +33,6 @@ function Players() {
     { label: "Touchdowns", value: 20 },
     { label: "Pressure to Sack %", value: 20 },
     { label: "Avg Time to Throw", value: 20 },
-    { label: "Interception %", value: 20 },
   ];
   return (
     <>
@@ -45,28 +49,51 @@ function Players() {
           <img src={logo} className="absolute opacity-50 -bottom-4 left-0" />
         </div>
       </div>
-      <div>
-        <div className="w-[28rem] shadow-[0_0_8px_0_rgba(0,0,0,0.2)] rounded-xl h-32">
-          <div className="text-center font-medium text-2xl p-1">
-            Characteristics
-          </div>
-          <div className="h-1 bg-slate-600"></div>
-          <div className="flex justify-around pt-2">
-            <div className="flex flex-col  py-1 ">
-              <FontAwesomeIcon icon={faX} className="fa-2xl pb-2" />
-              <p className="text-xl ">Speed</p>
+      <div className="flex gap-24 justify-center">
+        <div className="flex flex-col items-center">
+          <div className="w-[28rem] shadow-[0_0_8px_0_rgba(0,0,0,0.2)] rounded-xl h-32 my-12">
+            <div className="text-center font-medium text-2xl p-1">
+              Characteristics
             </div>
-            <div className="flex flex-col  py-1">
-              <FontAwesomeIcon icon={faX} className="fa-2xl pb-2" />
-              <p className="text-xl ">Speed</p>
+            <div className="h-1 bg-slate-600"></div>
+            <div className="flex justify-around pt-2">
+              <div className="flex flex-col  py-1 ">
+                <FontAwesomeIcon icon={faX} className="fa-2xl pb-2" />
+                <p className="text-xl ">Speed</p>
+              </div>
+              <div className="flex flex-col  py-1">
+                <FontAwesomeIcon icon={faX} className="fa-2xl pb-2" />
+                <p className="text-xl ">Speed</p>
+              </div>
+            </div>
+          </div>
+          <div className="w-[42rem] my-6 bg-primary rounded-xl shadow-lg">
+            <h1 className="text-4xl font-bold text-center bg-secondary -mt-6  py-4 rounded-t-xl shadow-xl">
+              Stats
+            </h1>
+            <div className="grid md:grid-cols-2 gap-6 h-[20rem]  mx-8 my-4 overflow-hidden">
+              <StatsSection title="Passing" stats={passingStats} />
+              <StatsSection title="Rushing" stats={rushingStats} />
             </div>
           </div>
         </div>
-        <div className="w-[50rem] p-6 bg-primary rounded-lg shadow-lg">
-          <h1 className="text-4xl font-bold text-center mb-8">Stats</h1>
-          <div className="grid md:grid-cols-2 gap-6 ">
-            <StatsSection title="Passing" stats={passingStats} />
-            <StatsSection title="Rushing" stats={rushingStats} />
+        <div className="flex flex-col items-center">
+          <div className="w-[28rem] shadow-[0_0_8px_0_rgba(0,0,0,0.2)] rounded-xl h-32 my-12 overflow-auto">
+            <div className="text-center font-medium text-2xl p-1 overflow-clip">
+              Write-up
+            </div>
+            <div className="h-1 bg-slate-600"></div>
+            <div className="p-4">Lorem ipsum dolor sit</div>
+          </div>
+          <div className="bg-primary w-[42rem] my-8 rounded-xl shadow-lg ">
+            <h1 className="text-4xl font-bold text-center  bg-secondary -mt-8  py-4 rounded-t-lg shadow-xl">
+              Stats
+            </h1>
+            <div className=" my-4 h-[20rem] overflow-auto">
+              {[1, 2, 3].map((index) => (
+                <TimelinePoint key={index} index={index}></TimelinePoint>
+              ))}
+            </div>
           </div>
         </div>
       </div>

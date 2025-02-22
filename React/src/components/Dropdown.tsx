@@ -51,9 +51,24 @@ type TeamDetails = {
 function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
   const currentPath = window.location.pathname.split("/")[1];
   const [selected] = useState(currentPath);
+
+  const favTeam = (props: { id: string }): void => {
+    for (let i = 0; i < 32; i++) {
+      if (data?.sports[0].leagues[0].teams[i].team.id === props.id) {
+        localStorage.setItem(
+          "FavoriteTeam",
+          data?.sports[0].leagues[0].teams[i].team.displayName
+        );
+        localStorage.setItem(
+          "FavoriteTeamId",
+          data?.sports[0].leagues[0].teams[i].team.id
+        );
+        break;
+      }
+    }
+  };
 
   const { data, isLoading, error } = useQuery<ApiResponse>({
     queryKey: ["teams"],
@@ -114,8 +129,8 @@ function Dropdown() {
         Rankings
       </button>
       <button
-        // onMouseEnter={() => setIsOpen(true)}
-        // onMouseLeave={() => setIsOpen(false)}
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
         //  onClick={addAllTeams}
         onClick={() => {
           navigate(`/teams`);
@@ -144,25 +159,36 @@ function Dropdown() {
       {isOpen && (
         <div className="absolute mt-12 z-20">
           <div
-            className="rounded-md grid grid-flow-row grid-cols-4 bg-primary p-2 shadow-lg"
+            className="rounded-md bg-primary p-2 shadow-lg"
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
-            {data?.sports[0].leagues[0].teams.map((item, i) => (
-              <div
-                onClick={() => {
-                  navigate(`/teams/${item.team.id}`);
-                  window.location.reload();
-                }}
-                className="py-4 px-2 mx-2 my-1 hover:bg-slate-300 cursor-pointer rounded-sm transition duration-300 ease-in-out transform hover:scale-105"
-                key={i}
-              >
-                <div className="flex items-center justify-center text-xl">
-                  {item.team.displayName}
-                  <img src={item.team.logos[0].href} width={40} />
+            <div
+              onClick={() =>
+                navigate(`/teams/${localStorage.getItem("FavoriteTeamId")}`)
+              }
+            >
+              {localStorage.getItem("FavoriteTeam") ||
+                "No favorite team selected"}
+            </div>
+            <div className="grid grid-flow-row grid-cols-4">
+              {data?.sports[0].leagues[0].teams.map((item, i) => (
+                <div
+                  onClick={() => {
+                    navigate(`/teams/${item.team.id}`);
+                    favTeam({ id: item.team.id });
+                    window.location.reload();
+                  }}
+                  className="py-4 px-2 mx-2 my-1 hover:bg-slate-300 cursor-pointer rounded-sm transition duration-300 ease-in-out transform hover:scale-105"
+                  key={i}
+                >
+                  <div className="flex items-center justify-center text-xl">
+                    {item.team.displayName}
+                    <img src={item.team.logos[0].href} width={40} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
