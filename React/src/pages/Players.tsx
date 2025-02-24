@@ -85,11 +85,11 @@ function Players() {
             <div className="h-1 bg-slate-600"></div>
             <div className="p-4">Lorem ipsum dolor sit</div>
           </div>
-          <div className="bg-primary w-[42rem] my-8 rounded-xl shadow-lg ">
+          <div className="bg-primary w-[42rem] [10rem] my-8 rounded-xl shadow-lg ">
             <h1 className="text-4xl font-bold text-center  bg-secondary -mt-8  py-4 rounded-t-lg shadow-xl">
               Stats
             </h1>
-            <div className=" my-4 h-[20rem] overflow-auto">
+            <div className=" py-4 overflow-auto">
               {[1, 2, 3].map((index) => (
                 <TimelinePoint key={index} index={index}></TimelinePoint>
               ))}

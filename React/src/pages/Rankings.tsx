@@ -158,6 +158,7 @@ function Rankings() {
           data: athleteResult,
           player: playerResult,
           team: teamResult,
+          key: index,
         };
       })
     );
@@ -178,6 +179,7 @@ function Rankings() {
       team: task.team.displayName,
       headshot: task.player.headshot.href,
       espnid: task.player.id,
+      key: task.id,
     }));
     const newPlayerStats = tasks.slice(0, 5).map((task) => ({
       playerid: task.player.id,
@@ -318,6 +320,7 @@ function Rankings() {
                     data={activeDragItem.data}
                     player={activeDragItem.player}
                     id={activeDragItem.id}
+                    key={activeDragItem.id}
                     index={tasks.findIndex((t) => t.id === activeDragItem.id)}
                     tailwind="opacity-100"
                   />

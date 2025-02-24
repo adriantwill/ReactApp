@@ -143,7 +143,6 @@ function Dropdown() {
       >
         Teams
       </button>
-      //data
       <button
         className={
           selected === "players"
