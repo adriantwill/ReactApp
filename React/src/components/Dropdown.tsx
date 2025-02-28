@@ -141,7 +141,7 @@ function Dropdown() {
             : ""
         }
       >
-        Teams h
+        Teams h s
       </button>
       <button
         className={
