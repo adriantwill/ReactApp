@@ -54,22 +54,6 @@ function Dropdown() {
   const currentPath = window.location.pathname.split("/")[1];
   const [selected] = useState(currentPath);
 
-  const favTeam = (props: { id: string }): void => {
-    for (let i = 0; i < 32; i++) {
-      if (data?.sports[0].leagues[0].teams[i].team.id === props.id) {
-        localStorage.setItem(
-          "FavoriteTeam",
-          data?.sports[0].leagues[0].teams[i].team.displayName
-        );
-        localStorage.setItem(
-          "FavoriteTeamId",
-          data?.sports[0].leagues[0].teams[i].team.id
-        );
-        break;
-      }
-    }
-  };
-
   const { data, isLoading, error } = useQuery<ApiResponse>({
     queryKey: ["teams"],
     queryFn: async () => {
@@ -141,7 +125,7 @@ function Dropdown() {
             : ""
         }
       >
-        Teams h s
+        Teams
       </button>
       <button
         className={
@@ -155,27 +139,18 @@ function Dropdown() {
       >
         Players
       </button>
-      {isOpen && (
+      {/* {isOpen && (
         <div className="absolute mt-12 z-20">
           <div
             className="rounded-md bg-primary p-2 shadow-lg"
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
-            <div
-              onClick={() =>
-                navigate(`/teams/${localStorage.getItem("FavoriteTeamId")}`)
-              }
-            >
-              {localStorage.getItem("FavoriteTeam") ||
-                "No favorite team selected"}
-            </div>
             <div className="grid grid-flow-row grid-cols-4">
               {data?.sports[0].leagues[0].teams.map((item, i) => (
                 <div
                   onClick={() => {
                     navigate(`/teams/${item.team.id}`);
-                    favTeam({ id: item.team.id });
                     window.location.reload();
                   }}
                   className="py-4 px-2 mx-2 my-1 hover:bg-slate-300 cursor-pointer rounded-sm transition duration-300 ease-in-out transform hover:scale-105"
@@ -190,7 +165,7 @@ function Dropdown() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </header>
   );
 }

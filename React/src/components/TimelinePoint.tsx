@@ -1,9 +1,17 @@
+import logo from "../assets/DET.webp";
+
 function TimelinePoint(props: { index: number }) {
   return (
     <>
       {props.index > 1 && <div className="w-1 h-24 bg-black mx-auto"></div>}
       <div className="flex justify-center items-center relative">
-        <div className="w-[4.5rem] h-[4.5rem] bg-blue-500 rounded-full justify-center"></div>
+        <div className="relative">
+          <div
+            className="w-20 h-20 rounded-full justify-center relative"
+            style={{ backgroundColor: `#${"0076B6"}` }}
+          />
+          <img src={logo} className="absolute top-0 bottom-0" />
+        </div>
 
         <div
           className={`bg-white rounded-lg p-2 shadow-lg w-52 h-20 absolute ${
