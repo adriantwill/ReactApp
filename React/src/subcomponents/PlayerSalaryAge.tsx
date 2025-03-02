@@ -7,7 +7,7 @@ function PlayerTraits() {
       </div>
       <div className="flex flex-col ">
         <div className="text-xl text-center ">Contract</div>
-        <p className="text-3xl font-medium text-center">$3.3M / 4Y</p>
+        <p className="text-3xl font-medium text-center">$3.3M</p>
       </div>
     </>
   );

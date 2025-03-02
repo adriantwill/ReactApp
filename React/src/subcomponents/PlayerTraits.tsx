@@ -1,17 +1,31 @@
-import { faGaugeHigh, faLightbulb } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+
+type TraitProps = {
+  name: string;
+  grade: string;
+};
+
+const Trait: React.FC<TraitProps> = ({ name, grade }) => {
+  return (
+    <div>
+      <div>{name}</div>
+      <div className="text-3xl text-center font-medium pt-1">{grade}</div>
+    </div>
+  );
+};
 
 function PlayerTraits() {
   return (
     <>
-      <div className="flex flex-col ">
-        <FontAwesomeIcon icon={faLightbulb} className="fa-2xl " />
-        <p className="text-xl">Accuracy</p>
-      </div>
-      <div className="flex flex-col ">
-        <FontAwesomeIcon icon={faGaugeHigh} className="fa-2xl " />
-        <p className="text-xl">Speed</p>
-      </div>
+      {[
+        { name: "Accuracy", grade: "A+" },
+        { name: "Speed", grade: "A+" },
+        { name: "Power", grade: "A+" },
+        { name: "Control", grade: "A+" },
+        { name: "Agility", grade: "A+" },
+      ].map((trait, index) => (
+        <Trait key={index} name={trait.name} grade={trait.grade} />
+      ))}
     </>
   );
 }

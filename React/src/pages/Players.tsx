@@ -55,28 +55,34 @@ function Players() {
       </div>
       <div className="w-[90rem] mx-auto space-y-12">
         <div className="flex justify-between">
-          <PlayerPageSmallCard title="Info" tailwind="items-center">
+          <PlayerPageSmallCard
+            title="Info"
+            tailwind="items-center justify-evenly"
+          >
             <PlayerSalaryAge />
           </PlayerPageSmallCard>
-          <PlayerPageSmallCard title="Write Up" tailwind="">
+          <PlayerPageSmallCard title="Write Up" tailwind="px-6 py-2">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
             tempore nisi voluptatem, impedit culpa temporibus asperiores sequi
             vero fugiat facilis iusto perspiciatis nostrum! Dignissimos
             laudantium ipsam quod. Aperiam, sed provident!
           </PlayerPageSmallCard>
-          <PlayerPageSmallCard title="Characteristics" tailwind="items-center">
+          <PlayerPageSmallCard
+            title="Characteristics"
+            tailwind="items-center justify-around"
+          >
             <PlayerTraits />
           </PlayerPageSmallCard>
         </div>
         <div className="flex justify-between">
           <PlayerPageMediumCard title="Stats">
-            <div className="grid grid-cols-2 gap-6 h-[20rem] mx-8 my-4 overflow-hidden">
+            <div className="grid grid-cols-2 gap-6 h-[20rem] mx-8 my-4 ">
               <StatsSection title="Passing" stats={passingStats} />
               <StatsSection title="Rushing" stats={rushingStats} />
             </div>
           </PlayerPageMediumCard>
           <PlayerPageMediumCard title="Timeline">
-            <div className="h-[22rem] mx-8 py-4 overflow-auto">
+            <div className="h-[22rem] py-4 overflow-auto">
               {[1, 2, 3, 4].map((index) => (
                 <TimelinePoint key={index} index={index}></TimelinePoint>
               ))}
