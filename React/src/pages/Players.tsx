@@ -76,7 +76,6 @@ function Players() {
         </div>
         <div className="flex justify-between">
           {" "}
-          //
           <PlayerPageMediumCard title="Stats">
             <div className="grid grid-cols-2 gap-6 h-[20rem] mx-8 my-4 ">
               <StatsSection title="Passing" stats={passingStats} />
