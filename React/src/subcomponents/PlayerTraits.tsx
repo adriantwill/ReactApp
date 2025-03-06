@@ -8,8 +8,9 @@ type TraitProps = {
 const Trait: React.FC<TraitProps> = ({ name, grade }) => {
   return (
     <div>
-      <div>{name}</div>
-      <div className="text-3xl text-center font-medium pt-1">{grade}</div>
+      <div className="text-lg">{name}</div>
+      <div className="text-xs text-center">Tier</div>
+      <div className="text-3xl text-center font-medium ">{grade}</div>
     </div>
   );
 };
@@ -18,11 +19,11 @@ function PlayerTraits() {
   return (
     <>
       {[
-        { name: "Accuracy", grade: "A+" },
-        { name: "Speed", grade: "A+" },
-        { name: "Power", grade: "A+" },
-        { name: "Control", grade: "A+" },
-        { name: "Agility", grade: "A+" },
+        { name: "Accuracy", grade: "1" },
+        { name: "Speed", grade: "2" },
+        { name: "Power", grade: "3" },
+        { name: "Control", grade: "4" },
+        { name: "Agility", grade: "5" },
       ].map((trait, index) => (
         <Trait key={index} name={trait.name} grade={trait.grade} />
       ))}

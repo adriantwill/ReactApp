@@ -17,24 +17,24 @@ function Players() {
     return <Navigate to="/error" replace />; // Redirect to error route
   }
   const passingStats = [
-    { label: "EPA", value: 1000 },
-    { label: "Adj Completion %", value: 100 },
-    { label: "Touchdowns", value: 20 },
-    { label: "Pressure to Sack %", value: 20 },
-    { label: "Avg Time to Throw", value: 20 },
-    { label: "Interception %", value: 20 },
-    { label: "Interception %", value: 20 },
-    { label: "Interception %", value: 20 },
-    { label: "Interception %", value: 20 },
-    { label: "Interception %", value: 20 },
+    { label: "EPA", value: 1000, description: "Real" },
+    { label: "Adj Completion %", value: 100, description: "Real" },
+    { label: "Touchdowns", value: 20, description: "Real" },
+    { label: "Pressure to Sack %", value: 20, description: "Real" },
+    { label: "Avg Time to Throw", value: 20, description: "Real" },
+    { label: "Interception %", value: 20, description: "Real" },
+    { label: "Interception %", value: 20, description: "Real" },
+    { label: "Interception %", value: 20, description: "Real" },
+    { label: "Interception %", value: 20, description: "Real" },
+    { label: "Interception %", value: 20, description: "Real" },
   ];
 
   const rushingStats = [
-    { label: "Yards", value: 1000 },
-    { label: "Completion %", value: 100 },
-    { label: "Touchdowns", value: 20 },
-    { label: "Pressure to Sack %", value: 20 },
-    { label: "Avg Time to Throw", value: 20 },
+    { label: "Yards", value: 1000, description: "Real" },
+    { label: "Completion %", value: 100, description: "Real" },
+    { label: "Touchdowns", value: 20, description: "Real" },
+    { label: "Pressure to Sack %", value: 20, description: "Real" },
+    { label: "Avg Time to Throw", value: 20, description: "Real" },
   ];
   return (
     <>
