@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/joho/godotenv"
-	"github.com/supabase-community/postgrest-go"
 	"github.com/supabase-community/supabase-go"
 	"github.com/tidwall/gjson"
 )
@@ -20,7 +19,10 @@ type Player struct {
 	Position string `json:"position"`
 	Headshot string `json:"headshot"`
 	Espnid  string `json:"espnid"`
-
+	Number string `json:"number"`
+	Height int8 `json:"height"`
+	Weight int8 `json:"weight"`
+	Age int8 `json:"age"`
 }
 
 // Fetch data from ESPN API
@@ -38,14 +40,7 @@ func fetchData(url string) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
-func getTeamPlayers(){
-	API_URL := os.Getenv("API_URL")
-	API_KEY := os.Getenv("API_KEY")
-
-	client := postgrest.NewClient(API_URL, API_KEY, nil)
-	if client.ClientError != nil {
-		panic(client.ClientError)
-	}
+func getTeamPlayers(client *supabase.Client){
 	apiURL := "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/24/depthcharts"
 
 	data, err := fetchData(apiURL)
@@ -101,15 +96,8 @@ func getTeamPlayers(){
 	}
 }
 
-func getTop(){
-	API_URL := os.Getenv("API_URL")
-	API_KEY := os.Getenv("API_KEY")
-	fmt.Println(API_URL)
+func getTop(client *supabase.Client){
 
-	client, err := supabase.NewClient(API_URL, API_KEY, &supabase.ClientOptions{})
-	if err != nil {
-		fmt.Println("cannot initalize client", err)
-	}
 	apiURL := "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/types/2/leaders"
 
 	data, err := fetchData(apiURL)
@@ -128,6 +116,10 @@ func getTop(){
 		name := gjson.GetBytes(playerData, "fullName").String()
 		headshot := gjson.GetBytes(playerData, "headshot.href").String()
 		espnid := gjson.GetBytes(playerData, "id").String()
+		number := gjson.GetBytes(playerData, "jersey").String()
+		height := gjson.GetBytes(playerData, "height").Int()
+		weight := gjson.GetBytes(playerData, "weight").Int()
+		age := gjson.GetBytes(playerData, "age").Int()
 
 		teamURL := leader.Get("team.$ref").String()	
 		teamData, err := fetchData(teamURL)
@@ -143,35 +135,14 @@ func getTop(){
 			Position: "QB",
 			Headshot: headshot,
 			Espnid:  espnid,
+			Number: number,
+			Height: int8(height),
+			Weight: int8(weight),
+			Age: int8(age),
 		})
 
 	}
-	_,_,err = client.From("Players").Insert(playersToInsert, false, "", "", "").Execute()
-	if err != nil {
-		log.Printf("Error inserting players: %v", err)
-		return
-	}
-}
-
-func testInsert(){
-	API_URL := os.Getenv("API_URL")
-	API_KEY := os.Getenv("API_KEY")
-	fmt.Println(API_URL)
-
-	client, err := supabase.NewClient(API_URL, API_KEY, &supabase.ClientOptions{})
-	if err != nil {
-		fmt.Println("cannot initalize client", err)
-	}
-	playersToInsert := []Player{
-		{
-			Name:     "Jared Goff",
-			Team:     "8",
-			Position: "QB",
-			Headshot: "https://a.espncdn.com/i/headshots/nfl/players/full/3046779.png",
-			Espnid:  "3046779",
-		},
-	}
-	_,_,err = client.From("Players").Insert(playersToInsert, false, "", "", "").Execute()
+	_,_,err = client.From("Players").Insert(playersToInsert, true, "", "", "").Execute()
 	if err != nil {
 		log.Printf("Error inserting players: %v", err)
 		return
@@ -183,9 +154,16 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+	API_URL := os.Getenv("API_URL")
+	API_KEY := os.Getenv("API_KEY")
+
+	client, err := supabase.NewClient(API_URL, API_KEY, &supabase.ClientOptions{})
+	if err != nil {
+		fmt.Println("cannot initalize client", err)
+	}
 	
 	fmt.Println("Hello, World!");
-	getTop()
+	getTop(client)
 	
 }
 

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
 
 type ApiResponse = {
   sports: Sport[];
@@ -67,22 +66,6 @@ function Dropdown() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-  const addAllTeams = async () => {
-    const newTeamData = data?.sports[0].leagues[0].teams.map((item) => ({
-      name: item.team.displayName,
-      color: item.team.color,
-      logo: item.team.logos[0].href,
-      espnid: item.team.id,
-    }));
-    const { data: mydata, error: myerror } = await supabase
-      .from("Teams")
-      .insert(newTeamData);
-    if (error) {
-      console.error("Error adding player", myerror);
-    } else {
-      console.log("Player added successfully", mydata);
-    }
-  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading teams</div>; //
