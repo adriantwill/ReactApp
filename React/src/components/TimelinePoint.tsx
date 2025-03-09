@@ -1,6 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
 import { Database } from "../lib/database.types";
-import { supabase } from "../supabase-client";
 
 type PlayerTeams = Database["public"]["Tables"]["Player_Team"]["Row"];
 type Team = Database["public"]["Tables"]["Teams"]["Row"];

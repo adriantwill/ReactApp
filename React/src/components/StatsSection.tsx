@@ -1,5 +1,4 @@
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IoInformationCircleOutline } from "react-icons/io5";
 import { useRef, useState } from "react";
 
 type StatsSectionProps = {
@@ -50,11 +49,11 @@ function StatsSection(props: StatsSectionProps) {
               className="flex justify-between items-center py-2 border-b border-gray-200 last:border-0 overflow-auto"
               key={index}
             >
-              <div>
+              <div className="flex items-center">
                 <span className="text-gray-700">{stat.label}</span>
-                <FontAwesomeIcon
-                  icon={faCircleInfo}
-                  className="pl-2"
+                <IoInformationCircleOutline
+                  className="inline ml-2"
+                  size="20"
                   onMouseOut={() => {
                     setInfo(false);
                   }}

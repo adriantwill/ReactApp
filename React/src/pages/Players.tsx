@@ -12,6 +12,8 @@ import { faFootball } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@tanstack/react-query";
 import { Database } from "../lib/database.types";
 import PlayerInfo from "../subcomponents/PlayerSalaryAge";
+import { getTraitIcon } from "../lib/icons";
+import React from "react";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
 type Team = Database["public"]["Tables"]["Teams"]["Row"];
@@ -160,7 +162,7 @@ function Players() {
               className="relative z-10"
             />
             <img
-              src={team?.logo}
+              src={team.logo}
               className="absolute opacity-50 -bottom-4 left-0"
             />
           </div>
@@ -176,11 +178,13 @@ function Players() {
               weight={player.weight}
             />
           </PlayerPageSmallCard>
-          <PlayerPageSmallCard title="Traits" tailwind="grid grid-cols-3 ">
+          <PlayerPageSmallCard title="Traits" tailwind="grid grid-flow-col">
             {Array.isArray(player.attributes) &&
               player.attributes.map((attribute, index) => (
-                <div key={index} className="flex flex-col">
-                  <FontAwesomeIcon icon={faFootball} className="fa-2xl" />
+                <div key={index} className="flex flex-col items-center">
+                  {React.createElement(getTraitIcon(String(attribute)), {
+                    size: 36,
+                  })}
                   <div className="text-lg text-center proper capitalize">
                     {String(attribute)}
                   </div>
@@ -189,7 +193,7 @@ function Players() {
           </PlayerPageSmallCard>
           <PlayerPageSmallCard
             title="Characteristics"
-            tailwind="justify-evenly"
+            tailwind="justify-evenly "
           >
             <PlayerTraits />
           </PlayerPageSmallCard>
