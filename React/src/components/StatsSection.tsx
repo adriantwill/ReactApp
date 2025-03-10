@@ -1,74 +1,47 @@
-import { IoInformationCircleOutline } from "react-icons/io5";
-import { useRef, useState } from "react";
+import { TbInfoCircle } from "react-icons/tb";
+import { Database } from "../lib/database.types";
 
 type StatsSectionProps = {
   title: string;
-  stats: StatItemProps[];
+  stats: PlayerPassingStats | undefined;
+  table: StatItemProps[];
 };
 type StatItemProps = {
   label: string;
-  value: number;
+  description: string;
 };
+type PlayerPassingStats = Database["public"]["Tables"]["Passing_Stats"]["Row"];
 
 function StatsSection(props: StatsSectionProps) {
-  const [info, setInfo] = useState(false);
-
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePosition({
-      x: e.clientX,
-      y: e.clientY,
-    });
-  };
-
+  console.log(props.stats);
+  if (!props.stats) {
+    return <div className="shadow-surround rounded-lg p-6 bg-white h-70"></div>;
+  }
   return (
-    <>
-      {info && (
-        <>
-          <div
-            className="fixed bg-gray-100 border border-gray-300 p-2 rounded shadow-md text-sm"
-            style={{
-              left: mousePosition.x + 10,
-              top: mousePosition.y - 15,
-              pointerEvents: "none",
-            }}
-          >
-            Hover over a stat label to see more information.
-          </div>
-        </>
-      )}
-      <div className="shadow-[0_0_8px_0_rgba(0,0,0,0.2)] rounded-lg p-6 bg-white h-70 overflow-auto">
-        <h2 className="text-2xl font-bold mb-2">{props.title}</h2>
-        <div className=" overflow-auto">
-          {props.stats.map((stat, index) => (
+    <div className="shadow-surround rounded-lg p-6 pb-0 bg-white h-70 ">
+      <h2 className="text-2xl font-bold mb-2">{props.title}</h2>
+      <div className="">
+        {Object.entries(props.stats)
+          .slice(3)
+          .map(([_, value], index) => (
             <div
-              className="flex justify-between items-center py-2 border-b border-gray-200 last:border-0 overflow-auto"
+              className="flex justify-between items-center py-2 border-b border-gray-200 last:border-0"
               key={index}
             >
-              <div className="flex items-center">
-                <span className="text-gray-700">{stat.label}</span>
-                <IoInformationCircleOutline
-                  className="inline ml-2"
-                  size="20"
-                  onMouseOut={() => {
-                    setInfo(false);
-                  }}
-                  onMouseOver={(e) => {
-                    setInfo(true);
-                    handleMouseMove(e);
-                  }}
-                />
+              <div className="flex items-center ">
+                <div className="text-gray-70 ">{props.table[index].label}</div>
+                <div className="relative group">
+                  <TbInfoCircle className="ml-1 cursor-help " />
+                  <div className="absolute w-96 left-9 top-1/2 -translate-y-1/2 p-2 bg-primary rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300 z-10">
+                    {props.table[index].description}
+                  </div>
+                </div>
               </div>
-              <span className="font-medium">{stat.value}</span>
+              <span className="font-medium">{value}</span>
             </div>
           ))}
-        </div>
       </div>
-    </>
+    </div>
   );
 }
 export default StatsSection;

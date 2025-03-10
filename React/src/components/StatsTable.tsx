@@ -72,7 +72,6 @@ function StatsTable(props: StatsProps) {
     const date = Temporal.PlainDate.from(dateString);
     return `${date.month}/${date.day}`;
   };
-  let bye = 1;
   return (
     <div className="pb-8">
       <div className="rounded-t-xl p-3 pb-5 my-8 -mb-2 bg-[rgba(255,255,255,0.25)] font-medium ">
@@ -107,11 +106,10 @@ function StatsTable(props: StatsProps) {
                     props.gameLog.seasonTypes.length - 1
                   ].categories[0].events;
                 const event = Object.values(props.gameLog.events).find(
-                  (event) => event.week === index + 1
+                  (event) =>
+                    event.week === index + 1 &&
+                    regEvents.some((regEvent) => regEvent.eventId === event.id)
                 );
-                if (!event) {
-                  bye--;
-                }
                 return (
                   <tr
                     key={index}
@@ -138,9 +136,7 @@ function StatsTable(props: StatsProps) {
                             event.awayTeamScore}
                         </td>
                       </>
-                    ) : regEvents &&
-                      event &&
-                      index <= regEvents.length - bye ? (
+                    ) : event ? (
                       Array.from({ length: activeStats.count }).map(
                         (_, weeklyIndex) => (
                           <td
@@ -148,7 +144,7 @@ function StatsTable(props: StatsProps) {
                             key={weeklyIndex}
                           >
                             {
-                              regEvents[regEvents.length - index - bye].stats[
+                              regEvents[regEvents.length - index].stats[
                                 weeklyIndex + totalCount
                               ]
                             }

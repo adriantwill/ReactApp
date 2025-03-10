@@ -236,7 +236,7 @@ function Rankings() {
           User Rankings
         </h1>
         <div className="flex flex-col gap-10">
-          <div className="bg-white shadow-[0_0_8px_0_rgba(0,0,0,0.2)] rounded-2xl">
+          <div className="bg-white shadow-surround rounded-2xl">
             <div className="flex gap-6 items-center h-full py-3 px-6">
               <RankingsDropdown title={"Category"} options={options} />
               <RankingsDropdown title={"Event"} options={weeks} />

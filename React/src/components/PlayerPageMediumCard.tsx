@@ -1,11 +1,18 @@
-type Props = { title: string; children: React.ReactNode };
-function PlayerPageMediumCard({ title, children }: Props) {
+function PlayerPageMediumCard(props: {
+  title: string;
+  children: React.ReactNode;
+  tailwind: string;
+  color: string;
+}) {
   return (
-    <div className="w-[43rem] my-6 bg-primary rounded-md shadow-lg">
-      <h1 className="text-4xl font-bold text-center bg-secondary -mt-6 py-4 rounded-md shadow-xl">
-        {title}
+    <div className="w-[43rem] mb-6 bg-white rounded-md shadow-surround">
+      <h1 className="text-4xl font-bold text-center pt-4 pb-2 ">
+        {props.title}
       </h1>
-      {children}
+      <div className="h-2" style={{ backgroundColor: `#${props.color}` }}></div>
+      <div className={`h-[23rem] px-8 py-6 ${props.tailwind} `}>
+        {props.children}
+      </div>
     </div>
   );
 }
