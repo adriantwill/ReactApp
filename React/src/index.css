@@ -10,13 +10,29 @@
 
 * {
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent; /* Thumb color | Track color */
-  font-family: sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
-/* @font-face {
-  font-family: "Sans", sans-serif;
+@font-face {
+  font-family: "Nunito";
   font-weight: 400;
-  src: url("assets/fonts/kumbhsans-regular-webfont.woff2") format("woff2"),
-    url("assets/fonts/src/assets/fonts/kumbhsans-regular-webfont.woff")
-      format("woff");
-} */
+  src: url("src/assets/fonts/Nunito-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Nunito";
+  font-weight: 300;
+  src: url("src/assets/fonts/Nunito-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Nunito";
+  font-weight: 500;
+  src: url("src/assets/fonts/Nunito-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Nunito";
+  font-weight: 700;
+  src: url("src/assets/fonts/Nunito-Bold.woff2") format("woff2");
+}

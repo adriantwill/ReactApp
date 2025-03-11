@@ -136,26 +136,18 @@ function StatsTable(props: StatsProps) {
                             event.awayTeamScore}
                         </td>
                       </>
-                    ) : event ? (
+                    ) : (
+                      regEvents.length > 0 &&
                       Array.from({ length: activeStats.count }).map(
                         (_, weeklyIndex) => (
                           <td
                             className="border text-center px-6 py-4"
                             key={weeklyIndex}
                           >
-                            {
-                              regEvents[regEvents.length - index].stats[
-                                weeklyIndex + totalCount
-                              ]
-                            }
-                          </td>
-                        )
-                      )
-                    ) : (
-                      Array.from({ length: activeStats.count }).map(
-                        (_, weeklyIndex) => (
-                          <td className="border text-center" key={weeklyIndex}>
-                            -
+                            {(event &&
+                              regEvents.find((e) => e.eventId === event.id)
+                                ?.stats[weeklyIndex + totalCount]) ||
+                              "-"}
                           </td>
                         )
                       )

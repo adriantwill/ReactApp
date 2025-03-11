@@ -1,5 +1,6 @@
 import { TbInfoCircle } from "react-icons/tb";
 import { Database } from "../lib/database.types";
+import InfoBox from "../subcomponents/InfoBox";
 
 type StatsSectionProps = {
   title: string;
@@ -30,12 +31,7 @@ function StatsSection(props: StatsSectionProps) {
             >
               <div className="flex items-center ">
                 <div className="text-gray-70 ">{props.table[index].label}</div>
-                <div className="relative group">
-                  <TbInfoCircle className="ml-1 cursor-help " />
-                  <div className="absolute w-96 left-9 top-1/2 -translate-y-1/2 p-2 bg-primary rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300 z-10">
-                    {props.table[index].description}
-                  </div>
-                </div>
+                <InfoBox info={props.table[index].description} />
               </div>
               <span className="font-medium">{value}</span>
             </div>

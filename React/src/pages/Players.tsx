@@ -23,7 +23,7 @@ type PlayerTeams = Database["public"]["Tables"]["Player_Team"]["Row"];
 type PlayerPassingStats = Database["public"]["Tables"]["Passing_Stats"]["Row"];
 type PlayerCharacteristics =
   Database["public"]["Tables"]["Passing_Characteristic"]["Row"];
-type Colleage_Team = Database["public"]["Tables"]["College_Teams"]["Row"];
+type College_Team = Database["public"]["Tables"]["College_Teams"]["Row"];
 
 function Players() {
   const { id } = useParams();

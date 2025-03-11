@@ -20,4 +20,5 @@ export const rushingStats = [
   { label: "Broken Tackles", description: "Real" },
   { label: "Fumbles", description: "Real" },
   { label: "First Downs", description: "Real" },
+  { label: "Rush EPA", description: "Real" },
 ];

@@ -30,11 +30,20 @@ type Player struct {
 
 type PlayerPassing struct {
 	Espnid     string `json:"espnid"`
-	PassingEPA string `json:"epa"`
-	TTT string `json:"ttt"`
-	YPA string `json:"ypa"`
-	OnTarget string `json:"ontarget"`
-	SackPercent string `json:"sackpercent"`
+	PassingEPA float32 `json:"epa"`
+	TTT float32 `json:"ttt"`
+	YPA float32 `json:"ypa"`
+	OnTarget float32 `json:"ontarget"`
+	SackPercent float32 `json:"sackpercent"`
+}
+
+type PlayerRushing struct {
+	Espnid     string `json:"espnid"`
+	RushEPA float32 `json:"rush_epa"`
+	YAC int `json:"yac"`
+	BrokenTackles int `json:"broken_tackle"`
+	FirstDowns int `json:"first_down"`
+	Fumble int `json:"fumble"`
 }
 
 // Fetch data from ESPN API
@@ -109,7 +118,6 @@ func getTeamPlayers(client *supabase.Client){
 			}
 		}
 	}
-	fmt.Println(playersToInsert)
 	_,_,err := client.From("Players").Insert(playersToInsert, true, "espnid", "", "").Execute()
 	
 	if err != nil {
@@ -183,64 +191,85 @@ func dynamicScrape (client *supabase.Client){
 
 	// Select all table rows
 	rows := page.MustElements("tbody tr")
-	var playersToInsert []Player
+	var playersToInsert []PlayerPassing
 
 	for _, row := range rows {
 		// Extract player stats
 		qbunsplit := row.MustElement(`[data-stat="quarterback"]`).MustText()
 		qb := strings.Split(qbunsplit, ". ")[1]
 		id := getPlayerID(client,qb)
+		if id == "" {
+            continue
+        }
+		fmt.Println(id)
 		epa := row.MustElement(`[data-stat="passing_epa"]`).MustText()
 		sack_rate := row.MustElement(`[data-stat="sack_rate"]`).MustText()
+		sack_rate = strings.TrimSuffix(sack_rate, "%")
 		time_to_throw := row.MustElement(`[data-stat="time_to_throw"]`).MustText()
 		ypa := row.MustElement(`[data-stat="ypa"]`).MustText()
-		_,_,err = client.From("Players").Insert(playersToInsert, true, "espnid", "", "").Execute()
-		if err != nil {
-			log.Printf("Error inserting players: %v", err)
-			return
-		}
+		playersToInsert = append(playersToInsert, PlayerPassing{
+			Espnid: id,
+			PassingEPA: float32(gjson.Parse(epa).Float()),
+			TTT: float32(gjson.Parse(time_to_throw).Float()),
+			YPA: float32(gjson.Parse(ypa).Float()),
+			OnTarget: 0.0,
+			SackPercent: float32(gjson.Parse(sack_rate).Float()),
+		})
+	}
+	_,_,err := client.From("Passing_Stats").Insert(playersToInsert, true, "espnid", "", "").Execute()
+	if err != nil {
+		log.Printf("Error inserting players: %v", err)
+		return
 	}
 }
 
 func webScraperRushing(client *supabase.Client){
 	c := colly.NewCollector(
 	)
+	var playersToInsert []PlayerRushing
 
 	c.OnHTML("table#adv_rushing tbody", func(e *colly.HTMLElement) {
 		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 			name := el.ChildText("td:nth-of-type(1) a")
-			
-
-			// Continue processing if player not found
+			id := getPlayerID(client,name)
+			if id == "" {
+				return
+			}
 			yac := el.ChildText("td:nth-of-type(12)")
 			brkntckl := el.ChildText("td:nth-of-type(14)")
 			fstdwn := el.ChildText("td:nth-of-type(9)")
-			if name != "" {
-				fmt.Println(name, yac,brkntckl,fstdwn)
-			}
+			playersToInsert = append(playersToInsert, PlayerRushing{
+				Espnid: id,
+				RushEPA: 0.0,
+				YAC: int(gjson.Parse(yac).Int()),
+				BrokenTackles: int(gjson.Parse(brkntckl).Int()),
+				FirstDowns: int(gjson.Parse(fstdwn).Int()),
+				Fumble: 0,
+			})
+			
 		})
 	})
 	c.Visit("https://www.pro-football-reference.com/years/2024/rushing_advanced.htm")
+	_,_,err := client.From("Rushing_Stat").Insert(playersToInsert, true, "espnid", "", "").Execute()
+	if err != nil {
+		log.Printf("Error inserting players: %v", err)
+		return
+	}
 }
 
 func getPlayerID(client *supabase.Client, name string) string {
 	var players []Player
-	data, _, err := client.From("Players").Select("espnid", "exact", false).Eq("name", name).Execute()
-	if err != nil {
+	data, count, err := client.From("Players").Select("espnid", "exact", false).Eq("name", name).Execute()
+	if err != nil || count == 0 {
 		log.Printf("Error querying players: %v", err)
 		return ""
 	}
-	fmt.Println(players)
-	
 	err = json.Unmarshal(data, &players)
 	if err != nil {
 		log.Printf("Error unmarshaling data: %v", err)
-		return ""
+		return "";
 	}
-	
-	for _, player := range players {
-		fmt.Printf("Player: %s\n", player.Espnid)
-	}
+
 	return players[0].Espnid
 }
 
@@ -258,7 +287,7 @@ func main() {
 	}
 	
 	fmt.Println("Hello, World!");
-	getTeamPlayers(client)
+	webScraperRushing(client)
 	
 }
 
