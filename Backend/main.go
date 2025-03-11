@@ -28,14 +28,9 @@ type Player struct {
 	Age int `json:"age"`
 }
 
-type WebRusher struct {
-	Name     string `json:"name"`
-	YAC	 string `json:"yac"`
-}
-
-type WebPasser struct {
+type PlayerPassing struct {
 	Espnid     string `json:"espnid"`
-	PassingEPA string `json:"passingepa"`
+	PassingEPA string `json:"epa"`
 	TTT string `json:"ttt"`
 	YPA string `json:"ypa"`
 	OnTarget string `json:"ontarget"`
@@ -58,64 +53,64 @@ func fetchData(url string) ([]byte, error) {
 }
 
 func getTeamPlayers(client *supabase.Client){
-	apiURL := "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/teams/1/depthcharts"
-
-	data, err := fetchData(apiURL)
-	if err != nil {
-		log.Printf("Error fetching data: %v", err)
-	}
-	items := gjson.GetBytes(data, "items").Array()
-	size := len(items)
-	fmt.Println(size)
-	positions := gjson.GetBytes(data, "items.1.positions")
-	
-
 	var playersToInsert []Player
-
-	// Loop through positions
-	fmt.Println(positions)
-	for position := range positions.Map() {
-		if position != "qb"{
+	for i := 1; i <= 34; i++ {
+		apiURL := fmt.Sprintf("https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2024/teams/%d/depthcharts", i)
+		data, err := fetchData(apiURL)
+		if err != nil {
+			log.Printf("Error fetching data: %v", err)
+		}
+		items := gjson.GetBytes(data, "items").Array()
+		size := len(items)
+		if size < 1{
 			continue
 		}
-		athletes := positions.Get(position + ".athletes").Array()
-		// Loop through athletes
-		for _, athlete := range athletes {
-			rank := int(athlete.Get("rank").Int())
-			if rank > 1 && !(position == "wr" && rank <= 3) {
+		fmt.Println(size)
+		positions := gjson.GetBytes(data, "items.2.positions")
+	
+		for position := range positions.Map() {
+			if position != "qb"{
 				continue
 			}
-			playerURL := athlete.Get("athlete.$ref").String()
+			athletes := positions.Get(position + ".athletes").Array()
+			// Loop through athletes
+			for _, athlete := range athletes {
+				rank := int(athlete.Get("rank").Int())
+				if rank > 1 && !(position == "wr" && rank <= 3) {
+					continue
+				}
+				playerURL := athlete.Get("athlete.$ref").String()
 
-			playerData, err := fetchData(playerURL)
-			if err != nil {
-				log.Printf("Error fetching player data: %v", err)
-				continue
+				playerData, err := fetchData(playerURL)
+				if err != nil {
+					log.Printf("Error fetching player data: %v", err)
+					continue
+				}
+
+				name := gjson.GetBytes(playerData, "fullName").String()
+				espnid := gjson.GetBytes(playerData, "id").String()
+				number := gjson.GetBytes(playerData, "jersey").String()
+				age := gjson.GetBytes(playerData, "age").Int()
+				weight := gjson.GetBytes(playerData, "weight").Int()
+				height := gjson.GetBytes(playerData, "height").Int()
+				position := gjson.GetBytes(playerData, "position.abbreviation").String()
+
+				playersToInsert = append(playersToInsert, Player{
+					Name:     name,
+					Team:     fmt.Sprintf("%d", i),
+					Position: position,
+					Espnid:  espnid,
+					Number: number,
+					Age: int(age),
+					Weight: int(weight),
+					Height: int(height),
+				})
+
 			}
-
-			name := gjson.GetBytes(playerData, "fullName").String()
-			espnid := gjson.GetBytes(playerData, "id").String()
-			number := gjson.GetBytes(playerData, "jersey").String()
-			age := gjson.GetBytes(playerData, "age").Int()
-			weight := gjson.GetBytes(playerData, "weight").Int()
-			height := gjson.GetBytes(playerData, "height").Int()
-			position := gjson.GetBytes(playerData, "position.abbreviation").String()
-
-			playersToInsert = append(playersToInsert, Player{
-				Name:     name,
-				Team:     "1",
-				Position: position,
-				Espnid:  espnid,
-				Number: number,
-				Age: int(age),
-				Weight: int(weight),
-				Height: int(height),
-			})
-
 		}
 	}
 	fmt.Println(playersToInsert)
-	_,_,err = client.From("Players").Insert(playersToInsert, true, "espnid", "", "").Execute()
+	_,_,err := client.From("Players").Insert(playersToInsert, true, "espnid", "", "").Execute()
 	
 	if err != nil {
 		log.Printf("Error inserting players: %v", err)
@@ -181,54 +176,30 @@ func dynamicScrape (client *supabase.Client){
 	defer browser.MustClose()
 
 	// Open the page
-	page := browser.MustPage("https://sumersports.com/players/quarterback/")
+	page := browser.MustPage("https://sumersports.com/players/quarterback/?plays=154")
 
 	// Wait for the table to load
 	page.MustWaitLoad()
 
 	// Select all table rows
 	rows := page.MustElements("tbody tr")
+	var playersToInsert []Player
 
 	for _, row := range rows {
 		// Extract player stats
 		qbunsplit := row.MustElement(`[data-stat="quarterback"]`).MustText()
 		qb := strings.Split(qbunsplit, ". ")[1]
+		id := getPlayerID(client,qb)
 		epa := row.MustElement(`[data-stat="passing_epa"]`).MustText()
 		sack_rate := row.MustElement(`[data-stat="sack_rate"]`).MustText()
 		time_to_throw := row.MustElement(`[data-stat="time_to_throw"]`).MustText()
 		ypa := row.MustElement(`[data-stat="ypa"]`).MustText()
-		// Query Supabase to get the ESPN ID based on the QB name
-		_, count, err := client.From("Players").Select("espnid", "1", false).Eq("name", qb).Execute()
-		if err != nil || count == 0 {
-			log.Printf("Error finding player %s: %v", qb, err)
-			continue
+		_,_,err = client.From("Players").Insert(playersToInsert, true, "espnid", "", "").Execute()
+		if err != nil {
+			log.Printf("Error inserting players: %v", err)
+			return
 		}
-
-		fmt.Println(epa, sack_rate, time_to_throw, ypa)
-		fmt.Printf("Added QB: %s, ESPN ID: %s\n", qb, "1")
 	}
-}
-
-
-func webScraperPassing(client *supabase.Client){
-	c := colly.NewCollector(
-		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"),
-		colly.AllowURLRevisit(),
-		)
-
-	c.OnRequest(func(r *colly.Request) {
-		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-		r.Headers.Set("Accept-Language", "en-US,en;q=0.5")
-	})
-
-	
-	c.OnHTML("tbody", func(e *colly.HTMLElement) {
-		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
-			fmt.Println(el)
-		})
-	})
-	c.Visit("https://nextgenstats.nfl.com/stats/passing#yards")
-
 }
 
 func webScraperRushing(client *supabase.Client){
@@ -252,25 +223,25 @@ func webScraperRushing(client *supabase.Client){
 	c.Visit("https://www.pro-football-reference.com/years/2024/rushing_advanced.htm")
 }
 
-func test(client *supabase.Client){
+func getPlayerID(client *supabase.Client, name string) string {
 	var players []Player
-	data, count, err := client.From("Players").Select("espnid", "exact", false).Eq("name", "Josh Allen").Execute()
+	data, _, err := client.From("Players").Select("espnid", "exact", false).Eq("name", name).Execute()
 	if err != nil {
 		log.Printf("Error querying players: %v", err)
-		return
+		return ""
 	}
 	fmt.Println(players)
 	
 	err = json.Unmarshal(data, &players)
 	if err != nil {
 		log.Printf("Error unmarshaling data: %v", err)
-		return
+		return ""
 	}
 	
-	fmt.Printf("Found %d players\n", count)
 	for _, player := range players {
 		fmt.Printf("Player: %s\n", player.Espnid)
 	}
+	return players[0].Espnid
 }
 
 func main() {
