@@ -1,4 +1,3 @@
-import React from "react";
 import InfoBox from "./InfoBox";
 import { Database } from "../lib/database.types";
 type PlayerCharacteristics =

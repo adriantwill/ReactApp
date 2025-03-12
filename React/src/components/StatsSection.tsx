@@ -1,4 +1,3 @@
-import { TbInfoCircle } from "react-icons/tb";
 import { Database } from "../lib/database.types";
 import InfoBox from "../subcomponents/InfoBox";
 
