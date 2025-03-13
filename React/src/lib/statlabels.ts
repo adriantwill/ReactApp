@@ -1,13 +1,13 @@
 export const passingStats = [
   {
-    label: "EPA",
+    label: "Passing EPA",
     description:
       "Expected Points Added (EPA) measures the value of each play based on down, distance, and field position. Positive EPA indicates an above-average play that improved the team's scoring chances.",
   },
-  { label: "Adj Completion %", description: "Real" },
-  { label: "Touchdowns", description: "Real" },
-  { label: "Pressure to Sack %", description: "Real" },
-  { label: "Avg Time to Throw", description: "Real" },
+  { label: "Time to Throw", description: "Real" },
+  { label: "Yards per Attempt", description: "Real" },
+  { label: "Sack %", description: "Real" },
+  { label: "On Target %", description: "Real" },
   { label: "Interception %", description: "Real" },
 ];
 

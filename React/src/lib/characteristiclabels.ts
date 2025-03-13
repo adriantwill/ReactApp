@@ -1,5 +1,5 @@
 export const passingCharacteristics = [
-  { label: "Elusiveness", description: "1" },
+  { label: "Play Extension", description: "1" },
   { label: "Accuracy", description: "2" },
   { label: "Processing", description: "3" },
 ];

@@ -106,7 +106,7 @@ function FrontPage() {
     return dateB.getTime() - dateA.getTime();
   });
   return (
-    <>
+    <div className="animate-fade-in-down">
       <Dropdown />
       <div className="pb-3 pl-2 overflow-auto flex pt-9">
         <Gamecard data={nflData ?? []} league={"NFL"} />
@@ -121,7 +121,7 @@ function FrontPage() {
           <BreakingCarosel likes={likes} />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

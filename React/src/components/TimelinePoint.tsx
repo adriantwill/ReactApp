@@ -1,17 +1,37 @@
 import { Database } from "../lib/database.types";
 
 type PlayerTeams = Database["public"]["Tables"]["Player_Team"]["Row"];
-type Team = Database["public"]["Tables"]["Teams"]["Row"];
+type TeamDetails = {
+  id: string;
+  uid: string;
+  slug: string;
+  abbreviation: string;
+  displayName: string;
+  shortDisplayName: string;
+  name: string;
+  nickname: string;
+  location: string;
+  color: string;
+  alternateColor: string;
+  isActive: boolean;
+  isAllStar: boolean;
+  logos: {
+    href: string;
+  }[];
+};
 
 function TimelinePoint(props: {
   index: number;
   team: PlayerTeams;
-  teamInfo: Team;
+  teamInfo?: TeamDetails;
 }) {
   const convertDate = (date: string) => {
     const d = new Date(date);
     return d.toLocaleString("en-US", { month: "long", year: "numeric" });
   };
+  if (!props.teamInfo) {
+    return null;
+  }
   return (
     <>
       {props.index > 0 && <div className="w-1 h-24 bg-black mx-auto"></div>}
@@ -21,7 +41,7 @@ function TimelinePoint(props: {
           style={{ backgroundColor: `#${props.teamInfo.color}` }}
         >
           <img
-            src={props.teamInfo.logo}
+            src={props.teamInfo.logos[1].href}
             className="absolute inset-0 m-auto object-contain w-10/12"
           />
         </div>

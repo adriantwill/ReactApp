@@ -17,6 +17,12 @@ import (
 	"github.com/tidwall/gjson"
 )
 
+type Team struct {
+	EspnId 	 string `json:"espnid"`
+	Name        string `json:"name"`
+	Color 	 string `json:"color"`
+}
+
 type Player struct {
 	Name     string `json:"name"`
 	Team     string `json:"teamid"`
@@ -59,6 +65,31 @@ func fetchData(url string) ([]byte, error) {
 	}
 
 	return ioutil.ReadAll(resp.Body)
+}
+
+func addTeams(client *supabase.Client){
+	var teamsToInsert []Team
+	data, err := fetchData("https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams")
+	if err != nil {
+		log.Printf("Error fetching data: %v", err)
+	}
+	teams := gjson.GetBytes(data, "sports.0.leagues.0.teams")
+	for _, team := range teams.Array() {
+		fmt.Println(team)
+		espnid := team.Get("team.id").String()
+		name := team.Get("team.displayName").String()
+		color := team.Get("team.color").String()
+		teamsToInsert = append(teamsToInsert, Team{
+			EspnId: espnid,
+			Name:   name,
+			Color:  color,
+		})
+	}
+	_,_,err = client.From("College_Teams").Insert(teamsToInsert, true, "espnid", "", "").Execute()
+	if err != nil {
+		log.Printf("Error inserting teams: %v", err)
+		return
+	}
 }
 
 func getTeamPlayers(client *supabase.Client){
@@ -287,7 +318,7 @@ func main() {
 	}
 	
 	fmt.Println("Hello, World!");
-	webScraperRushing(client)
+	addTeams(client)
 	
 }
 
