@@ -106,22 +106,24 @@ function FrontPage() {
     return dateB.getTime() - dateA.getTime();
   });
   return (
-    <div className="animate-fade-in-down">
+    <>
       <Dropdown />
-      <div className="pb-3 pl-2 overflow-auto flex pt-9">
-        <Gamecard data={nflData ?? []} league={"NFL"} />
-        <Gamecard data={nbaData ?? []} league={"NBA"} />
-      </div>
-      <div>
-        <h2 className="text-2xl text-center font-semibold text-white uppercase bg-[#3C3C3C] p-1">
-          Breaking
-        </h2>
-        <div className="flex group overflow-hidden bg-primary p-6 shadow-lg">
-          <BreakingCarosel likes={likes} />
-          <BreakingCarosel likes={likes} />
+      <div className="animate-fade-in-down">
+        <div className="pb-3 pl-2 overflow-auto flex pt-9">
+          <Gamecard data={nflData ?? []} league={"NFL"} />
+          <Gamecard data={nbaData ?? []} league={"NBA"} />
+        </div>
+        <div>
+          <h2 className="text-2xl text-center font-semibold text-white uppercase bg-[#3C3C3C] p-1">
+            Breaking
+          </h2>
+          <div className="flex group overflow-hidden bg-primary p-6 shadow-lg">
+            <BreakingCarosel likes={likes} />
+            <BreakingCarosel likes={likes} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

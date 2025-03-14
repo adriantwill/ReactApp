@@ -7,6 +7,7 @@ import Rankings from "./pages/Rankings";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Players from "./pages/Players";
 import AllPlayers from "./pages/AllPlayers";
+import AllTeams from "./pages/AllTeams";
 
 function App() {
   const queryClient = new QueryClient();
@@ -15,7 +16,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<FrontPage />} />
-          <Route path="/teams" element={<Teams />} />
+          <Route path="/teams" element={<AllTeams />} />
           <Route path="/teams/:id" element={<Teams />} />
           <Route path="/players" element={<AllPlayers />} />
           <Route path="/players/:id" element={<Players />} />

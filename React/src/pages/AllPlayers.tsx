@@ -59,22 +59,24 @@ function AllPlayers() {
   const playersList = Array.isArray(players) ? players : [];
   console.log(teams);
   return (
-    <div className="animate-fade-in-down">
+    <>
       <Dropdown />
-      <h1 className="text-center text-5xl p-5">Players</h1>
-      <p className="text-3xl ml-5 tracking-tighter border-b-2 font-bold border-gray-400 pb-1 inline-block">
-        Quarterbacks:
-      </p>
-      <div className="flex relative overflow-scroll gap-10 mx-5 py-5 ">
-        {playersList.map((player) => (
-          <PlayerCard
-            key={player.id}
-            player={player}
-            team={teams.find((team) => team.espnid === player.teamid)}
-          />
-        ))}
+      <div className="animate-fade-in-down">
+        <h1 className="text-center text-5xl p-5">Players</h1>
+        <p className="text-3xl ml-5 tracking-tighter border-b-2 font-bold border-gray-400 pb-1 inline-block">
+          Quarterbacks
+        </p>
+        <div className="flex relative overflow-scroll gap-10 mx-5 py-5 ">
+          {playersList.map((player) => (
+            <PlayerCard
+              key={player.id}
+              player={player}
+              team={teams.find((team) => team.espnid === player.teamid)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 export default AllPlayers;
