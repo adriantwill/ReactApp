@@ -4,229 +4,234 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   public: {
     Tables: {
-      College_Teams: {
-        Row: {
-          color: string
-          created_at: string
-          espn_id: string
-          id: number
-          logo: string
-          name: string
-        }
-        Insert: {
-          color: string
-          created_at?: string
-          espn_id: string
-          id?: number
-          logo: string
-          name: string
-        }
-        Update: {
-          color?: string
-          created_at?: string
-          espn_id?: string
-          id?: number
-          logo?: string
-          name?: string
-        }
-        Relationships: []
-      }
       Passing_Characteristic: {
         Row: {
-          created_at: string
-          deep: number
-          espnid: string
-          id: number
-          intermediate: number
-          pocket: number
-          rushing: number
-        }
+          accuracy: number;
+          created_at: string;
+          espnid: string;
+          id: number;
+          play_extension: number;
+          processing: number;
+        };
         Insert: {
-          created_at?: string
-          deep: number
-          espnid: string
-          id?: number
-          intermediate: number
-          pocket: number
-          rushing: number
-        }
+          accuracy: number;
+          created_at?: string;
+          espnid: string;
+          id?: number;
+          play_extension: number;
+          processing: number;
+        };
         Update: {
-          created_at?: string
-          deep?: number
-          espnid?: string
-          id?: number
-          intermediate?: number
-          pocket?: number
-          rushing?: number
-        }
-        Relationships: []
-      }
+          accuracy?: number;
+          created_at?: string;
+          espnid?: string;
+          id?: number;
+          play_extension?: number;
+          processing?: number;
+        };
+        Relationships: [];
+      };
       Passing_Stats: {
         Row: {
-          comppercent: number
-          created_at: string
-          epa: number
-          id: number
-          intpercent: number
-          playerid: number
-          qbr: number
-          ttt: number
-          ypa: number
-        }
+          created_at: string;
+          epa: number;
+          espnid: string;
+          id: number;
+          ontarget: number;
+          sackpercent: number;
+          ttt: number;
+          ypa: number;
+        };
         Insert: {
-          comppercent: number
-          created_at?: string
-          epa: number
-          id?: number
-          intpercent: number
-          playerid: number
-          qbr: number
-          ttt: number
-          ypa: number
-        }
+          created_at?: string;
+          epa: number;
+          espnid: string;
+          id?: number;
+          ontarget: number;
+          sackpercent: number;
+          ttt: number;
+          ypa: number;
+        };
         Update: {
-          comppercent?: number
-          created_at?: string
-          epa?: number
-          id?: number
-          intpercent?: number
-          playerid?: number
-          qbr?: number
-          ttt?: number
-          ypa?: number
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          epa?: number;
+          espnid?: string;
+          id?: number;
+          ontarget?: number;
+          sackpercent?: number;
+          ttt?: number;
+          ypa?: number;
+        };
+        Relationships: [];
+      };
       Player_Team: {
         Row: {
-          created_at: string
-          end_date: string | null
-          id: number
-          nfl: boolean
-          notes: string
-          player_espnid: string
-          start_date: string
-          team_id: string
-        }
+          created_at: string;
+          end_date: string | null;
+          id: number;
+          nfl: boolean;
+          notes: string;
+          player_espnid: string;
+          start_date: string;
+          team_id: string;
+        };
         Insert: {
-          created_at?: string
-          end_date?: string | null
-          id?: number
-          nfl?: boolean
-          notes?: string
-          player_espnid: string
-          start_date: string
-          team_id: string
-        }
+          created_at?: string;
+          end_date?: string | null;
+          id?: number;
+          nfl?: boolean;
+          notes?: string;
+          player_espnid: string;
+          start_date: string;
+          team_id: string;
+        };
         Update: {
-          created_at?: string
-          end_date?: string | null
-          id?: number
-          nfl?: boolean
-          notes?: string
-          player_espnid?: string
-          start_date?: string
-          team_id?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          end_date?: string | null;
+          id?: number;
+          nfl?: boolean;
+          notes?: string;
+          player_espnid?: string;
+          start_date?: string;
+          team_id?: string;
+        };
+        Relationships: [];
+      };
       Players: {
         Row: {
-          age: number
-          attributes: Json
-          contract: number
-          created_at: string
-          espnid: string
-          headshot: string
-          height: number
-          id: number
-          name: string
-          number: string
-          position: string
-          teamid: string
-          weight: number
-        }
+          age: number;
+          attributes: Json;
+          contract: number;
+          created_at: string;
+          espnid: string;
+          height: number;
+          id: number;
+          name: string;
+          number: string;
+          position: string;
+          teamid: string;
+          weight: number;
+        };
         Insert: {
-          age: number
-          attributes?: Json
-          contract?: number
-          created_at?: string
-          espnid: string
-          headshot: string
-          height: number
-          id?: number
-          name: string
-          number?: string
-          position: string
-          teamid: string
-          weight: number
-        }
+          age: number;
+          attributes?: Json;
+          contract?: number;
+          created_at?: string;
+          espnid: string;
+          height: number;
+          id?: number;
+          name: string;
+          number?: string;
+          position: string;
+          teamid: string;
+          weight: number;
+        };
         Update: {
-          age?: number
-          attributes?: Json
-          contract?: number
-          created_at?: string
-          espnid?: string
-          headshot?: string
-          height?: number
-          id?: number
-          name?: string
-          number?: string
-          position?: string
-          teamid?: string
-          weight?: number
-        }
-        Relationships: []
-      }
-      Teams: {
+          age?: number;
+          attributes?: Json;
+          contract?: number;
+          created_at?: string;
+          espnid?: string;
+          height?: number;
+          id?: number;
+          name?: string;
+          number?: string;
+          position?: string;
+          teamid?: string;
+          weight?: number;
+        };
+        Relationships: [];
+      };
+      Rushing_Stat: {
         Row: {
-          color: string
-          created_at: string
-          espnid: string
-          id: number
-          logo: string
-          name: string
-        }
+          broken_tackle: number | null;
+          created_at: string;
+          espnid: string;
+          first_down: number | null;
+          fumble: number | null;
+          id: number;
+          rush_epa: number | null;
+          yac: number | null;
+        };
         Insert: {
-          color: string
-          created_at?: string
-          espnid: string
-          id?: number
-          logo: string
-          name: string
-        }
+          broken_tackle?: number | null;
+          created_at?: string;
+          espnid: string;
+          first_down?: number | null;
+          fumble?: number | null;
+          id?: number;
+          rush_epa?: number | null;
+          yac?: number | null;
+        };
         Update: {
-          color?: string
-          created_at?: string
-          espnid?: string
-          id?: number
-          logo?: string
-          name?: string
-        }
-        Relationships: []
-      }
-    }
+          broken_tackle?: number | null;
+          created_at?: string;
+          espnid?: string;
+          first_down?: number | null;
+          fumble?: number | null;
+          id?: number;
+          rush_epa?: number | null;
+          yac?: number | null;
+        };
+        Relationships: [];
+      };
+      Team: {
+        Row: {
+          abbreviation: string;
+          color: string;
+          created_at: string;
+          division: string;
+          espnid: string;
+          id: number;
+          name: string;
+          secondary_color: string;
+        };
+        Insert: {
+          abbreviation?: string;
+          color: string;
+          created_at?: string;
+          division?: string;
+          espnid: string;
+          id?: number;
+          logo: string;
+          name: string;
+          secondary_color?: string;
+        };
+        Update: {
+          abbreviation?: string;
+          color?: string;
+          created_at?: string;
+          division?: string;
+          espnid?: string;
+          id?: number;
+          logo?: string;
+          name?: string;
+          secondary_color?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, "public">];
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -235,23 +240,23 @@ export type Tables<
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
   : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
+      PublicSchema["Views"])
+  ? (PublicSchema["Tables"] &
+      PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+      Row: infer R;
+    }
+    ? R
     : never
+  : never;
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -259,20 +264,20 @@ export type TablesInsert<
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+      Insert: infer I;
+    }
+    ? I
     : never
+  : never;
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -280,20 +285,20 @@ export type TablesUpdate<
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+      Update: infer U;
+    }
+    ? U
     : never
+  : never;
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -301,24 +306,24 @@ export type Enums<
     | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never = never
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never
+  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+  : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof PublicSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never = never
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never;

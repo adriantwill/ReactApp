@@ -3,10 +3,9 @@ import Dropdown from "../components/Dropdown";
 import PlayerCard from "../components/PlayerCard";
 import { supabase } from "../supabase-client";
 import { Database } from "../lib/database.types";
-import { useState } from "react";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
-type Team = Database["public"]["Tables"]["Teams"]["Row"];
+type Team = Database["public"]["Tables"]["Team"]["Row"];
 
 function AllPlayers() {
   const fetchPlayer = async () => {
@@ -30,7 +29,7 @@ function AllPlayers() {
     queryFn: fetchPlayer,
   });
   const fetchTeams = async () => {
-    const { data, error } = await supabase.from("Teams").select("*");
+    const { data, error } = await supabase.from("Team").select("*");
     if (error) {
       console.log("error", error);
       throw error;
@@ -66,7 +65,7 @@ function AllPlayers() {
         <p className="text-3xl ml-5 tracking-tighter border-b-2 font-bold border-gray-400 pb-1 inline-block">
           Quarterbacks
         </p>
-        <div className="flex relative overflow-scroll gap-10 mx-5 py-5 ">
+        <div className="flex relative overflow-scroll gap-12 mx-5 py-5 ">
           {playersList.map((player) => (
             <PlayerCard
               key={player.id}

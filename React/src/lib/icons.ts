@@ -3,6 +3,7 @@ import { TbTargetArrow } from "react-icons/tb";
 import { TbFaceIdError } from "react-icons/tb";
 import { TbUsersGroup } from "react-icons/tb";
 import { TbBrain } from "react-icons/tb";
+import { FaFootballBall } from "react-icons/fa";
 
 // Type for trait names to ensure type safety
 export type TraitName = "accurate" | "error" | "strong team" | "processor";

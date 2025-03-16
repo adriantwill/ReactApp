@@ -18,7 +18,7 @@ import {
 } from "../lib/characteristiclabels";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
-type Team = Database["public"]["Tables"]["Teams"]["Row"];
+type Team = Database["public"]["Tables"]["Team"]["Row"];
 type PlayerTeams = Database["public"]["Tables"]["Player_Team"]["Row"];
 type PlayerPassingStats = Database["public"]["Tables"]["Passing_Stats"]["Row"];
 type PlayerCharacteristics =
@@ -59,7 +59,7 @@ function Players() {
   };
   const fetchTeam = async () => {
     const { data, error } = await supabase
-      .from("Teams")
+      .from("Team")
       .select("*")
       .eq("espnid", player?.teamid);
     if (error) {
@@ -233,7 +233,7 @@ function Players() {
               className="relative z-10"
             />
             <img
-              src={team.logo}
+              src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${team.abbreviation}.png`}
               className="absolute opacity-50 -bottom-4 left-0"
             />
           </div>

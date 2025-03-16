@@ -2,7 +2,7 @@ import { Database } from "../lib/database.types";
 import { useNavigate } from "react-router";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
-type Team = Database["public"]["Tables"]["Teams"]["Row"];
+type Team = Database["public"]["Tables"]["Team"]["Row"];
 
 function PlayerCard(props: { player?: Player; team?: Team }) {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ function PlayerCard(props: { player?: Player; team?: Team }) {
           }}
         />
         <img
-          src={props.team.logo}
+          src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${props.team.abbreviation}.png`}
           className="absolute opacity-70 top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-[110%] transition-all duration-300 ease-in-out group-hover:opacity-90 group-hover:min-w-[120%] " // Added smooth transition and subtle rotation
         />
       </div>

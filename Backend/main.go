@@ -21,6 +21,9 @@ type Team struct {
 	EspnId 	 string `json:"espnid"`
 	Name        string `json:"name"`
 	Color 	 string `json:"color"`
+	Abbreviation string `json:"abbreviation"`
+	Division string `json:"division"`
+	Secondary string `json:"secondary_color"`
 }
 
 type Player struct {
@@ -69,23 +72,44 @@ func fetchData(url string) ([]byte, error) {
 
 func addTeams(client *supabase.Client){
 	var teamsToInsert []Team
-	data, err := fetchData("https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams")
+	data, err := fetchData("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams")
 	if err != nil {
 		log.Printf("Error fetching data: %v", err)
 	}
 	teams := gjson.GetBytes(data, "sports.0.leagues.0.teams")
 	for _, team := range teams.Array() {
-		fmt.Println(team)
 		espnid := team.Get("team.id").String()
 		name := team.Get("team.displayName").String()
 		color := team.Get("team.color").String()
+		seconday := team.Get("team.alternateColor").String()
+		abbreviation := team.Get("team.abbreviation").String()
+		fmt.Println(abbreviation)
+		division := "AFC West"
+		if (abbreviation=="BAL" || abbreviation=="CIN" || abbreviation=="CLE" || abbreviation=="PIT"){
+			division="AFC North"
+		} else if (abbreviation=="TEN" || abbreviation=="IND" || abbreviation=="JAX" || abbreviation=="HOU"){
+			division="AFC South"
+		} else if (abbreviation=="NYJ" || abbreviation=="BUF" || abbreviation=="MIA" || abbreviation=="NE"){
+			division="AFC East"
+		} else if (abbreviation=="SEA" || abbreviation=="SF" || abbreviation=="LAR" || abbreviation=="ARI"){
+			division="NFC West"
+		} else if (abbreviation=="CHI" || abbreviation=="DET" || abbreviation=="GB" || abbreviation=="MIN"){
+			division="NFC North"
+		} else if (abbreviation=="NO" || abbreviation=="ATL" || abbreviation=="CAR" || abbreviation=="TB"){
+			division="NFC South"
+		} else if (abbreviation=="PHI" || abbreviation=="DAL" || abbreviation=="WSH" || abbreviation=="NYG"){
+			division="NFC East"
+		}
 		teamsToInsert = append(teamsToInsert, Team{
 			EspnId: espnid,
 			Name:   name,
 			Color:  color,
+			Abbreviation: abbreviation,
+			Division: division,
+			Secondary: seconday,
 		})
 	}
-	_,_,err = client.From("College_Teams").Insert(teamsToInsert, true, "espnid", "", "").Execute()
+	_,_,err = client.From("Team").Insert(teamsToInsert, true, "espnid", "", "").Execute()
 	if err != nil {
 		log.Printf("Error inserting teams: %v", err)
 		return
