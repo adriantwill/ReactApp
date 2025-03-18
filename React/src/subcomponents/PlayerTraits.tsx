@@ -27,7 +27,6 @@ function PlayerTraits(props: TraitProps) {
               <div className="text-lg text-center">
                 {props.characteristicLabel[index].label}
               </div>
-              <InfoBox info="This is a trait" />
             </div>
             <div className="text-xs text-center">Tier</div>
             <div className="text-3xl text-center font-medium ">{value}</div>

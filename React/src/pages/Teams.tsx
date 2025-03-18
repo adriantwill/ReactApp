@@ -7,6 +7,7 @@ import { Navigate, useParams } from "react-router";
 import NextGame from "../components/NextGame";
 import TeamStat from "../components/TeamStat";
 import { useQuery } from "@tanstack/react-query";
+import CoachInfo from "../components/CoachInfo";
 
 export type TeamInfo = {
   color: string;
@@ -208,11 +209,11 @@ function Teams() {
               <TeamStat
                 item={teamData.record.items[0]}
                 color={teamData.color}
-              ></TeamStat>
-              <TeamStat
+              />
+              <CoachInfo
                 item={teamData.record.items[0]}
                 color={teamData.color}
-              ></TeamStat>
+              />
             </div>
             <div className="bg-[url('./assets/background.svg')] bg-cover bg-center shadow-surround rounded-md mt-12">
               <div className="flex">

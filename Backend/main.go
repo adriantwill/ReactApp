@@ -342,7 +342,7 @@ func main() {
 	}
 	
 	fmt.Println("Hello, World!");
-	addTeams(client)
+	//addTeams(client)
 	
 }
 
