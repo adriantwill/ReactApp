@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import InfoBox from "./InfoBox";
+import InfoBox from "./PlayerModalMediumCard";
 import StatsTable from "./StatsTable";
 import { useQuery } from "@tanstack/react-query";
 import { PlayerInfo, TeamInfo } from "../pages/Teams";
@@ -63,22 +63,28 @@ function Modal(props: MoadlProps) {
       selection: "UDFA",
     };
   }
-  const { data: gameLog, isLoading, isError } = useQuery<GameLog>({
+  const {
+    data: gameLog,
+    isLoading,
+    isError,
+  } = useQuery<GameLog>({
     queryKey: ["gameLog"],
     queryFn: async () => {
-      const response = await fetch(`https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${props.player.id}/gamelog`);
+      const response = await fetch(
+        `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${props.player.id}/gamelog`
+      );
       const data = await response.json();
       return data;
-    }
-  })
+    },
+  });
   const { data: college } = useQuery<string>({
     queryKey: ["college"],
     queryFn: async () => {
       const response = await fetch(props.player.college.$ref);
       const data = await response.json();
       return data.abbrev;
-    }
-  })
+    },
+  });
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading data</p>;
@@ -131,7 +137,7 @@ function Modal(props: MoadlProps) {
           <div className="w-[70rem]">
             <div className="flex justify-between">
               <InfoBox
-                item1={college || ''}
+                item1={college || ""}
                 item2={props.player.draft.year}
                 item3={props.player.draft.selection}
                 style={"mr-4"}

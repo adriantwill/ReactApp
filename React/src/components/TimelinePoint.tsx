@@ -47,7 +47,7 @@ function TimelinePoint(props: {
         </div>
 
         <div
-          className={`bg-white rounded-lg px-4 py-2 shadow-lg w-56 h-20 absolute overflow-auto ${
+          className={`bg-white rounded-lg px-4 py-2 shadow-surround w-56 h-20 absolute overflow-auto ${
             props.index % 2 === 0 ? "translate-x-48" : "-translate-x-48"
           }`}
         >

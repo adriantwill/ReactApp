@@ -23,6 +23,7 @@ import {
 import RankingCard from "../components/RankingCard";
 import RankingsDropdown from "../components/RankingsDropdown";
 import { supabase } from "../supabase-client";
+import MainPageTitle from "../subcomponents/MainPageTitle";
 
 type Split = {
   stats: string[];
@@ -232,9 +233,7 @@ function Rankings() {
     <>
       <Dropdown />
       <div className="flex flex-col items-center">
-        <h1 className="text-3xl font-light tracking-wide text-center m-5">
-          User Rankings
-        </h1>
+        <MainPageTitle title="Rankings" />
         <div className="flex flex-col gap-10">
           <div className="bg-white shadow-surround rounded-2xl">
             <div className="flex gap-6 items-center h-full py-3 px-6">

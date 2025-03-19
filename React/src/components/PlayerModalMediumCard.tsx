@@ -5,7 +5,7 @@ type PlayerInfo = {
   style: string;
 };
 
-function InfoBox(props: PlayerInfo) {
+function PlayerModalMediumCard(props: PlayerInfo) {
   return (
     <div className={`drop-shadow-sm w-[55vh]`}>
       <div className="rounded-t-xl p-3 pb-5 -mb-2 bg-[rgba(255,255,255,0.25)] font-medium ">
@@ -35,4 +35,4 @@ function InfoBox(props: PlayerInfo) {
   );
 }
 
-export default InfoBox;
+export default PlayerModalMediumCard;

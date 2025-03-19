@@ -2,37 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar-track {
-  background: transparent; /* Transparent background */
+/* ::-webkit-scrollbar-track {
+  background: transparent; 
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
-}
+} */
 
 * {
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent; /* Thumb color | Track color */
-  font-family: "Nunito", sans-serif;
+  font-family: "LibreFranklin", sans-serif;
 }
 
 @font-face {
-  font-family: "Nunito";
+  font-family: "LibreFranklin";
   font-weight: 400;
-  src: url("src/assets/fonts/Nunito-Regular.woff2") format("woff2");
+  src: url("src/assets/fonts/LibreFranklin-Regular.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Nunito";
+  font-family: "LibreFranklin";
   font-weight: 300;
-  src: url("src/assets/fonts/Nunito-Light.woff2") format("woff2");
+  src: url("src/assets/fonts/LibreFranklin-Light.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Nunito";
+  font-family: "LibreFranklin";
   font-weight: 500;
-  src: url("src/assets/fonts/Nunito-Medium.woff2") format("woff2");
+  src: url("src/assets/fonts/LibreFranklin-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "LibreFranklin";
+  font-weight: 600;
+  src: url("src/assets/fonts/LibreFranklin-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Nunito";
+  font-family: "LibreFranklin";
   font-weight: 700;
-  src: url("src/assets/fonts/Nunito-Bold.woff2") format("woff2");
+  src: url("src/assets/fonts/LibreFranklin-Bold.woff2") format("woff2");
 }

@@ -3,6 +3,7 @@ import Dropdown from "../components/Dropdown";
 import PlayerCard from "../components/PlayerCard";
 import { supabase } from "../supabase-client";
 import { Database } from "../lib/database.types";
+import MainPageTitle from "../subcomponents/MainPageTitle";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
 type Team = Database["public"]["Tables"]["Team"]["Row"];
@@ -61,7 +62,7 @@ function AllPlayers() {
     <>
       <Dropdown />
       <div className="animate-fade-in-down">
-        <h1 className="text-center text-5xl p-5">Players</h1>
+        <MainPageTitle title="Players" />
         <p className="text-3xl ml-5 tracking-tighter border-b-2 font-bold border-gray-400 pb-1 inline-block">
           Quarterbacks
         </p>

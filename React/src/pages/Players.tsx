@@ -217,7 +217,7 @@ function Players() {
     characteristics = rushingCharacteristics;
   }
   return (
-    <div className="animate-fade-in-down">
+    <div className="animate-fade-in-down bg-primary">
       <Dropdown />
       <div className="mb-12" style={{ backgroundColor: `#${team?.color}` }}>
         <div className="w-[90rem] mx-auto flex justify-between h-52 overflow-hidden">
@@ -262,9 +262,9 @@ function Players() {
               player.attributes.map((attribute, index) => (
                 <div key={index} className="flex flex-col items-center">
                   {React.createElement(getTraitIcon(String(attribute)), {
-                    size: 36,
+                    size: 34,
                   })}
-                  <div className="text-lg text-center proper capitalize">
+                  <div className=" text-center proper capitalize">
                     {String(attribute)}
                   </div>
                 </div>

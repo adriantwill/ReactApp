@@ -1,10 +1,10 @@
 import Dropdown from "../components/Dropdown";
 import TeamCard from "../components/TeamCard";
 import InfoSubHeader from "../subcomponents/InfoSubHeader";
-import PageTitle from "../subcomponents/PageTitle";
 import { Database } from "../lib/database.types";
 import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
+import MainPageTitle from "../subcomponents/MainPageTitle";
 
 type Team = Database["public"]["Tables"]["Team"]["Row"];
 
@@ -58,7 +58,7 @@ function AllTeams() {
     <>
       <Dropdown />
       <div className="animate-fade-in-down">
-        <PageTitle title="Teams" />
+        <MainPageTitle title="Teams" />
         <div className="flex justify-center gap-16">
           <div className="">
             <InfoSubHeader text="NFC" />

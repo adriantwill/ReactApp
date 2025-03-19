@@ -1,21 +1,35 @@
 import { IconType } from "react-icons/lib";
-import { TbTargetArrow } from "react-icons/tb";
 import { TbFaceIdError } from "react-icons/tb";
-import { TbUsersGroup } from "react-icons/tb";
+import { TbTargetArrow } from "react-icons/tb";
+import { LuBicepsFlexed } from "react-icons/lu";
+import { TbRun } from "react-icons/tb";
 import { TbBrain } from "react-icons/tb";
-import { FaFootballBall } from "react-icons/fa";
+import { PiFootballHelmet } from "react-icons/pi";
 
 // Type for trait names to ensure type safety
-export type TraitName = "accurate" | "error" | "strong team" | "processor";
+export type TraitName = string;
 // Add other traits as needed
 
 // Map of trait names to their corresponding icon components
 export const traitIcons: Record<TraitName, IconType> = {
-  accurate: TbTargetArrow,
-  error: TbFaceIdError,
-  "strong team": TbUsersGroup,
+  "pocket passer": PiFootballHelmet,
+  gunslinger: PiFootballHelmet,
+  "dual threat": PiFootballHelmet,
+  deep: TbTargetArrow,
+  medium: TbTargetArrow,
+  sideline: TbTargetArrow,
+  intermediate: TbTargetArrow,
+  pressure: TbTargetArrow,
   processor: TbBrain,
-  // Add other trait-icon mappings as needed
+  "decision maker": TbBrain,
+  "pocket presence": TbBrain,
+  strength: LuBicepsFlexed,
+  versitility: LuBicepsFlexed,
+  velocity: LuBicepsFlexed,
+  rushing: TbRun,
+  elusiveness: TbRun,
+  "play extension": TbRun,
+  error: TbFaceIdError,
 };
 
 // Helper function to get an icon component by trait name
