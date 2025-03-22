@@ -31,7 +31,7 @@ function SlimRankingCard(props: {
       {...attributes}
       {...listeners}
       style={style}
-      className="relative bg-white rounded-md shadow-md cursor-grab w-[28rem]"
+      className="relative bg-white rounded-md border shadow-md cursor-grab w-[28rem]"
     >
       <div
         className={`

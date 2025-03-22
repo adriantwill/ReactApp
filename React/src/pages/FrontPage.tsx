@@ -7,6 +7,7 @@ import {
 } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import Gamecard from "../components/Gamecard";
 import BreakingCarosel from "../components/BreakingCarosel";
+import DraftFrontPageCard from "../components/DraftFrontPageCard";
 
 export interface FeedViewPostWithRecord extends FeedViewPost {
   post: PostView & {
@@ -53,6 +54,16 @@ type Team = {
   logo: string;
 };
 
+export type Player = {
+  displayName: string;
+  weight: number;
+  height: number;
+  position: string;
+  headshot: string;
+  college: string;
+  experience: { displayValue: string };
+};
+
 function FrontPage() {
   const agent = new AtpAgent({ service: "https://bsky.social" });
   const { data } = useQuery<FeedViewPost[]>({
@@ -77,7 +88,7 @@ function FrontPage() {
     queryKey: ["nbaEvents"],
     queryFn: async () => {
       const response = await fetch(
-        "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
+        "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard"
       );
       const data = await response.json();
       return data.events;
@@ -99,6 +110,78 @@ function FrontPage() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
+  const { data: nflDraftData } = useQuery<{ items: Array<{ $ref: string }> }>({
+    queryKey: ["nflDraft"],
+    queryFn: async () => {
+      const response = await fetch(
+        "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2025/draft/athletes?lang=en&region=us"
+      );
+      return response.json();
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+  const { data: draftPlayers } = useQuery<
+    {
+      athlete: Player & {
+        fullName: string;
+        headshot?: string;
+        college?: { name: string; logo?: string };
+      };
+      college: { name: string; logo?: string };
+    }[]
+  >({
+    queryKey: ["draftPlayersDetails", nflDraftData],
+    queryFn: async () => {
+      if (!nflDraftData?.items?.length) return [];
+
+      const playerPromises = nflDraftData.items.map(async (item) => {
+        const response = await fetch(item.$ref);
+        const playerData = await response.json();
+
+        try {
+          const athleteResponse = await fetch(playerData.athlete.$ref);
+          const athleteData = await athleteResponse.json();
+
+          const collegeId = playerData.college.$ref.split("/").pop();
+          const collegeResponse = await fetch(
+            `https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/${collegeId}`
+          );
+          const collegeData = await collegeResponse.json();
+
+          return {
+            athlete: {
+              ...athleteData,
+              position: athleteData.position.abbreviation,
+              fullName: athleteData.fullName || athleteData.displayName,
+              headshot: athleteData.headshot?.href || null,
+            },
+            college: collegeData
+              ? {
+                  name: collegeData.team.shortDisplayName,
+                  logo: collegeData.team.logos?.[1]?.href || null,
+                  color: collegeData.team.color,
+                }
+              : null,
+          };
+        } catch (error) {
+          console.error("Error fetching player details:", error);
+          return {
+            athlete: playerData.athlete,
+            college: playerData.college,
+          };
+        }
+      });
+
+      return Promise.all(playerPromises);
+    },
+    enabled: !!nflDraftData?.items?.length,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
   let likes = data as FeedViewPostWithRecord[];
   likes = likes?.sort((a, b) => {
     const dateA = new Date(a.post.record.createdAt);
@@ -108,18 +191,33 @@ function FrontPage() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down">
-        <div className="pb-3 pl-2 overflow-auto flex pt-9">
+      <div className="animate-fade-in-down bg-white">
+        <div className="pb-8 pl-2 overflow-auto flex pt-9">
           <Gamecard data={nflData ?? []} league={"NFL"} />
-          <Gamecard data={nbaData ?? []} league={"NBA"} />
+          <Gamecard data={nbaData ?? []} league={"NCAA"} />
         </div>
         <div>
           <h2 className="text-2xl text-center font-semibold text-white uppercase bg-[#3C3C3C] p-1">
             Breaking
           </h2>
-          <div className="flex group overflow-hidden bg-primary p-6 shadow-lg">
+          <div className="flex group overflow-hidden bg-gray-100 p-6 shadow-surround">
             <BreakingCarosel likes={likes} />
             <BreakingCarosel likes={likes} />
+          </div>
+        </div>
+        <div className=" my-12 bg-white shadow-surround">
+          <div className="text-center text-2xl font-semibold text-black p-3 tracking-tighter border-gray-400 ">
+            Big Board
+          </div>
+          <div className="flex overflow-auto overflow-y-visible gap-12 px-5 pb-5">
+            {draftPlayers?.slice(0, 10).map((player, index) => (
+              <DraftFrontPageCard
+                key={index}
+                player={player.athlete}
+                college={player.college}
+              />
+            ))}
+            d
           </div>
         </div>
       </div>

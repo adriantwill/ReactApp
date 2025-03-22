@@ -2,7 +2,6 @@ import { Games } from "../pages/FrontPage";
 import GameCardInfo from "./GameCardInfo";
 
 function Gamecard(props: { data: Games[]; league: string }) {
-  console.log(props.data);
   const sortedData = [...props.data].sort((a, b) => {
     const statusOrder: { [key: number]: number } = { 2: 0, 1: 1, 3: 2 };
     return (
@@ -10,7 +9,6 @@ function Gamecard(props: { data: Games[]; league: string }) {
       statusOrder[Number(b.status.type.id)]
     );
   });
-  console.log(sortedData);
   return (
     <div className="flex relative">
       <p className="text-lg text-gray-500 block absolute -top-6 left-2">

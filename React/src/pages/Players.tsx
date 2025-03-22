@@ -4,7 +4,6 @@ import StatsSection from "../components/StatsSection";
 import TimelinePoint from "../components/TimelinePoint";
 import PlayerPageSmallCard from "../components/PlayerPageSmallCard";
 import PlayerTraits from "../subcomponents/PlayerTraits";
-import PlayerPageMediumCard from "../components/PlayerPageMediumCard";
 import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { Database } from "../lib/database.types";
@@ -16,6 +15,7 @@ import {
   passingCharacteristics,
   rushingCharacteristics,
 } from "../lib/characteristiclabels";
+import MediumCardTitle from "../subcomponents/MediumCardTitle";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
 type Team = Database["public"]["Tables"]["Team"]["Row"];
@@ -159,9 +159,8 @@ function Players() {
     return data[0];
   };
   const { data: playerPassingStats } = useQuery<PlayerPassingStats>({
-    queryKey: ["playerPassingStats", player],
+    queryKey: ["playerPassingStats"],
     queryFn: fetchPlayerPassingStats,
-    enabled: !!player,
     refetchOnWindowFocus: false,
   });
   const fetchPlayerRushingStats = async () => {
@@ -194,9 +193,8 @@ function Players() {
   };
 
   const { data: playerCharacteristics } = useQuery<PlayerCharacteristics>({
-    queryKey: ["playerCharacteristics", player],
+    queryKey: ["playerCharacteristics"],
     queryFn: fetchPlayerCharacteristics,
-    enabled: !!player,
     refetchOnWindowFocus: false,
   });
 
@@ -217,108 +215,104 @@ function Players() {
     characteristics = rushingCharacteristics;
   }
   return (
-    <div className="animate-fade-in-down bg-primary">
+    <>
       <Dropdown />
-      <div className="mb-12" style={{ backgroundColor: `#${team?.color}` }}>
-        <div className="w-[90rem] mx-auto flex justify-between h-52 overflow-hidden">
-          <div className="py-8 flex flex-col justify-around">
-            <h1 className="text-white text-6xl font-bold ">{player.name}</h1>
-            <h2 className="text-white text-4xl font-medium">
-              {player.position + " | #" + player.number}
-            </h2>
-          </div>
-          <div className="relative w-60 self-end ">
-            <img
-              src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espnid}.png`}
-              className="relative z-10"
-            />
-            <img
-              src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${team.abbreviation}.png`}
-              className="absolute opacity-50 -bottom-4 left-0"
-            />
+      <div className="animate-fade-in-down bg-white">
+        <div className="mb-12" style={{ backgroundColor: `#${team?.color}` }}>
+          <div className="w-[90rem] mx-auto flex justify-between h-52 overflow-hidden">
+            <div className="py-8 flex flex-col justify-around">
+              <h1 className="text-white text-6xl font-bold ">{player.name}</h1>
+              <h2 className="text-white text-4xl font-medium">
+                {player.position + " | #" + player.number}
+              </h2>
+            </div>
+            <div className="relative w-60 self-end ">
+              <img
+                src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espnid}.png`}
+                className="relative z-10"
+              />
+              <img
+                src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${team.abbreviation}.png`}
+                className="absolute opacity-50 -bottom-4 left-0"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="w-[90rem] mx-auto space-y-12">
-        <div className="flex justify-between">
-          <PlayerPageSmallCard
-            title="Info"
-            tailwind=" justify-evenly"
-            color={team.color}
-          >
-            <PlayerInfo
-              age={player.age}
-              salary={player.contract}
-              height={player.height}
-              weight={player.weight}
-            />
-          </PlayerPageSmallCard>
-          <PlayerPageSmallCard
-            title="Traits"
-            tailwind="grid grid-flow-col"
-            color={team.color}
-          >
-            {Array.isArray(player.attributes) &&
-              player.attributes.map((attribute, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  {React.createElement(getTraitIcon(String(attribute)), {
-                    size: 34,
-                  })}
-                  <div className=" text-center proper capitalize">
-                    {String(attribute)}
+        <div className="w-[90rem] mx-auto space-y-12">
+          <div className="flex justify-between">
+            <PlayerPageSmallCard
+              title="Info"
+              tailwind=" justify-evenly"
+              color={team.color}
+            >
+              <PlayerInfo
+                age={player.age}
+                salary={player.contract}
+                height={player.height}
+                weight={player.weight}
+              />
+            </PlayerPageSmallCard>
+            <PlayerPageSmallCard
+              title="Traits"
+              tailwind="grid grid-flow-col"
+              color={team.color}
+            >
+              {Array.isArray(player.attributes) &&
+                player.attributes.map((attribute, index) => (
+                  <div key={index} className="flex flex-col items-center">
+                    {React.createElement(getTraitIcon(String(attribute)), {
+                      size: 34,
+                    })}
+                    <div className=" text-center proper capitalize">
+                      {String(attribute)}
+                    </div>
                   </div>
-                </div>
-              ))}
-          </PlayerPageSmallCard>
-          <PlayerPageSmallCard
-            title="Characteristics"
-            tailwind="justify-evenly "
-            color={team.color}
-          >
-            <PlayerTraits
-              characteristicLabel={characteristics}
-              playerCharacteristics={playerCharacteristics}
-            />
-          </PlayerPageSmallCard>
-        </div>
-        <div className="flex justify-between">
-          {" "}
-          <PlayerPageMediumCard
-            title="Stats"
-            tailwind="grid grid-cols-2 gap-6"
-            color={team.color}
-          >
+                ))}
+            </PlayerPageSmallCard>
+            <PlayerPageSmallCard
+              title="Characteristics"
+              tailwind="justify-evenly "
+              color={team.color}
+            >
+              <PlayerTraits
+                characteristicLabel={characteristics}
+                playerCharacteristics={playerCharacteristics}
+              />
+            </PlayerPageSmallCard>
+          </div>
+          <div className="flex justify-between">
             <StatsSection
               title="Passing"
               stats={playerPassingStats}
               table={statsTable1}
+              color={team.color}
             />
             <StatsSection
               title="Rushing"
               stats={playerRushingStats}
               table={statsTable2}
+              color={team.color}
             />
-          </PlayerPageMediumCard>
-          <PlayerPageMediumCard
-            title="Timeline"
-            tailwind="overflow-y-auto"
-            color={team.color}
-          >
-            {Array.isArray(teams) &&
-              teams.map((timelineTeam, index) => (
-                <TimelinePoint
-                  key={index}
-                  index={index}
-                  team={timelineTeam}
-                  teamInfo={allteams.find(
-                    (team) => team.id === timelineTeam.team_id
-                  )}
-                ></TimelinePoint>
-              ))}
-          </PlayerPageMediumCard>
+            <div className="w-[42rem] mb-6 bg-white rounded-md shadow-surround">
+              <MediumCardTitle title={"Timeline"} color={team.color} />
+              <div className={`h-[21rem] px-8 py-6 overflow-y-auto `}>
+                {Array.isArray(teams) &&
+                  teams.map((timelineTeam, index) => (
+                    <TimelinePoint
+                      key={index}
+                      index={index}
+                      team={timelineTeam}
+                      teamInfo={allteams.find(
+                        (team) => team.id === timelineTeam.team_id
+                      )}
+                    ></TimelinePoint>
+                  ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 export default Players;

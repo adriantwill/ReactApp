@@ -2,7 +2,6 @@ import Dropdown from "../components/Dropdown";
 import KeyButton from "../components/KeyButton";
 import { useState } from "react";
 import MainPageTitle from "../subcomponents/MainPageTitle";
-import { TbTargetArrow } from "react-icons/tb";
 import ChacteristicBoxKey from "../components/ChacteristicBoxKey";
 import TraitBoxKey from "../components/TraitBoxKey";
 import { passingCharacteristics } from "../lib/characteristiclabels";
@@ -16,9 +15,9 @@ function Key() {
     <>
       <Dropdown />
       <div className="animate-fade-in-down">
-        <MainPageTitle title="Key" />
+        <MainPageTitle title="Player Key" />
 
-        <div className="max-w-7xl mx-auto space-x-6 my-10 ">
+        <div className="max-w-7xl mx-auto space-x-6 my-10">
           {["Passing", "Rushing", "Receiving", "Blocking"].map(
             (title, index) => (
               <KeyButton
@@ -30,7 +29,7 @@ function Key() {
             )
           )}
         </div>
-        <div className="max-w-7xl mx-auto bg-white rounded-md shadow-surround ">
+        <div className="max-w-7xl mx-auto bg-white rounded-md shadow-surround py-8">
           <KeyCards title={"Characteristics"}>
             {passingCharacteristics.map((characteristic, index) => (
               <ChacteristicBoxKey
@@ -40,6 +39,7 @@ function Key() {
               />
             ))}
           </KeyCards>
+          <div className="mt-12"></div> {/* Added spacing between components */}
           <KeyCards title={"Traits"}>
             {passingTraits.map((characteristic, index) => (
               <TraitBoxKey
