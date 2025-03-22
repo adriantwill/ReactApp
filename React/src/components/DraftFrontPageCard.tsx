@@ -1,11 +1,7 @@
 import { Player } from "../pages/FrontPage";
 
 function DraftFrontPageCard(props: {
-  player: Player & {
-    fullName: string;
-    headshot?: string;
-    college?: { name: string; logo?: string; color: string };
-  };
+  player: Player;
   college: { name: string; logo?: string; color: string };
 }) {
   console.log(props.college.color);

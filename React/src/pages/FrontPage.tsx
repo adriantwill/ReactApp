@@ -125,11 +125,7 @@ function FrontPage() {
 
   const { data: draftPlayers } = useQuery<
     {
-      athlete: Player & {
-        fullName: string;
-        headshot?: string;
-        college?: { name: string; logo?: string };
-      };
+      athlete: Player;
       college: { name: string; logo?: string };
     }[]
   >({
