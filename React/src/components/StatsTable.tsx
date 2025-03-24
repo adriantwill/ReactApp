@@ -54,7 +54,7 @@ function StatsTable(props: StatsProps) {
     count: 3,
   };
   const label = ["DATE", "OPP", "RES"];
-  let allCategories: [CategoriesLabels] = [opponents];
+  let allCategories: CategoriesLabels[] = [opponents];
   if (props.gameLog?.categories) {
     allCategories.push(...props.gameLog.categories);
   }
@@ -104,7 +104,7 @@ function StatsTable(props: StatsProps) {
                 const regEvents =
                   props.gameLog.seasonTypes[
                     props.gameLog.seasonTypes.length - 1
-                  ].categories[0].events;
+                  ].categories[0]?.events || [];
                 const event = Object.values(props.gameLog.events).find(
                   (event) =>
                     event.week === index + 1 &&
@@ -137,7 +137,6 @@ function StatsTable(props: StatsProps) {
                         </td>
                       </>
                     ) : (
-                      regEvents.length > 0 &&
                       Array.from({ length: activeStats.count }).map(
                         (_, weeklyIndex) => (
                           <td
@@ -145,6 +144,7 @@ function StatsTable(props: StatsProps) {
                             key={weeklyIndex}
                           >
                             {(event &&
+                              regEvents.length > 0 &&
                               regEvents.find((e) => e.eventId === event.id)
                                 ?.stats[weeklyIndex + totalCount]) ||
                               "-"}

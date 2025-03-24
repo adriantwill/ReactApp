@@ -112,7 +112,6 @@ export type PlayerInfo = {
 function Teams() {
   const { id } = useParams();
   const teamId = Number(id) || 1;
-  console.log(teamId);
   if (!((teamId > 0 && teamId < 31) || teamId == 33 || teamId == 34)) {
     return <Navigate to="/error" replace />; // Redirect to error route
   }
@@ -148,11 +147,9 @@ function Teams() {
     const positions = ["qb", "rb", "wr", "te", "lt", "lg", "c", "rg", "rt"];
 
     for (const element of positions) {
-      console.log(fetchedUrl);
       const primaryResponse = await fetch(
         fetchedUrl[element].athletes[0].athlete.$ref
       );
-      console.log(element);
       const primaryResult = await primaryResponse.json();
       allResults.push(primaryResult);
 
@@ -193,19 +190,16 @@ function Teams() {
         ></Modal>
       )}
       {data && data.length > 10 && teamData && (
-        <div className="flex justify-center flex-col">
+        <div className="flex justify-center flex-col animate-fade-in-down">
           <Title teamName={teamData} />
 
           <nav className="flex justify-center space-x-4 py-3 shadow-surround">
-            <button className="px-4 text-xl font-semibold ">Home</button>
-            <button className="px-4 text-xl font-semibold ">Schedule</button>
-            <button className="px-4 text-xl font-semibold ">Roster</button>
-            <button className="px-4 text-xl font-semibold ">Stats</button>
-            <button className="px-4 text-xl font-semibold ">News</button>
+            <button className="px-4 text-xl font-semibold ">Offense</button>
+            <button className="px-4 text-xl font-semibold ">Defense</button>
           </nav>
 
           <div className=" m-12">
-            <div className="flex justify-between">
+            <div className="flex gap-12">
               <TeamStat
                 item={teamData.record.items[0]}
                 color={teamData.color}

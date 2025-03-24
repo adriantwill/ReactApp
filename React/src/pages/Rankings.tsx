@@ -227,10 +227,10 @@ function Rankings() {
                   ))}
                 </div>
                 <div
-                  className="bg-white w-fit rounded-lg shadow-surround h-[39rem] flex flex-col gap-7 p-8 overflow-y-auto overflow-x-hidden"
-                  ref={ref} //comment
+                  className="bg-white w-fit rounded-lg shadow-surround h-[39rem] flex flex-col gap-7 p-8 overflow-auto"
+                  ref={ref}
                 >
-                  <div className="flex justify-between bg-white items-center -mx-8 -mt-8  p-5 pt-10 rounded-t-lg h-20 relative">
+                  <div className="flex justify-between bg-white items-center -mx-8 -mt-8  p-5 pt-9 rounded-t-lg h-20 relative">
                     <input className="bg-gray-100 p-3 text-xl drop-shadow-lg rounded-xl w-full" />
                     <PiMagnifyingGlass className="absolute text-gray-400 size-7 right-10" />
                   </div>

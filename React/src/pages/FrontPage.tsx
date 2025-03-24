@@ -202,7 +202,7 @@ function FrontPage() {
           </div>
         </div>
         <div className=" my-12 bg-white shadow-surround">
-          <div className="text-center text-2xl font-semibold text-black p-3 tracking-tighter border-gray-400 ">
+          <div className="text-center text-3xl font-semibold text-black p-3 tracking-tighter ">
             Big Board
           </div>
           <div className="flex overflow-auto overflow-y-visible gap-12 px-5 pb-5">
@@ -213,7 +213,6 @@ function FrontPage() {
                 college={player.college}
               />
             ))}
-            d
           </div>
         </div>
       </div>

@@ -29,7 +29,7 @@ function Key() {
             )
           )}
         </div>
-        <div className="max-w-7xl mx-auto bg-white rounded-md shadow-surround py-8">
+        <div className="max-w-7xl mx-auto bg-white rounded-md shadow-surround py-8 mb-10">
           <KeyCards title={"Characteristics"}>
             {passingCharacteristics.map((characteristic, index) => (
               <ChacteristicBoxKey

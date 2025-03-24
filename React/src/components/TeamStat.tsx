@@ -7,21 +7,31 @@ type Props = {
 
 function TeamStat(props: Props) {
   return (
-    <div className="w-[51rem] bg-white rounded-md shadow-surround">
-      <h3 className="text-center text-3xl font-medium m-2">Team Stats</h3>
+    <div className="w-7/12 bg-white rounded-md shadow-surround">
+      <h3 className="text-center text-3xl font-medium m-2">
+        Offense Team Stats
+      </h3>
       <div style={{ backgroundColor: `#${props.color}` }} className="h-2"></div>
-      <div className="grid grid-cols-3 gap-0 p-4 items-center">
+      <div className="grid grid-cols-5 gap-0 p-4 items-center">
         <div className="flex flex-col items-center">
-          <p className="text-center text-2xl">Overall Record</p>
+          <p className="text-center text-2xl">EPA Per Play</p>
           <p className="text-center text-lg">{props.item.summary}</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="text-center text-2xl">Avg Pts Against</p>
-          <p className="text-center text-lg">{props.item.stats[2].value}</p>
+          <p className="text-center text-2xl">Success Rate</p>
+          <p className="text-center text-lg">{props.item.summary}</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="text-center text-2xl">Avg Pts For</p>
-          <p className="text-center text-lg">{props.item.stats[3].value}</p>
+          <p className="text-center text-2xl">RZ Scoring %</p>
+          <p className="text-center text-lg">{props.item.summary}</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <p className="text-center text-2xl">Pass Play %</p>
+          <p className="text-center text-lg">{props.item.summary}</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <p className="text-center text-2xl">Run Play %</p>
+          <p className="text-center text-lg">{props.item.summary}</p>
         </div>
       </div>
     </div>

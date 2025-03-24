@@ -19,7 +19,7 @@ export const traitIcons: Record<TraitName, IconType> = {
   medium: TbTargetArrow,
   sideline: TbTargetArrow,
   intermediate: TbTargetArrow,
-  pressure: TbTargetArrow,
+  pressure: TbBrain,
   processor: TbBrain,
   "decision maker": TbBrain,
   "pocket presence": TbBrain,
