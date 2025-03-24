@@ -57,7 +57,7 @@ function AllTeams() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down">
+      <div className="animate-fade-in-down bg-primary">
         <MainPageTitle title="Teams" />
         <div className="flex justify-center gap-16">
           <div className="">

@@ -2,7 +2,7 @@ export const passingTraits = [
   {
     label: "pocket passer",
     description:
-      "A player who prefers to process the defense and complete pass based on the defensive coverage and weaknesses",
+      "A player who prefers to quickly process the defense and throw based on the coverage, generally avoiding running to extend the play.",
   },
   {
     label: "gunslinger",

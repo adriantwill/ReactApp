@@ -187,7 +187,7 @@ function FrontPage() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down bg-white">
+      <div className="animate-fade-in-down bg-primary">
         <div className="pb-8 pl-2 overflow-auto flex pt-9">
           <Gamecard data={nflData ?? []} league={"NFL"} />
           <Gamecard data={nbaData ?? []} league={"NCAA"} />
@@ -196,7 +196,7 @@ function FrontPage() {
           <h2 className="text-2xl text-center font-semibold text-white uppercase bg-[#3C3C3C] p-1">
             Breaking
           </h2>
-          <div className="flex group overflow-hidden bg-gray-100 p-6 shadow-surround">
+          <div className="flex group overflow-hidden bg-white p-6 shadow-surround">
             <BreakingCarosel likes={likes} />
             <BreakingCarosel likes={likes} />
           </div>

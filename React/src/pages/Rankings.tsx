@@ -14,17 +14,11 @@ import {
 } from "@dnd-kit/core";
 import { useQuery } from "@tanstack/react-query";
 import SlimRankingCard from "../components/SlimRankingCard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRightToBracket,
-  faArrowUpFromBracket,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
 import RankingCard from "../components/RankingCard";
 import RankingsDropdown from "../components/RankingsDropdown";
-import { supabase } from "../supabase-client";
 import MainPageTitle from "../subcomponents/MainPageTitle";
 import { PiMagnifyingGlass } from "react-icons/pi";
+import { TbShare } from "react-icons/tb";
 
 type Split = {
   stats: string[];
@@ -78,12 +72,7 @@ function Rankings() {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [activeDragItem, setActiveDragItem] = useState<Card | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const options = [
-    "Receiving Yards",
-    "Rushing Yards",
-    "Passing Yards",
-    "Total Touchdowns",
-  ];
+  const options = ["Passing Yards", "Receiving Yards", "Rushing Yards"];
   const weeks = [
     "Season Long",
     "Week 1",
@@ -178,7 +167,7 @@ function Rankings() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down flex flex-col items-center">
+      <div className=" flex flex-col items-center">
         <MainPageTitle title="Rankings" />
         <div className="flex flex-col gap-10">
           <div className="shadow-surround rounded-2xl">
@@ -198,32 +187,23 @@ function Rankings() {
             >
               <div className="flex gap-24">
                 <div className="bg-white w-fit p-8 pb-6 rounded-lg shadow-surround h-[39rem] flex flex-col justify-between">
-                  <div className="flex justify-between bg-white items-center -mx-8 -mt-8  p-5 drop-shadow-lg rounded-t-lg h-20">
-                    <FontAwesomeIcon
-                      icon={faArrowRightToBracket}
-                      className="fa-xl cursor-pointer"
-                    />
-                    <h1 className="text-3xl"> Receiving Rankings</h1>
-                    <FontAwesomeIcon
-                      icon={faArrowUpFromBracket}
-                      className="fa-xl cursor-pointer"
-                    />
+                  <div className="flex justify-center bg-white items-center -mx-8 -mt-8  p-5 drop-shadow-lg rounded-t-lg h-20">
+                    <h1 className="ml-auto text-3xl"> Receiving Rankings</h1>
+                    <TbShare className="size-7 ml-auto cursor-pointer" />
                   </div>
                   {tasks.slice(0, 5).map((task) => (
-                    <>
-                      <SlimRankingCard
-                        team={task.team}
-                        data={task.data}
-                        player={task.player}
-                        id={task.id}
-                        key={task.id}
-                        index={tasks.findIndex((t) => t.id === task.id)} //comment
-                        isExpanded={activeId === task.id}
-                        onExpand={(id) =>
-                          setActiveId(id === activeId ? null : id)
-                        }
-                      />
-                    </>
+                    <SlimRankingCard
+                      team={task.team}
+                      data={task.data}
+                      player={task.player}
+                      id={task.id}
+                      key={task.id}
+                      index={tasks.findIndex((t) => t.id === task.id)} //comment
+                      isExpanded={activeId === task.id}
+                      onExpand={(id) =>
+                        setActiveId(id === activeId ? null : id)
+                      }
+                    />
                   ))}
                 </div>
                 <div
@@ -235,19 +215,17 @@ function Rankings() {
                     <PiMagnifyingGlass className="absolute text-gray-400 size-7 right-10" />
                   </div>
                   {tasks.slice(5, 20).map((task) => (
-                    <>
-                      <RankingCard
-                        team={task.team}
-                        data={task.data}
-                        player={task.player}
-                        id={task.id}
-                        key={task.id}
-                        index={tasks.findIndex((t) => t.id === task.id)}
-                        tailwind={
-                          task === activeDragItem ? "opacity-0" : "opacity-100"
-                        }
-                      />
-                    </>
+                    <RankingCard
+                      team={task.team}
+                      data={task.data}
+                      player={task.player}
+                      id={task.id}
+                      key={task.id}
+                      index={tasks.findIndex((t) => t.id === task.id)}
+                      tailwind={
+                        task === activeDragItem ? "opacity-0" : "opacity-100"
+                      }
+                    />
                   ))}
                 </div>
               </div>

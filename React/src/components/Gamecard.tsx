@@ -17,7 +17,7 @@ function Gamecard(props: { data: Games[]; league: string }) {
 
       {sortedData.map((game, index) => (
         <div
-          className="shadow-surround rounded-xl my-2 mx-4 relative w-52 flex-shrink-0 "
+          className="shadow-surround rounded-xl my-2 mx-4 relative w-52 flex-shrink-0 bg-white"
           key={index}
         >
           <GameCardInfo
