@@ -23,7 +23,7 @@ export const traitIcons: Record<TraitName, IconType> = {
   processor: TbBrain,
   "decision maker": TbBrain,
   "pocket presence": TbBrain,
-  strength: LuBicepsFlexed,
+  power: LuBicepsFlexed,
   versitility: LuBicepsFlexed,
   velocity: LuBicepsFlexed,
   rushing: TbRun,

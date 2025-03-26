@@ -7,6 +7,8 @@ import TraitBoxKey from "../components/TraitBoxKey";
 import { passingCharacteristics } from "../lib/characteristiclabels";
 import { passingTraits } from "../lib/traitslabels";
 import KeyCards from "../components/KeyCards";
+import TermBoxKey from "../components/TermBoxKey";
+import { terms } from "../lib/termlabels";
 
 function Key() {
   const [selectedButton, setSelectedButton] = useState<number>(0);
@@ -14,10 +16,10 @@ function Key() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down">
+      <div className="animate-fade-in-down bg-primary pb-10">
         <MainPageTitle title="Player Key" />
 
-        <div className="max-w-7xl mx-auto space-x-6 my-10">
+        <div className="max-w-7xl mx-auto space-x-6 my-6">
           {["Passing", "Rushing", "Receiving", "Blocking"].map(
             (title, index) => (
               <KeyButton
@@ -46,6 +48,18 @@ function Key() {
                 key={index}
                 title={characteristic.label}
                 description={characteristic.description}
+              />
+            ))}
+          </KeyCards>
+        </div>
+        <div className="max-w-7xl mx-auto bg-white rounded-md shadow-surround py-8">
+          <KeyCards title={"Key Terms"}>
+            {terms.map((characteristic, index) => (
+              <TermBoxKey
+                key={index}
+                title={characteristic.label}
+                description={characteristic.description}
+                image={characteristic.image}
               />
             ))}
           </KeyCards>
