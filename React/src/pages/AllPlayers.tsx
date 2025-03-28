@@ -4,6 +4,7 @@ import PlayerCard from "../components/PlayerCard";
 import { supabase } from "../supabase-client";
 import { Database } from "../lib/database.types";
 import MainPageTitle from "../subcomponents/MainPageTitle";
+import InfoSubHeader from "../subcomponents/InfoSubHeader";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
 type Team = Database["public"]["Tables"]["Team"]["Row"];
@@ -45,7 +46,9 @@ function AllPlayers() {
 
   // If still loading players or teams, show loading message
   if (isLoading) {
-    return <div className="text-center p-10">Loading players...</div>;
+    return (
+      <div className="text-center p-10 bg-primary">Loading players...</div>
+    );
   }
 
   // If there is an error fetching players or teams, show error message
@@ -61,12 +64,22 @@ function AllPlayers() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down">
+      <div className="animate-fade-in-down bg-primary">
         <MainPageTitle title="Players" />
-        <p className="text-3xl ml-5 tracking-tighter border-b-2 font-bold border-gray-400 pb-1 inline-block">
-          Quarterbacks
-        </p>
-        <div className="flex relative overflow-scroll gap-12 mx-5 py-5 ">
+        <div className="pl-10">
+          <InfoSubHeader text="Quarterbacks" />
+        </div>
+        <div className="flex relative overflow-scroll gap-12 px-10 pb-10">
+          {playersList.map((player) => (
+            <PlayerCard
+              key={player.id}
+              player={player}
+              team={teams.find((team) => team.espnid === player.teamid)}
+            />
+          ))}
+        </div>
+        <InfoSubHeader text="Wide Recievers" />
+        <div className="flex relative overflow-scroll gap-12 px-10 pb-10">
           {playersList.map((player) => (
             <PlayerCard
               key={player.id}

@@ -59,18 +59,22 @@ function AllTeams() {
       <Dropdown />
       <div className="animate-fade-in-down bg-primary">
         <MainPageTitle title="Teams" />
-        <div className="flex justify-center gap-16">
+        <div className="flex justify-center gap-20">
           <div className="">
             <InfoSubHeader text="NFC" />
-            {NfcTeams.map((team: Team) => (
-              <TeamCard key={team.id} team={team} />
-            ))}
+            <div className="flex flex-col gap-10">
+              {NfcTeams.map((team: Team) => (
+                <TeamCard key={team.id} team={team} />
+              ))}
+            </div>
           </div>
           <div className="">
             <InfoSubHeader text="AFC" />
-            {AfcTeams.map((team: Team) => (
-              <TeamCard key={team.id} team={team} />
-            ))}
+            <div className="flex flex-col gap-10">
+              {AfcTeams.map((team: Team) => (
+                <TeamCard key={team.id} team={team} />
+              ))}
+            </div>
           </div>
         </div>
       </div>

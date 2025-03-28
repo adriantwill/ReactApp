@@ -12,7 +12,7 @@ function PlayerCard(props: { player?: Player; team?: Team }) {
   }
   return (
     <div
-      className="h-80 w-96 rounded-md shadow-surround flex-shrink-0 group cursor-pointer"
+      className="h-80 w-96 rounded-sm shadow-lg flex-shrink-0 group cursor-pointer"
       onClick={() => navigate(`/players/${props.player?.espnid}`)}
     >
       <div
@@ -31,13 +31,13 @@ function PlayerCard(props: { player?: Player; team?: Team }) {
           className="absolute opacity-70 top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-[110%] transition-all duration-300 ease-in-out group-hover:opacity-90 group-hover:min-w-[120%] " // Added smooth transition and subtle rotation
         />
       </div>
-      <div className="flex flex-col justify-center items-center bg-white h-2/5 rounded-b-md">
-        <div className="text-4xl font-bold tracking-tight drop-shadow-sm pb-2">
+      <div className="flex flex-col justify-center items-center bg-white h-2/5 rounded-b-sm gap-2">
+        <div className="text-4xl font-bold tracking-tight ">
           {props.player.name}
         </div>
-        <div className="text-2xl font-medium">
+        <div className="text-xl font-medium text-gray-500">
           {" "}
-          {props.team.name} | #{props.player.number}
+          {props.team.name}
         </div>
       </div>
     </div>

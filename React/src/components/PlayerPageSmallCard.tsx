@@ -10,8 +10,8 @@ interface PlayerPageSmallCardProps {
 function PlayerPageSmallCard(props: PlayerPageSmallCardProps) {
   const navigate = useNavigate();
   return (
-    <div className=" w-[28rem] shadow-surround rounded-md  bg-white">
-      <div className="text-center justify-center font-medium text-2xl p-1 relative">
+    <div className="w-full shadow-surround rounded-sm  bg-white">
+      <div className="text-center  justify-center font-medium tracking-tighter text-2xl p-1 relative">
         {props.title}
         {props.title !== "Info" && (
           <IoMdOpen

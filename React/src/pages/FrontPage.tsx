@@ -187,13 +187,13 @@ function FrontPage() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down bg-primary">
-        <div className="pb-8 pl-2 overflow-auto flex pt-9">
+      <div className="animate-fade-in-down bg-primary pb-12">
+        <div className=" pl-2 overflow-auto flex py-8">
           <Gamecard data={nflData ?? []} league={"NFL"} />
           <Gamecard data={nbaData ?? []} league={"NCAA"} />
         </div>
-        <div>
-          <h2 className="text-2xl text-center font-semibold text-white uppercase bg-[#3C3C3C] p-1">
+        <div className="mb-12">
+          <h2 className="text-2xl text-center font-semibold text-white uppercase bg-blue-700 p-1">
             Breaking
           </h2>
           <div className="flex group overflow-hidden bg-white p-6 shadow-surround">
@@ -201,10 +201,8 @@ function FrontPage() {
             <BreakingCarosel likes={likes} />
           </div>
         </div>
-        <div className=" my-12 bg-white shadow-surround">
-          <div className="text-center text-3xl font-semibold text-black p-3 tracking-tighter ">
-            Big Board
-          </div>
+        <div className="bg-white shadow-surround">
+          <div className="text-center text-3xl font-bold p-4  ">Big Board</div>
           <div className="flex overflow-auto overflow-y-visible gap-12 px-5 pb-5">
             {draftPlayers?.slice(0, 10).map((player, index) => (
               <DraftFrontPageCard

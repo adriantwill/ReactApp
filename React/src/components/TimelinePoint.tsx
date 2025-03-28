@@ -34,10 +34,12 @@ function TimelinePoint(props: {
   }
   return (
     <>
-      {props.index > 0 && <div className="w-1 h-24 bg-black mx-auto"></div>}
+      {props.index > 0 && (
+        <div className="w-1.5 h-28 bg-gray-300 mx-auto"></div>
+      )}
       <div className="flex justify-center items-center relative">
         <div
-          className="w-24 h-24 rounded-full flex justify-center items-center relative overflow-hidden"
+          className="size-20 rounded-full shadow-md flex justify-center items-center relative overflow-hidden"
           style={{ backgroundColor: `#${props.teamInfo.color}` }}
         >
           <img
@@ -47,11 +49,11 @@ function TimelinePoint(props: {
         </div>
 
         <div
-          className={`bg-white rounded-lg px-4 py-2 shadow-surround w-56 h-20 absolute overflow-auto ${
+          className={`bg-white rounded-md shadow-surround w-1/3 py-2 px-3 h-20 absolute overflow-auto ${
             props.index % 2 === 0 ? "translate-x-48" : "-translate-x-48"
           }`}
         >
-          <p className="font-medium">{props.team.notes}</p>
+          <p className="">{props.team.notes}</p>
         </div>
         <div
           className={` absolute overflow-auto w-40 ${
@@ -60,7 +62,10 @@ function TimelinePoint(props: {
               : "-translate-x-40 text-right"
           }`}
         >
-          <p className="text-xl"> {convertDate(props.team.start_date)}</p>
+          <p className="text-2xl font-medium">
+            {" "}
+            {convertDate(props.team.start_date)}
+          </p>
         </div>
       </div>
     </>

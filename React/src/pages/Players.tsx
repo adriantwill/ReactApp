@@ -15,7 +15,9 @@ import {
   passingCharacteristics,
   rushingCharacteristics,
 } from "../lib/characteristiclabels";
-import MediumCardTitle from "../subcomponents/MediumCardTitle";
+import PlayerNameTitle from "../components/PlayerNameTitle";
+import InfoSubHeader from "../subcomponents/InfoSubHeader";
+import PlayerCareerTableStat from "../subcomponents/PlayerCareerTableStat";
 
 type Player = Database["public"]["Tables"]["Players"]["Row"];
 type Team = Database["public"]["Tables"]["Team"]["Row"];
@@ -40,6 +42,15 @@ type TeamDetails = {
   logos: {
     href: string;
   }[];
+};
+
+type CareerStats = {
+  yards: number;
+  touchdowns: number;
+  interceptions: number;
+  name: string;
+  abreviation: string;
+  year: number;
 };
 
 function Players() {
@@ -119,6 +130,57 @@ function Players() {
     return data;
   };
 
+  // const fetchCareerStats = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/athletes/${playerId}/statisticslog`
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch player statistics log");
+  //     }
+
+  //     const statsLog = await response.json();
+
+  //     console.log(statsLog);
+  //     // Extract item references from the stats log
+  //     const itemRefs = statsLog.entries?.map((item) => item.$ref) || [];
+  //     console.log(itemRefs);
+
+  //     // Fetch each stats item
+  //     const statsPromises = itemRefs.map((ref) =>
+  //       fetch(ref).then((response) => {
+  //         if (!response.ok) {
+  //           throw new Error(`Failed to fetch stats at ${ref}`);
+  //         }
+  //         return response.json();
+  //       })
+  //     );
+
+  //     // Wait for all stats to be fetched
+  //     const statsResults = await Promise.all(statsPromises);
+
+  //     // Transform into career stats format
+  //     return statsResults.map((stat) => ({
+  //       yards: stat.passing?.yards || 0,
+  //       touchdowns: stat.passing?.touchdowns || 0,
+  //       interceptions: stat.passing?.interceptions || 0,
+  //       name: stat.team?.displayName || "",
+  //       abreviation: stat.team?.abbreviation || "",
+  //       year: stat.season?.year || 0,
+  //     }));
+  //   } catch (err) {
+  //     console.error("Error fetching career stats:", err);
+  //     return [];
+  //   }
+  // };
+
+  // const { data: careerStats } = useQuery<CareerStats[]>({
+  //   queryKey: ["player"],
+  //   queryFn: fetchCareerStats,
+  //   refetchOnWindowFocus: false,
+  // });
+
   const {
     data: player,
     isLoading,
@@ -192,6 +254,40 @@ function Players() {
     return data[0];
   };
 
+  const seasonData = [
+    {
+      season: "2015",
+      team: "Louisville",
+      passingYards: 1840,
+      complations: 135,
+      touchdowns: 12,
+      interceptions: 8,
+      logo: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/97.png",
+      color: "#c9001f",
+    },
+    {
+      season: "2016",
+      team: "Louisville",
+      passingYards: 4282,
+      complations: 135,
+      touchdowns: 29,
+      interceptions: 7,
+      rating: 104.6,
+      logo: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/97.png",
+      color: "#c9001f",
+    },
+    {
+      season: "2017",
+      team: "Louisville",
+      passingYards: 3660,
+      complations: 254,
+      touchdowns: 27,
+      interceptions: 10,
+      logo: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/97.png",
+      color: "#c9001f",
+    },
+  ];
+
   const { data: playerCharacteristics } = useQuery<PlayerCharacteristics>({
     queryKey: ["playerCharacteristics"],
     queryFn: fetchPlayerCharacteristics,
@@ -201,6 +297,7 @@ function Players() {
   let statsTable1 = rushingStats;
   let statsTable2 = rushingStats;
   let characteristics = rushingCharacteristics;
+  let fullPosition = "Running Back";
   if (isLoading)
     return <div className="text-center py-10">Loading player data...</div>;
   if (isError || !player || !team || !teams || !allteams)
@@ -209,6 +306,7 @@ function Players() {
     statsTable1 = passingStats;
     statsTable2 = rushingStats;
     characteristics = passingCharacteristics;
+    fullPosition = "Quarterback";
   } else if (player.position === "RB") {
     statsTable1 = rushingStats;
     statsTable2 = passingStats;
@@ -217,15 +315,14 @@ function Players() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down bg-white">
-        <div className="mb-12" style={{ backgroundColor: `#${team?.color}` }}>
-          <div className="w-[90rem] mx-auto flex justify-between h-52 overflow-hidden">
-            <div className="py-8 flex flex-col justify-around">
-              <h1 className="text-white text-6xl font-bold ">{player.name}</h1>
-              <h2 className="text-white text-4xl font-medium">
-                {player.position + " | #" + player.number}
-              </h2>
-            </div>
+      <div className="animate-fade-in-down bg-primary">
+        <div className="" style={{ backgroundColor: `#${team?.color}` }}>
+          <div className="px-32 flex justify-between h-56">
+            <PlayerNameTitle
+              name={player.name}
+              number={player.number}
+              position={fullPosition}
+            />
             <div className="relative w-60 self-end ">
               <img
                 src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espnid}.png`}
@@ -238,64 +335,72 @@ function Players() {
             </div>
           </div>
         </div>
-        <div className="w-[90rem] mx-auto space-y-12">
-          <div className="flex justify-between">
-            <PlayerPageSmallCard
-              title="Info"
-              tailwind=" justify-evenly"
-              color={team.color}
-            >
-              <PlayerInfo
-                age={player.age}
-                salary={player.contract}
-                height={player.height}
-                weight={player.weight}
-              />
-            </PlayerPageSmallCard>
-            <PlayerPageSmallCard
-              title="Traits"
-              tailwind="grid grid-flow-col"
-              color={team.color}
-            >
-              {Array.isArray(player.attributes) &&
-                player.attributes.map((attribute, index) => (
-                  <div key={index} className="flex flex-col items-center">
-                    {React.createElement(getTraitIcon(String(attribute)), {
-                      size: 34,
-                    })}
-                    <div className=" text-center proper capitalize">
-                      {String(attribute)}
+        <div className="px-32 py-10 flex flex-col gap-10">
+          <div>
+            <InfoSubHeader text="Player Info" />
+            <div className="flex justify-between gap-10">
+              <PlayerPageSmallCard
+                title="Info"
+                tailwind=" justify-evenly"
+                color={team.color}
+              >
+                <PlayerInfo
+                  age={player.age}
+                  salary={player.contract}
+                  height={player.height}
+                  weight={player.weight}
+                />
+              </PlayerPageSmallCard>
+              <PlayerPageSmallCard
+                title="Characteristics"
+                tailwind="justify-evenly "
+                color={team.color}
+              >
+                <PlayerTraits
+                  characteristicLabel={characteristics}
+                  playerCharacteristics={playerCharacteristics}
+                />
+              </PlayerPageSmallCard>
+              <PlayerPageSmallCard
+                title="Traits"
+                tailwind="grid grid-flow-col"
+                color={team.color}
+              >
+                {Array.isArray(player.attributes) &&
+                  player.attributes.map((attribute, index) => (
+                    <div key={index} className="flex flex-col items-center">
+                      {React.createElement(getTraitIcon(String(attribute)), {
+                        size: 36,
+                      })}
+                      <div className=" text-center proper capitalize">
+                        {String(attribute)}
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </PlayerPageSmallCard>
-            <PlayerPageSmallCard
-              title="Characteristics"
-              tailwind="justify-evenly "
-              color={team.color}
-            >
-              <PlayerTraits
-                characteristicLabel={characteristics}
-                playerCharacteristics={playerCharacteristics}
-              />
-            </PlayerPageSmallCard>
+                  ))}
+              </PlayerPageSmallCard>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <StatsSection
-              title="Passing"
-              stats={playerPassingStats}
-              table={statsTable1}
-              color={team.color}
-            />
-            <StatsSection
-              title="Rushing"
-              stats={playerRushingStats}
-              table={statsTable2}
-              color={team.color}
-            />
-            <div className="w-[42rem] mb-6 bg-white rounded-md shadow-surround">
-              <MediumCardTitle title={"Timeline"} color={team.color} />
-              <div className={`h-[21rem] px-8 py-6 overflow-y-auto `}>
+          <div>
+            <InfoSubHeader text="Stats" />
+            <div className="flex justify-between gap-10">
+              <StatsSection
+                title="Passing"
+                stats={playerPassingStats}
+                table={statsTable1}
+                color={team.color}
+              />
+              <StatsSection
+                title="Rushing"
+                stats={playerRushingStats}
+                table={statsTable2}
+                color={team.color}
+              />
+            </div>
+          </div>
+          <div className="">
+            <InfoSubHeader text="Career" />
+            <div className="flex gap-10">
+              <div className="w-1/2 h-80 px-8 py-6 overflow-y-auto bg-white rounded-sm shadow-surround">
                 {Array.isArray(teams) &&
                   teams.map((timelineTeam, index) => (
                     <TimelinePoint
@@ -307,6 +412,43 @@ function Players() {
                       )}
                     ></TimelinePoint>
                   ))}
+              </div>
+              <div className="w-1/2 bg-white h-80 shadow-surround rounded-sm  overflow-auto p-4 flex flex-col gap-6">
+                {seasonData.map((season, index) => (
+                  <div key={index} className="">
+                    <div
+                      className="flex justify-between items-center mb-2 px-2 text-white rounded-sm "
+                      style={{ backgroundColor: `${season.color}` }}
+                    >
+                      <span className="text-xl font-medium">
+                        {season.season}
+                      </span>
+                      <div className="flex items-center">
+                        <span className="mr-1">{season.team} </span>
+                        <img className="h-6" src={season.logo} />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 px-2">
+                      <PlayerCareerTableStat
+                        title="Passing Yards"
+                        amount={season.passingYards}
+                      />
+                      <PlayerCareerTableStat
+                        title="Completions"
+                        amount={season.complations}
+                      />
+                      <PlayerCareerTableStat
+                        title="Touchdowns"
+                        amount={season.touchdowns}
+                      />
+                      <PlayerCareerTableStat
+                        title="Interceptions"
+                        amount={season.interceptions}
+                      />
+                    </div>
+                    <div className="mt-2 border-t border-gray-300"></div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

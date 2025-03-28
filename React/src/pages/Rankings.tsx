@@ -105,6 +105,7 @@ function Rankings() {
       ref.current.scrollTo({ top: 0 });
       ref.current.style.cssText = "overflow-y: hidden;";
     }
+    setActiveId(null);
   };
   const handleDragEnd = (event: DragEndEvent) => {
     if (ref.current) {
@@ -167,10 +168,10 @@ function Rankings() {
   return (
     <>
       <Dropdown />
-      <div className=" flex flex-col items-center">
+      <div className=" flex flex-col items-center bg-primary pb-3">
         <MainPageTitle title="Rankings" />
         <div className="flex flex-col gap-10">
-          <div className="shadow-surround rounded-2xl">
+          <div className="shadow-surround rounded-2xl bg-white">
             <div className="flex gap-6 items-center h-full py-3 px-6">
               <RankingsDropdown title={"Category"} options={options} />
               <RankingsDropdown title={"Event"} options={weeks} />
@@ -186,10 +187,10 @@ function Rankings() {
               strategy={verticalListSortingStrategy}
             >
               <div className="flex gap-24">
-                <div className="bg-white w-fit p-8 pb-6 rounded-lg shadow-surround h-[39rem] flex flex-col justify-between">
-                  <div className="flex justify-center bg-white items-center -mx-8 -mt-8  p-5 drop-shadow-lg rounded-t-lg h-20">
-                    <h1 className="ml-auto text-3xl"> Receiving Rankings</h1>
-                    <TbShare className="size-7 ml-auto cursor-pointer" />
+                <div className="bg-white pb-8 w-[32rem] rounded-md shadow-surround h-[39rem] flex flex-col justify-between items-center">
+                  <div className="flex justify-center bg-white items-center w-full p-5 shadow-md rounded-md ">
+                    <h1 className="ml-auto text-3xl">Passing Rankings</h1>
+                    <TbShare className="size-7  ml-auto cursor-pointer" />
                   </div>
                   {tasks.slice(0, 5).map((task) => (
                     <SlimRankingCard
@@ -207,12 +208,12 @@ function Rankings() {
                   ))}
                 </div>
                 <div
-                  className="bg-white w-fit rounded-lg shadow-surround h-[39rem] flex flex-col gap-7 p-8 overflow-auto"
+                  className="bg-white items-center pb-8 rounded-lg shadow-surround h-[39rem] flex flex-col gap-7 overflow-auto w-[32rem]"
                   ref={ref}
                 >
-                  <div className="flex justify-between bg-white items-center -mx-8 -mt-8  p-5 pt-9 rounded-t-lg h-20 relative">
-                    <input className="bg-gray-100 p-3 text-xl drop-shadow-lg rounded-xl w-full" />
-                    <PiMagnifyingGlass className="absolute text-gray-400 size-7 right-10" />
+                  <div className="flex justify-between items-center w-11/12 mt-5 relative">
+                    <input className="bg-primary p-3 text-xl shadow-sm rounded-xl w-full border" />
+                    <PiMagnifyingGlass className="absolute text-gray-600 size-7 right-5" />
                   </div>
                   {tasks.slice(5, 20).map((task) => (
                     <RankingCard

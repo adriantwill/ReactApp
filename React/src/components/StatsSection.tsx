@@ -1,28 +1,25 @@
 import { Database } from "../lib/database.types";
-import InfoBox from "../subcomponents/InfoBox";
 import MediumCardTitle from "../subcomponents/MediumCardTitle";
 
-type StatsSectionProps = {
-  title: string;
-  stats: PlayerPassingStats | undefined;
-  table: StatItemProps[];
-  color: string;
-};
-type StatItemProps = {
-  label: string;
-  description: string;
-};
 type PlayerPassingStats = Database["public"]["Tables"]["Passing_Stats"]["Row"];
 
-function StatsSection(props: StatsSectionProps) {
-  console.log(props.stats);
+function StatsSection(props: {
+  title: string;
+  stats: PlayerPassingStats | undefined;
+  table: {
+    label: string;
+    description: string;
+  }[];
+  color: string;
+}) {
   if (!props.stats) {
     return <div className="shadow-surround rounded-md bg-white "></div>;
   }
+  console.log(props.table);
   return (
-    <div className="shadow-surround rounded-md mb-6 bg-white w-[21rem]">
+    <div className="shadow-surround rounded-sm bg-white w-1/2">
       <MediumCardTitle title={props.title} color={props.color} />
-      <div className="h-[21rem] px-6 py-3">
+      <div className=" px-6 py-3">
         {Object.entries(props.stats)
           .slice(3)
           .map(([_, value], index) => (
@@ -30,9 +27,11 @@ function StatsSection(props: StatsSectionProps) {
               className="flex justify-between items-center py-2 border-b border-gray-200 last:border-0"
               key={index}
             >
-              <div className="flex items-center ">
-                <div className="text-gray-70 ">{props.table[index].label}</div>
-                <InfoBox info={props.table[index].description} />
+              <div className="flex items-center gap-4">
+                <div className="font-semibold ">
+                  11<sup>th</sup>
+                </div>
+                <div className="">{props.table[index].label}</div>
               </div>
               <span className="font-semibold">{value}</span>
             </div>

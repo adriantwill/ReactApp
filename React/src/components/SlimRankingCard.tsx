@@ -52,7 +52,9 @@ function SlimRankingCard(props: {
 
       <div
         className={`transition-all duration-300 ease-in-out ${
-          props.isExpanded ? "opacity-100 h-auto" : "opacity-0 h-0"
+          props.isExpanded
+            ? "opacity-100 h-auto"
+            : "opacity-0 h-0 absolute overflow-hidden"
         }`}
       >
         <div className="flex justify-between p-1 px-4 items-center gap-4">

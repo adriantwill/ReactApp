@@ -28,7 +28,7 @@ function PlayerTraits(props: TraitProps) {
                 {props.characteristicLabel[index].label}
               </div>
             </div>
-            <div className="text-xs text-center">Tier</div>
+            <div className="text-xs text-center text-gray-600">Tier</div>
             <div className="text-3xl text-center font-medium ">{value}</div>
           </div>
         ))}

@@ -4,20 +4,22 @@ import Title from "./../components/Title";
 import Dropdown from "./../components/Dropdown";
 import Modal from "./../components/Modal";
 import { Navigate, useParams } from "react-router";
-import NextGame from "../components/NextGame";
-import TeamStat from "../components/TeamStat";
 import { useQuery } from "@tanstack/react-query";
-import CoachInfo from "../components/CoachInfo";
+import TeamStats from "../components/TeamStats";
+import TeamStat from "../subcomponents/TeamStat";
+import KeyButton from "../components/KeyButton";
+import TeamButton from "../components/TeamButton";
 
 export type TeamInfo = {
   color: string;
   alternateColor: string;
-  logos: Logos[];
+  abbreviation: string;
   displayName: string;
   nextEvent: NextEvent[];
   record: Record;
+  standingSummary: string;
 };
-
+``;
 type Record = {
   items: Items[];
 };
@@ -117,6 +119,13 @@ function Teams() {
   }
   const [modal, setModal] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState<PlayerInfo>();
+  const offensiveTeamStats = [
+    "EPA Per Play",
+    "Success Rate",
+    "RZ Success Rate",
+    "Pass Rate",
+    "Run Rate",
+  ];
   const toggleModal = () => {
     setModal(!modal);
   };
@@ -169,6 +178,7 @@ function Teams() {
 
     return allResults;
   };
+  const [selectedButton, setSelectedButton] = useState<number>(0);
 
   const { data, isLoading, isError } = useQuery<PlayerInfo[]>({
     queryKey: ["playerData", fetchedUrl],
@@ -177,7 +187,7 @@ function Teams() {
   });
 
   if (isLoading) return <p>Loading player data...</p>;
-  if (isError) return <p>Error fetching player data</p>;
+  if (isError || !data || !teamData) return <p>Error fetching player data</p>;
 
   return (
     <>
@@ -189,28 +199,52 @@ function Teams() {
           player={currentPlayer}
         ></Modal>
       )}
-      {data && data.length > 10 && teamData && (
-        <div className="flex justify-center flex-col animate-fade-in-down">
+      {data.length > 10 && (
+        <div className="flex justify-center flex-col animate-fade-in-down bg-primary">
           <Title teamName={teamData} />
 
-          <nav className="flex justify-center space-x-4 py-3 shadow-surround">
-            <button className="px-4 text-xl font-semibold ">Offense</button>
-            <button className="px-4 text-xl font-semibold ">Defense</button>
+          <nav className="flex gap-4 justify-center py-2 shadow-surround bg-white">
+            {["Offense", "Defense"].map((title, index) => (
+              <TeamButton
+                key={index}
+                color={teamData.color}
+                title={title}
+                selected={selectedButton === index}
+                onClick={() => setSelectedButton(index)}
+              />
+            ))}
           </nav>
 
-          <div className=" m-12">
-            <div className="flex gap-12">
-              <TeamStat
-                item={teamData.record.items[0]}
+          <div className="p-10 flex flex-col gap-10">
+            <div className="flex gap-10">
+              <TeamStats
                 color={teamData.color}
-              />
-              <CoachInfo
-                item={teamData.record.items[0]}
+                tailwind="w-7/12"
+                title="Team Statistics"
+              >
+                <TeamStat title="EPA Per Play" summary={"0.038"} rank={15} />
+                <TeamStat title="Success Rate" summary={"47.5%"} rank={9} />
+                <TeamStat
+                  title="Red Zone Scoring"
+                  summary={"51.39%"}
+                  rank={17}
+                />
+                <TeamStat title="PROE" summary={"-3.5%"} rank={24} />
+              </TeamStats>
+              <TeamStats
                 color={teamData.color}
-              />
+                tailwind="w-5/12"
+                title="Coaching Staff"
+              >
+                <TeamStat title="Head Coach" summary="Sean McVay" />
+                <TeamStat
+                  title="Offensive Coordinator"
+                  summary="Mike LaFleur"
+                />
+              </TeamStats>
             </div>
-            <div className="bg-[url('./assets/background.svg')] bg-cover bg-center shadow-surround rounded-md mt-12">
-              <div className="flex">
+            <div className="bg-[url('./assets/background.svg')] bg-cover bg-center rounded-sm shadow-surround p-6">
+              <div className="flex mb-2">
                 <Card
                   team={teamData}
                   data={data[3]}
@@ -274,22 +308,23 @@ function Teams() {
                   setCurrentPlayer={() => setCurrentPlayer(data[2])}
                 />
               </div>
-              <div className="flex justify-center">
+
+              <div className="flex justify-center w-full">
+                <div className="w-24 m-4 py-3 invisible"></div>
                 <Card
                   team={teamData}
                   data={data[0]}
-                  tailwind="mb-14"
+                  tailwind=""
                   handleClick={toggleModal}
                   setCurrentPlayer={() => setCurrentPlayer(data[0])}
                 />
-                <div className="flex absolute ml-64 mt-8">
-                  <Card
-                    team={teamData}
-                    data={data[1]}
-                    handleClick={toggleModal}
-                    setCurrentPlayer={() => setCurrentPlayer(data[1])}
-                  />
-                </div>
+                <Card
+                  team={teamData}
+                  data={data[1]}
+                  tailwind="mt-12"
+                  handleClick={toggleModal}
+                  setCurrentPlayer={() => setCurrentPlayer(data[1])}
+                />
               </div>
             </div>
           </div>

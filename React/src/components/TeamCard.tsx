@@ -7,7 +7,7 @@ function TeamCard(props: { team: Team }) {
   const navigate = useNavigate();
   return (
     <div
-      className="h-40 mx-5 my-8 w-[38rem] rounded-md shadow-surround group cursor-pointer"
+      className="h-40 w-[38rem] rounded-md shadow-surround group cursor-pointer"
       style={{ backgroundColor: `#${props.team.color}` }}
       onClick={() => navigate(`/teams/${props.team.espnid}`)}
     >

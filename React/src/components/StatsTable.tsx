@@ -1,9 +1,10 @@
 import { useState } from "react";
-import TableButton from "./TableButton";
 import { Temporal } from "@js-temporal/polyfill";
+import TeamButton from "./TeamButton";
 
 type StatsProps = {
   gameLog: GameLog;
+  color: string;
 };
 
 type GameLog = {
@@ -73,18 +74,23 @@ function StatsTable(props: StatsProps) {
     return `${date.month}/${date.day}`;
   };
   return (
-    <div className="pb-8">
-      <div className="rounded-t-xl p-3 pb-5 my-8 -mb-2 bg-[rgba(255,255,255,0.25)] font-medium ">
-        <p className="text-center text-3xl text-white">
-          2024 Season Statistics
-        </p>
+    <>
+      <div className="text-center text-3xl text-white rounded-t-xl p-3 pb-5 -mb-2 bg-white bg-opacity-25 font-medium ">
+        2024 Season Statistics
       </div>
-      <div className="rounded-xl bg-primary p-4 w-[70rem]">
-        <TableButton
-          setTableButton={setActiveStats}
-          allCategories={allCategories}
-          activeStats={activeStats}
-        />
+
+      <div className=" rounded-xl bg-primary p-4 ">
+        <div className="flex gap-4 mb-4 justify-center">
+          {allCategories.map((category) => (
+            <TeamButton
+              key={category.name}
+              onClick={() => setActiveStats(category)}
+              title={category.name}
+              selected={activeStats.name === category.name}
+              color={props.color}
+            />
+          ))}
+        </div>
         <div className="relative overflow-auto shadow-md rounded-lg h-64">
           <table className="w-full text-sm text-center text-gray-500 ">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
@@ -159,7 +165,7 @@ function StatsTable(props: StatsProps) {
           </table>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

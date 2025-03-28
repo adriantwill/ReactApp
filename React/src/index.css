@@ -16,28 +16,28 @@
 @font-face {
   font-family: "LibreFranklin";
   font-weight: 400;
-  src: url("src/assets/fonts/LibreFranklin-Regular.woff2") format("woff2");
+  src: url("assets/fonts/LibreFranklin-Regular.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "LibreFranklin";
   font-weight: 300;
-  src: url("src/assets/fonts/LibreFranklin-Light.woff2") format("woff2");
+  src: url("assets/fonts/LibreFranklin-Light.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "LibreFranklin";
   font-weight: 500;
-  src: url("src/assets/fonts/LibreFranklin-Medium.woff2") format("woff2");
+  src: url("assets/fonts/LibreFranklin-Medium.woff2") format("woff2");
 }
 @font-face {
   font-family: "LibreFranklin";
   font-weight: 600;
-  src: url("src/assets/fonts/LibreFranklin-SemiBold.woff2") format("woff2");
+  src: url("assets/fonts/LibreFranklin-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "LibreFranklin";
   font-weight: 700;
-  src: url("src/assets/fonts/LibreFranklin-Bold.woff2") format("woff2");
+  src: url("assets/fonts/LibreFranklin-Bold.woff2") format("woff2");
 }

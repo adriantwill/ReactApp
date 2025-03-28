@@ -1,34 +1,28 @@
 type PlayerInfo = {
-  item1: string;
-  item2: string;
-  item3: string;
-  style: string;
+  items: string[];
+  info: string[];
+  title: string;
 };
 
 function PlayerModalMediumCard(props: PlayerInfo) {
   return (
-    <div className={`drop-shadow-sm w-[55vh]`}>
-      <div className="rounded-t-xl p-3 pb-5 -mb-2 bg-[rgba(255,255,255,0.25)] font-medium ">
-        <p className="text-center text-3xl text-white">
-          {props.style === "mr-4" ? "Draft Profile" : "Player Information"}
-        </p>
+    <div className={`w-full`}>
+      <div className="text-center text-3xl text-white rounded-t-xl p-3 pb-5 -mb-2 bg-white bg-opacity-25 font-medium ">
+        {props.title}
       </div>
       <div className="rounded-xl bg-primary">
-        <div className="grid grid-cols-3 font-semibold opacity-60 text-3xl p-4 pb-2">
-          <p className="text-center">
-            {props.style === "mr-4" ? "College" : "Weight"}
-          </p>
-          <p className="text-center">
-            {props.style === "mr-4" ? "Year" : "Height"}
-          </p>
-          <p className="text-center">
-            {props.style === "mr-4" ? "Pick" : "Age"}
-          </p>
-        </div>
-        <div className="grid grid-cols-3 font-semibold text-4xl p-4 pt-2">
-          <p className="text-center">{props.item1}</p>
-          <p className="text-center">{props.item2}</p>
-          <p className="text-center">{props.item3}</p>
+        <div className="grid grid-cols-3 p-4">
+          {props.items.map((item, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center justify-center gap-2"
+            >
+              <div className="text-lg text-gray-600 font-medium">
+                {props.info[index]}
+              </div>
+              <div className="text-3xl font-bold">{item}</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

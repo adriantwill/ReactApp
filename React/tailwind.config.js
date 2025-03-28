@@ -7,7 +7,7 @@ export default {
         surround: "0 0 10px 1px rgba(0, 0, 0, 0.2)",
       },
       colors: {
-        primary: "#F2F1F0",
+        primary: "#F9F9FB",
         secondary: "#EFEFEF",
       },
       animation: {
