@@ -2,10 +2,11 @@ import { Database } from "../lib/database.types";
 import MediumCardTitle from "../subcomponents/MediumCardTitle";
 
 type PlayerPassingStats = Database["public"]["Tables"]["Passing_Stats"]["Row"];
+type PlayerRushingStats = Database["public"]["Tables"]["Rushing_Stat"]["Row"];
 
 function StatsSection(props: {
   title: string;
-  stats: PlayerPassingStats | undefined;
+  stats: PlayerPassingStats | PlayerRushingStats | undefined;
   table: {
     label: string;
     description: string;
@@ -31,9 +32,20 @@ function StatsSection(props: {
                 <div className="font-semibold ">
                   11<sup>th</sup>
                 </div>
-                <div className="">{props.table[index].label}</div>
+                <div className="capitalize">{props.table[index].label}</div>
               </div>
-              <span className="font-semibold">{value}</span>
+              <span className="font-semibold">
+                {value}
+                {(props.table[index].label.toLowerCase() ===
+                  "touchdown rate by interception rate" ||
+                  props.table[index].label.toLowerCase() ===
+                    "explosive run rate" ||
+                  props.table[index].label.toLowerCase() ===
+                    "pressure to sack rate" ||
+                  props.table[index].label.toLowerCase() ===
+                    "completion percentage over expected") &&
+                  "%"}
+              </span>
             </div>
           ))}
       </div>

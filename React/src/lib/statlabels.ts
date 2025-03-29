@@ -15,6 +15,11 @@ export const passingStats = [
       "The average amount of yards gained on every dropback. Generally higher is better as more of a quarterbacks dropbacks are being completed and for more substancial yardage",
   },
   {
+    label: "Touchdown Rate by Interception Rate",
+    description:
+      "The percentage of throws that were inercepted. Lower is better, however not a flawless stat as not all interceptions are the fault of the quarterback, as a throw bobbled by the receiver and intercepted being an example",
+  },
+  {
     label: "Pressure to Sack Rate",
     description:
       "The percentage of times a quarterback is sacked when attempting to pass. Lower is better and it generally an indicator of how a quarterback deals with pressure, but sometimes a sign of poor offensive line play",
@@ -24,22 +29,16 @@ export const passingStats = [
     description:
       "The percentage of plays that were accurate and on target, removing throwaways and spikes. Higher is better and this is a generally a better indicator than completion percentage, as accurate throws which were dropeed do not reflect poorly on the quarterback",
   },
-  {
-    label: "Touchdown to Interception Ratio",
-    description:
-      "The percentage of throws that were inercepted. Lower is better, however not a flawless stat as not all interceptions are the fault of the quarterback, as a throw bobbled by the receiver and intercepted being an example",
-  },
 ];
 
 export const rushingStats = [
   {
-    label: "Yards After Contact",
+    label: "Yards After Contact per Attempt",
     description:
       "Expected Points Added (EPA) measures the value of each play based on down, distance, and field position. Positive EPA indicates an above-average play that improved the team's scoring chances.",
   },
-  { label: "Broken Tackles", description: "Real" },
+  { label: "Forced Missed Tackles", description: "Real" },
   { label: "Fumbles", description: "Real" },
-  { label: "First Downs", description: "Real" },
-  { label: "EPA", description: "Real" },
-  { label: "EPA", description: "Real" },
+  { label: "Explosive Run Rate", description: "Real" },
+  { label: "EPA per Rush", description: "Real" },
 ];

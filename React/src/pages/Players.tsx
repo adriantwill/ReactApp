@@ -23,6 +23,7 @@ type Player = Database["public"]["Tables"]["Players"]["Row"];
 type Team = Database["public"]["Tables"]["Team"]["Row"];
 type PlayerTeams = Database["public"]["Tables"]["Player_Team"]["Row"];
 type PlayerPassingStats = Database["public"]["Tables"]["Passing_Stats"]["Row"];
+type PlayerRushingStats = Database["public"]["Tables"]["Rushing_Stat"]["Row"];
 type PlayerCharacteristics =
   Database["public"]["Tables"]["Passing_Characteristic"]["Row"];
 type TeamDetails = {
@@ -229,15 +230,17 @@ function Players() {
     const { data, error } = await supabase
       .from("Rushing_Stat")
       .select("*")
-      .eq("espnid", playerId);
+      .eq("espnid", playerId)
+      .limit(1);
     if (error) {
       console.log("error", error);
       throw error;
     }
+    console.log(data);
     return data[0];
   };
-  const { data: playerRushingStats } = useQuery<PlayerPassingStats>({
-    queryKey: ["playerPassingStats"],
+  const { data: playerRushingStats } = useQuery<PlayerRushingStats>({
+    queryKey: ["playerRusingStats"],
     queryFn: fetchPlayerRushingStats,
     refetchOnWindowFocus: false,
   });
