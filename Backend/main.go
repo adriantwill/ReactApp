@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-rod/rod"
 	"github.com/gocolly/colly"
 	"github.com/joho/godotenv"
 	"github.com/supabase-community/supabase-go"
@@ -39,11 +38,12 @@ type Player struct {
 
 type PlayerPassing struct {
 	Espnid     string `json:"espnid"`
-	PassingEPA float32 `json:"epa"`
-	TTT float32 `json:"ttt"`
+	EPA float32 `json:"epa"`
 	YPA float32 `json:"ypa"`
-	OnTarget float32 `json:"ontarget"`
-	SackPercent float32 `json:"sackpercent"`
+	CPOE float32 `json:"cpoe"`
+	TDINT float32 `json:"tdint"`
+	P2S float32 `json:"p2s"`
+	TTT float32 `json:"ttt"`
 }
 
 type PlayerRushing struct {
@@ -234,49 +234,102 @@ func getTop(client *supabase.Client){
 	}
 }
 
-func dynamicScrape (client *supabase.Client){
-	browser := rod.New().MustConnect()
-	defer browser.MustClose()
-
-	// Open the page
-	page := browser.MustPage("https://sumersports.com/players/quarterback/?plays=154")
-
-	// Wait for the table to load
-	page.MustWaitLoad()
-
-	// Select all table rows
-	rows := page.MustElements("tbody tr")
+func nfeloScrape (client *supabase.Client){
+	c := colly.NewCollector(
+	)
 	var playersToInsert []PlayerPassing
+	pffLinks := map[string]string{
+		"Lamar Jackson": "https://www.pff.com/nfl/players/lamar-jackson/46416",
+	}
 
-	for _, row := range rows {
-		// Extract player stats
-		qbunsplit := row.MustElement(`[data-stat="quarterback"]`).MustText()
-		qb := strings.Split(qbunsplit, ". ")[1]
-		id := getPlayerID(client,qb)
-		if id == "" {
-            continue
-        }
-		fmt.Println(id)
-		epa := row.MustElement(`[data-stat="passing_epa"]`).MustText()
-		sack_rate := row.MustElement(`[data-stat="sack_rate"]`).MustText()
-		sack_rate = strings.TrimSuffix(sack_rate, "%")
-		time_to_throw := row.MustElement(`[data-stat="time_to_throw"]`).MustText()
-		ypa := row.MustElement(`[data-stat="ypa"]`).MustText()
-		playersToInsert = append(playersToInsert, PlayerPassing{
-			Espnid: id,
-			PassingEPA: float32(gjson.Parse(epa).Float()),
-			TTT: float32(gjson.Parse(time_to_throw).Float()),
-			YPA: float32(gjson.Parse(ypa).Float()),
-			OnTarget: 0.0,
-			SackPercent: float32(gjson.Parse(sack_rate).Float()),
+	c.OnHTML("tbody", func(e *colly.HTMLElement) {
+		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+			firstname := el.ChildText("div.plate_styles-module--playerPlateContainer--3LAPh div.plate_styles-module--metaContainer--2p-V5 div.plate_styles-module--nameContainer--23hYA p.plate_styles-module--firstName--3gYfK")
+			lastname := el.ChildText("div.plate_styles-module--playerPlateContainer--3LAPh div.plate_styles-module--metaContainer--2p-V5 div.plate_styles-module--nameContainer--23hYA p.plate_styles-module--lastName--13DQ-")
+			name := firstname + " " + lastname
+			fmt.Println(name)
+			id := getPlayerID(client,name)
+			if id == "" {
+				return
+			}
+			epa := el.ChildText("td:nth-of-type(29) div")
+			cpoe := strings.Split(el.ChildText("td:nth-of-type(10) div"), "%")[0]
+			tdint := strings.Split(el.ChildText("td:nth-of-type(22) div"), "%")[0]
+			ypa := el.ChildText("td:nth-of-type(12) div")
+			count := 0
+			ttt := "0"
+			p2s := "0"
+			col := colly.NewCollector(
+			)
+			col.OnHTML("div.css-146c3p1.r-b0vftf.r-vnw8o6.r-1o4mh9l.r-16dba41.r-1iukymi", func(element *colly.HTMLElement) {
+				count++
+				if count == 8 {
+					ttt = element.Text
+				} else if count == 9{
+					p2s = strings.Split(element.Text, "%")[0]
+				}
+			})
+			col.Visit(pffLinks[name])
+
+			playersToInsert = append(playersToInsert, PlayerPassing{
+				Espnid: id,
+				EPA: float32(gjson.Parse(epa).Float()),
+				CPOE: float32(gjson.Parse(cpoe).Float()),
+				YPA: float32(gjson.Parse(ypa).Float()),
+				TDINT: float32(gjson.Parse(tdint).Float()),
+				TTT: float32(gjson.Parse(ttt).Float()),
+				P2S: float32(gjson.Parse(p2s).Float()),
+			})
+			
 		})
-	}
-	_,_,err := client.From("Passing_Stats").Insert(playersToInsert, true, "espnid", "", "").Execute()
-	if err != nil {
-		log.Printf("Error inserting players: %v", err)
-		return
-	}
+	})
+	c.Visit("https://www.nfeloapp.com/qb-rankings/")
+	fmt.Println(playersToInsert)
 }
+
+// func dynamicScrape (client *supabase.Client){
+// 	browser := rod.New().MustConnect()
+// 	defer browser.MustClose()
+
+// 	// Open the page
+// 	page := browser.MustPage("https://sumersports.com/players/quarterback/?plays=154")
+
+// 	// Wait for the table to load
+// 	page.MustWaitLoad()
+
+// 	// Select all table rows
+// 	rows := page.MustElements("tbody tr")
+// 	var playersToInsert []PlayerPassing
+
+// 	for _, row := range rows {
+// 		// Extract player stats
+// 		qbunsplit := row.MustElement(`[data-stat="quarterback"]`).MustText()
+// 		qb := strings.Split(qbunsplit, ". ")[1]
+// 		id := getPlayerID(client,qb)
+// 		if id == "" {
+//             continue
+//         }
+// 		fmt.Println(id)
+// 		epa := row.MustElement(`[data-stat="passing_epa"]`).MustText()
+// 		sack_rate := row.MustElement(`[data-stat="sack_rate"]`).MustText()
+// 		sack_rate = strings.TrimSuffix(sack_rate, "%")
+// 		time_to_throw := row.MustElement(`[data-stat="time_to_throw"]`).MustText()
+// 		ypa := row.MustElement(`[data-stat="ypa"]`).MustText()
+// 		playersToInsert = append(playersToInsert, PlayerPassing{
+// 			Espnid: id,
+// 			PassingEPA: float32(gjson.Parse(epa).Float()),
+// 			TTT: float32(gjson.Parse(time_to_throw).Float()),
+// 			YPA: float32(gjson.Parse(ypa).Float()),
+// 			OnTarget: 0.0,
+// 			SackPercent: float32(gjson.Parse(sack_rate).Float()),
+// 		})
+// 	}
+// 	_,_,err := client.From("Passing_Stats").Insert(playersToInsert, true, "espnid", "", "").Execute()
+// 	if err != nil {
+// 		log.Printf("Error inserting players: %v", err)
+// 		return
+// 	}
+// }
 
 func webScraperRushing(client *supabase.Client){
 	c := colly.NewCollector(
@@ -340,9 +393,8 @@ func main() {
 	if err != nil {
 		fmt.Println("cannot initalize client", err)
 	}
-	
 	fmt.Println("Hello, World!");
-	//addTeams(client)
+	nfeloScrape(client)
 	
 }
 

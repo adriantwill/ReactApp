@@ -6,9 +6,9 @@ function DraftFrontPageCard(props: {
 }) {
   console.log(props.college.color);
   return (
-    <div className="w-[30rem] mx-auto bg-white rounded-md shadow-surround overflow-hidden flex-shrink-0">
+    <div className="w-[30rem] mx-auto bg-white rounded-md border overflow-hidden flex-shrink-0">
       <div
-        className="text-white text-2xl flex items-center py-2 px-6"
+        className="text-white text-2xl flex items-center py-2 px-4"
         style={{ backgroundColor: `#${props.college.color}` }}
       >
         <div className=" font-semibold mr-3">{props.player.displayName}</div>
@@ -16,15 +16,15 @@ function DraftFrontPageCard(props: {
         <div className="">{props.player.position}</div>
       </div>
 
-      <div className="flex">
-        <div className="m-6 flex-1">
-          <div className="text-xl mb-2">
+      <div className="flex justify-between p-4">
+        <div className=" flex flex-col justify-between">
+          <div className="text-xl ">
             <span className="font-bold">School: </span> {props.college.name}
           </div>
-          <div className="text-xl mb-2">
+          <div className="text-xl ">
             <span className="font-bold">Weight: </span> {props.player.weight}
           </div>
-          <div className="text-xl mb-2">
+          <div className="text-xl ">
             <span className="font-bold">Height: </span> {props.player.height}
           </div>
           <div className="text-xl">
@@ -35,7 +35,7 @@ function DraftFrontPageCard(props: {
 
         <img
           src={props.player.headshot}
-          className="object-cover size-36 border-2 rounded-full mt-auto mb-3 mr-3"
+          className="object-cover size-36 border-2 rounded-full "
         />
       </div>
     </div>

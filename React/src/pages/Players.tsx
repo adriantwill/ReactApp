@@ -47,11 +47,14 @@ type TeamDetails = {
 
 type CareerStats = {
   yards: number;
+  displayName: string;
   touchdowns: number;
+  completions: number;
   interceptions: number;
-  name: string;
   abreviation: string;
-  year: number;
+  color: string;
+  year: string;
+  logo: string;
 };
 
 function Players() {
@@ -131,56 +134,87 @@ function Players() {
     return data;
   };
 
-  // const fetchCareerStats = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/athletes/${playerId}/statisticslog`
-  //     );
+  const fetchCareerStats = async (apiurl: string) => {
+    try {
+      const response = await fetch(apiurl);
+      if (!response.ok) {
+        throw new Error("Failed to fetch player statistics log");
+      }
+      const statsLog = await response.json();
+      let itemRefs =
+        statsLog.entries.flatMap(
+          (item: { statistics: { statistics: { $ref: any } }[] }) =>
+            item.statistics.slice(1).map((stat) => stat.statistics.$ref)
+        ) || [];
+      let statsPromises = itemRefs.map((ref: string | URL | Request) =>
+        fetch(ref).then((response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch stats at ${ref}`);
+          }
+          return response.json();
+        })
+      );
+      let statsResults = await Promise.all(statsPromises);
+      let finalsResult: CareerStats[] = statsResults.map((stat) => ({
+        yards: stat.splits.categories[1].stats[7].value || "0",
+        completions: stat.splits.categories[1].stats[2].value || "0",
+        displayName: "",
+        touchdowns: stat.splits.categories[1].stats[17].value || "0",
+        interceptions: stat.splits.categories[1].stats[5].value || "0",
+        abreviation: "",
+        color: "",
+        year: stat.season.$ref.split("/").slice(-1)[0].split("?")[0] || "0",
+        logo: "",
+      }));
+      itemRefs =
+        statsLog.entries.flatMap(
+          (item: { statistics: { team: { $ref: any } }[] }) =>
+            item.statistics
+              .slice(1)
+              .map((stat) => stat?.team?.$ref.replace(/\/seasons\/\d{4}/, ""))
+        ) || [];
+      statsPromises = itemRefs.map((ref: string | URL | Request) =>
+        fetch(ref).then((response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch stats at ${ref}`);
+          }
+          return response.json();
+        })
+      );
+      statsResults = await Promise.all(statsPromises);
+      for (let i = 0; i < statsResults.length; i++) {
+        finalsResult[i].displayName = statsResults[i].displayName;
+        finalsResult[i].abreviation = statsResults[i].abbreviation;
+        finalsResult[i].color = statsResults[i].color;
+        finalsResult[i].logo = statsResults[i].logos[1].href;
+      }
+      return finalsResult;
+    } catch (err) {
+      console.error("Error fetching career stats:", err);
+      return [];
+    }
+  };
 
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch player statistics log");
-  //     }
+  const { data: careerStats } = useQuery<CareerStats[]>({
+    queryKey: ["playerCareerStats"],
+    queryFn: () =>
+      fetchCareerStats(
+        `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/athletes/${playerId}/statisticslog`
+      ),
+  });
 
-  //     const statsLog = await response.json();
+  const { data: collegeCareerStats } = useQuery<CareerStats[]>({
+    queryKey: ["collegeCareerStats"],
+    queryFn: () =>
+      fetchCareerStats(
+        `https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/athletes/${playerId}/statisticslog?lang=en&region=us`
+      ),
+  });
 
-  //     console.log(statsLog);
-  //     // Extract item references from the stats log
-  //     const itemRefs = statsLog.entries?.map((item) => item.$ref) || [];
-  //     console.log(itemRefs);
-
-  //     // Fetch each stats item
-  //     const statsPromises = itemRefs.map((ref) =>
-  //       fetch(ref).then((response) => {
-  //         if (!response.ok) {
-  //           throw new Error(`Failed to fetch stats at ${ref}`);
-  //         }
-  //         return response.json();
-  //       })
-  //     );
-
-  //     // Wait for all stats to be fetched
-  //     const statsResults = await Promise.all(statsPromises);
-
-  //     // Transform into career stats format
-  //     return statsResults.map((stat) => ({
-  //       yards: stat.passing?.yards || 0,
-  //       touchdowns: stat.passing?.touchdowns || 0,
-  //       interceptions: stat.passing?.interceptions || 0,
-  //       name: stat.team?.displayName || "",
-  //       abreviation: stat.team?.abbreviation || "",
-  //       year: stat.season?.year || 0,
-  //     }));
-  //   } catch (err) {
-  //     console.error("Error fetching career stats:", err);
-  //     return [];
-  //   }
-  // };
-
-  // const { data: careerStats } = useQuery<CareerStats[]>({
-  //   queryKey: ["player"],
-  //   queryFn: fetchCareerStats,
-  //   refetchOnWindowFocus: false,
-  // });
+  const mergedCareerStats = [
+    ...(careerStats || []),
+    ...(collegeCareerStats || []),
+  ];
 
   const {
     data: player,
@@ -236,7 +270,6 @@ function Players() {
       console.log("error", error);
       throw error;
     }
-    console.log(data);
     return data[0];
   };
   const { data: playerRushingStats } = useQuery<PlayerRushingStats>({
@@ -256,40 +289,6 @@ function Players() {
     }
     return data[0];
   };
-
-  const seasonData = [
-    {
-      season: "2015",
-      team: "Louisville",
-      passingYards: 1840,
-      complations: 135,
-      touchdowns: 12,
-      interceptions: 8,
-      logo: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/97.png",
-      color: "#c9001f",
-    },
-    {
-      season: "2016",
-      team: "Louisville",
-      passingYards: 4282,
-      complations: 135,
-      touchdowns: 29,
-      interceptions: 7,
-      rating: 104.6,
-      logo: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/97.png",
-      color: "#c9001f",
-    },
-    {
-      season: "2017",
-      team: "Louisville",
-      passingYards: 3660,
-      complations: 254,
-      touchdowns: 27,
-      interceptions: 10,
-      logo: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/97.png",
-      color: "#c9001f",
-    },
-  ];
 
   const { data: playerCharacteristics } = useQuery<PlayerCharacteristics>({
     queryKey: ["playerCharacteristics"],
@@ -417,41 +416,47 @@ function Players() {
                   ))}
               </div>
               <div className="w-1/2 bg-white h-80 shadow-surround rounded-sm  overflow-auto p-4 flex flex-col gap-6">
-                {seasonData.map((season, index) => (
-                  <div key={index} className="">
-                    <div
-                      className="flex justify-between items-center mb-2 px-2 text-white rounded-sm "
-                      style={{ backgroundColor: `${season.color}` }}
-                    >
-                      <span className="text-xl font-medium">
-                        {season.season}
-                      </span>
-                      <div className="flex items-center">
-                        <span className="mr-1">{season.team} </span>
-                        <img className="h-6" src={season.logo} />
+                {mergedCareerStats && mergedCareerStats.length > 0 ? (
+                  mergedCareerStats.map((season, index) => (
+                    <div key={index} className="">
+                      <div
+                        className="flex justify-between items-center mb-2 px-2 text-white rounded-sm "
+                        style={{ backgroundColor: `#${season.color}` }}
+                      >
+                        <span className="text-xl font-medium">
+                          {season.year}
+                        </span>
+                        <div className="flex items-center">
+                          <span className="mr-1">{season.displayName} </span>
+                          <img className="h-6" src={season.logo} />
+                        </div>
                       </div>
+                      <div className="grid grid-cols-4 px-2">
+                        <PlayerCareerTableStat
+                          title="Passing Yards"
+                          amount={season.yards}
+                        />
+                        <PlayerCareerTableStat
+                          title="Completions"
+                          amount={season.completions}
+                        />
+                        <PlayerCareerTableStat
+                          title="Touchdowns"
+                          amount={season.touchdowns}
+                        />
+                        <PlayerCareerTableStat
+                          title="Interceptions"
+                          amount={season.interceptions}
+                        />
+                      </div>
+                      <div className="mt-2 border-t border-gray-300"></div>
                     </div>
-                    <div className="grid grid-cols-4 px-2">
-                      <PlayerCareerTableStat
-                        title="Passing Yards"
-                        amount={season.passingYards}
-                      />
-                      <PlayerCareerTableStat
-                        title="Completions"
-                        amount={season.complations}
-                      />
-                      <PlayerCareerTableStat
-                        title="Touchdowns"
-                        amount={season.touchdowns}
-                      />
-                      <PlayerCareerTableStat
-                        title="Interceptions"
-                        amount={season.interceptions}
-                      />
-                    </div>
-                    <div className="mt-2 border-t border-gray-300"></div>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-500">
+                    No career stats
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

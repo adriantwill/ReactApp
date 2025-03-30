@@ -10,37 +10,40 @@ function Gamecard(props: { data: Games[]; league: string }) {
     );
   });
   return (
-    <div className="flex relative">
-      <p className="text-lg text-gray-500 block absolute -top-6 left-2">
-        {props.league}
-      </p>
-
-      {sortedData.map((game, index) => (
-        <div
-          className="shadow-surround rounded-xl my-2 mx-4 relative w-52 flex-shrink-0 bg-white"
-          key={index}
-        >
-          <GameCardInfo
-            border={"rounded-tl-xl"}
-            team={game.competitions[0].competitors[1]}
-            status={game.status}
-            borderPos={[
-              "borderBottomColor",
-              "borderLeftWidth",
-              "borderBottomWidth",
-            ]}
-          />
-          <div className="absolute top-1/2 right-2 -translate-y-1/2 text-sm">
-            {game.status.type.shortDetail}
+    <div className="pb-5">
+      <p className="text-lg block text-gray-600 pb-1 ">{props.league}</p>
+      <div className=" flex relative gap-10">
+        {sortedData.map((game, index) => (
+          <div
+            className="shadow-surround rounded-md relative w-56 flex-shrink-0 bg-white"
+            key={index}
+          >
+            <GameCardInfo
+              border={"rounded-tl-md"}
+              team={game.competitions[0].competitors[1]}
+              status={game.status}
+              borderPos={[
+                "borderBottomColor",
+                "borderLeftWidth",
+                "borderBottomWidth",
+              ]}
+            />
+            <div className="absolute top-1/2 right-2 -translate-y-1/2 text-xs">
+              {game.status.type.shortDetail}
+            </div>
+            <GameCardInfo
+              border={"rounded-bl-md"}
+              status={game.status}
+              team={game.competitions[0].competitors[0]}
+              borderPos={[
+                "borderTopColor",
+                "borderRightWidth",
+                "borderTopWidth",
+              ]}
+            />
           </div>
-          <GameCardInfo
-            border={"rounded-bl-xl"}
-            status={game.status}
-            team={game.competitions[0].competitors[0]}
-            borderPos={["borderTopColor", "borderRightWidth", "borderTopWidth"]}
-          />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

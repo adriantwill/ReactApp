@@ -8,6 +8,7 @@ import {
 import Gamecard from "../components/Gamecard";
 import BreakingCarosel from "../components/BreakingCarosel";
 import DraftFrontPageCard from "../components/DraftFrontPageCard";
+import InfoSubHeader from "../subcomponents/InfoSubHeader";
 
 export interface FeedViewPostWithRecord extends FeedViewPost {
   post: PostView & {
@@ -88,7 +89,7 @@ function FrontPage() {
     queryKey: ["nbaEvents"],
     queryFn: async () => {
       const response = await fetch(
-        "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard"
+        "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
       );
       const data = await response.json();
       return data.events;
@@ -102,6 +103,19 @@ function FrontPage() {
     queryFn: async () => {
       const response = await fetch(
         "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+      );
+      const data = await response.json();
+      return data.events;
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const { data: collegeBasketballData } = useQuery<Games[]>({
+    queryKey: ["collegeBasketballEvents"],
+    queryFn: async () => {
+      const response = await fetch(
+        "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard"
       );
       const data = await response.json();
       return data.events;
@@ -126,7 +140,7 @@ function FrontPage() {
   const { data: draftPlayers } = useQuery<
     {
       athlete: Player;
-      college: { name: string; logo?: string };
+      college: { name: string; logo?: string; color: string };
     }[]
   >({
     queryKey: ["draftPlayersDetails", nflDraftData],
@@ -187,30 +201,35 @@ function FrontPage() {
   return (
     <>
       <Dropdown />
-      <div className="animate-fade-in-down bg-primary pb-12">
-        <div className=" pl-2 overflow-auto flex py-8">
+      <div className="animate-fade-in-down bg-primary ">
+        <div className=" flex mx-10 mb-5 overflow-auto gap-10">
           <Gamecard data={nflData ?? []} league={"NFL"} />
-          <Gamecard data={nbaData ?? []} league={"NCAA"} />
+          <Gamecard data={nbaData ?? []} league={"NBA"} />
+          <Gamecard data={collegeBasketballData ?? []} league={"NCAA"} />
         </div>
-        <div className="mb-12">
-          <h2 className="text-2xl text-center font-semibold text-white uppercase bg-blue-700 p-1">
-            Breaking
-          </h2>
-          <div className="flex group overflow-hidden bg-white p-6 shadow-surround">
-            <BreakingCarosel likes={likes} />
-            <BreakingCarosel likes={likes} />
+        <div className="px-10 pb-10 flex flex-col gap-10">
+          <div className="shadow-surround rounded-sm bg-white">
+            <h2 className="rounded-t-sm text-xl border-b border-b-gray-400 font-semibold  pl-5 p-2">
+              Breaking
+            </h2>
+            <div className="flex group overflow-hidden p-5">
+              <BreakingCarosel likes={likes} />
+              <BreakingCarosel likes={likes} />
+            </div>
           </div>
-        </div>
-        <div className="bg-white shadow-surround">
-          <div className="text-center text-3xl font-bold p-4  ">Big Board</div>
-          <div className="flex overflow-auto overflow-y-visible gap-12 px-5 pb-5">
-            {draftPlayers?.slice(0, 10).map((player, index) => (
-              <DraftFrontPageCard
-                key={index}
-                player={player.athlete}
-                college={player.college}
-              />
-            ))}
+          <div>
+            <h2 className="text-xl font-medium bg-gray-800 rounded-t-sm  text-white p-2 pl-5">
+              Big Board
+            </h2>
+            <div className="bg-white shadow-surround flex overflow-auto overflow-y-visible gap-10 p-5 rounded-b-sm">
+              {draftPlayers?.slice(0, 10).map((player, index) => (
+                <DraftFrontPageCard
+                  key={index}
+                  player={player.athlete}
+                  college={player.college}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

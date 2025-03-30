@@ -6,11 +6,8 @@ import { TbRun } from "react-icons/tb";
 import { TbBrain } from "react-icons/tb";
 import { PiFootballHelmet } from "react-icons/pi";
 
-// Type for trait names to ensure type safety
 export type TraitName = string;
-// Add other traits as needed
 
-// Map of trait names to their corresponding icon components
 export const traitIcons: Record<TraitName, IconType> = {
   "pocket passer": PiFootballHelmet,
   gunslinger: PiFootballHelmet,
@@ -32,9 +29,6 @@ export const traitIcons: Record<TraitName, IconType> = {
   error: TbFaceIdError,
 };
 
-// Helper function to get an icon component by trait name
 export const getTraitIcon = (trait: string): IconType => {
-  // Check if the trait exists in our mapping, otherwise return the error icon
-  console.log(trait);
   return traitIcons[trait as TraitName] || traitIcons.error;
 };

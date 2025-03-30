@@ -16,7 +16,6 @@ function StatsSection(props: {
   if (!props.stats) {
     return <div className="shadow-surround rounded-md bg-white "></div>;
   }
-  console.log(props.table);
   return (
     <div className="shadow-surround rounded-sm bg-white w-1/2">
       <MediumCardTitle title={props.title} color={props.color} />
