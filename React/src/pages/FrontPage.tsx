@@ -55,7 +55,7 @@ type Team = {
   logo: string;
 };
 
-export type Player = {
+export interface Player {
   displayName: string;
   weight: number;
   height: number;
@@ -63,7 +63,7 @@ export type Player = {
   headshot: string;
   college: string;
   experience: { displayValue: string };
-};
+}
 
 function FrontPage() {
   const agent = new AtpAgent({ service: "https://bsky.social" });
