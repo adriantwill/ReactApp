@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import TeamButton from "./TeamButton";
+import PlayerModalCardSubTitle from "../subcomponents/PlayerModalCardSubTitle";
 
 type StatsProps = {
   gameLog: GameLog;
@@ -11,7 +12,7 @@ type GameLog = {
   categories: CategoriesLabels[];
   labels: string[];
   seasonTypes: SeasonTypes[];
-  events: Record<string, EventDetail>;
+  events: { [playerId: string]: EventDetail };
 };
 
 type CategoriesLabels = {
@@ -34,6 +35,7 @@ type Events = {
 };
 
 type EventDetail = {
+  eventNote: string;
   id: string;
   week: number;
   atVs: string;
@@ -75,11 +77,9 @@ function StatsTable(props: StatsProps) {
   };
   return (
     <>
-      <div className="text-center text-3xl text-white rounded-t-xl p-3 pb-5 -mb-2 bg-white bg-opacity-25 font-medium ">
-        2024 Season Statistics
-      </div>
+      <PlayerModalCardSubTitle title={"2024 Season Statistics"} />
 
-      <div className=" rounded-xl bg-primary p-4 ">
+      <div className=" rounded-md bg-primary p-4 ">
         <div className="flex gap-4 mb-4 justify-center">
           {allCategories.map((category) => (
             <TeamButton
@@ -91,13 +91,13 @@ function StatsTable(props: StatsProps) {
             />
           ))}
         </div>
-        <div className="relative overflow-auto shadow-md rounded-lg h-64">
+        <div className="relative overflow-auto border rounded-sm h-72">
           <table className="w-full text-sm text-center text-gray-500 ">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100  ">
               <tr>
                 <th className="px-4 py-2">WK</th>
                 {Array.from({ length: activeStats.count }).map((_, index) => (
-                  <th key={index} className="px-4 py-2">
+                  <th key={index} className="px-4 py-3">
                     {activeStats.name === "opponents"
                       ? label[index]
                       : props.gameLog.labels[index + totalCount]}
@@ -107,19 +107,16 @@ function StatsTable(props: StatsProps) {
             </thead>
             <tbody>
               {Array.from({ length: 18 }).map((_, index) => {
-                const regEvents =
-                  props.gameLog.seasonTypes[
-                    props.gameLog.seasonTypes.length - 1
-                  ].categories[0]?.events || [];
+                if (!props.gameLog.events) {
+                  return null;
+                }
                 const event = Object.values(props.gameLog.events).find(
-                  (event) =>
-                    event.week === index + 1 &&
-                    regEvents.some((regEvent) => regEvent.eventId === event.id)
+                  (event) => event.week === index + 1 && !event.eventNote
                 );
                 return (
                   <tr
                     key={index}
-                    className="odd:bg-white even:bg-gray-50 border-b "
+                    className="odd:bg-white even:bg-gray-100 border-b "
                   >
                     <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{`Week ${
                       index + 1
@@ -150,9 +147,14 @@ function StatsTable(props: StatsProps) {
                             key={weeklyIndex}
                           >
                             {(event &&
-                              regEvents.length > 0 &&
-                              regEvents.find((e) => e.eventId === event.id)
-                                ?.stats[weeklyIndex + totalCount]) ||
+                              props.gameLog.seasonTypes[
+                                props.gameLog.seasonTypes.length - 1
+                              ].categories[0]?.events.length > 0 &&
+                              props.gameLog.seasonTypes[
+                                props.gameLog.seasonTypes.length - 1
+                              ].categories[0]?.events.find(
+                                (e) => e.eventId === event.id
+                              )?.stats[weeklyIndex + totalCount]) ||
                               "-"}
                           </td>
                         )

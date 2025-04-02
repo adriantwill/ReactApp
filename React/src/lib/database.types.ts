@@ -158,7 +158,7 @@ export type Database = {
           broken_tackle: number | null
           created_at: string
           espnid: string
-          first_down: number | null
+          explosive: number | null
           fumble: number | null
           id: number
           rush_epa: number | null
@@ -168,7 +168,7 @@ export type Database = {
           broken_tackle?: number | null
           created_at?: string
           espnid: string
-          first_down?: number | null
+          explosive?: number | null
           fumble?: number | null
           id?: number
           rush_epa?: number | null
@@ -178,7 +178,7 @@ export type Database = {
           broken_tackle?: number | null
           created_at?: string
           espnid?: string
-          first_down?: number | null
+          explosive?: number | null
           fumble?: number | null
           id?: number
           rush_epa?: number | null
@@ -193,8 +193,10 @@ export type Database = {
           created_at: string
           division: string
           espnid: string
+          hc: string
           id: number
           name: string
+          oc: string
           secondary_color: string
         }
         Insert: {
@@ -203,8 +205,10 @@ export type Database = {
           created_at?: string
           division?: string
           espnid: string
+          hc?: string
           id?: number
           name: string
+          oc?: string
           secondary_color?: string
         }
         Update: {
@@ -213,8 +217,10 @@ export type Database = {
           created_at?: string
           division?: string
           espnid?: string
+          hc?: string
           id?: number
           name?: string
+          oc?: string
           secondary_color?: string
         }
         Relationships: []
@@ -224,7 +230,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_rushing_stat_rank: {
+        Args: {
+          espn_id: string
+          stat_column: string
+        }
+        Returns: {
+          rank: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

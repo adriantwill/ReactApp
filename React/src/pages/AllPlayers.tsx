@@ -78,16 +78,6 @@ function AllPlayers() {
             />
           ))}
         </div>
-        <InfoSubHeader text="Wide Recievers" />
-        <div className="flex relative overflow-scroll gap-12 px-10 pb-10">
-          {playersList.map((player) => (
-            <PlayerCard
-              key={player.id}
-              player={player}
-              team={teams.find((team) => team.espnid === player.teamid)}
-            />
-          ))}
-        </div>
       </div>
     </>
   );

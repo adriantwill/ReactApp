@@ -40,6 +40,7 @@ type Events = {
 type EventDetail = {
   id: string;
   week: number;
+  eventNote: string;
   atVs: string;
   homeTeamScore: string;
   awayTeamScore: string;
@@ -90,13 +91,13 @@ function Modal(props: MoadlProps) {
   if (isError || !gameLog) return <p>Error loading data</p>;
 
   return (
-    <div className="flex items-center justify-center fixed inset-0 z-20">
+    <div className="flex items-center justify-center fixed inset-0 z-20 animate-fade-in ">
       <div
         onClick={props.toggleModal}
-        className="bg-black bg-opacity-30 w-screen h-screen absolute inset-0"
+        className="bg-black bg-opacity-30 w-screen h-screen absolute inset-0 "
       />
       <div
-        className="rounded-lg bg-white w-[150vh] h-[90%] drop-shadow-xl overflow-auto "
+        className="rounded-lg bg-white w-[150vh] h-[90%] drop-shadow-xl overflow-auto animate-scale-in"
         style={{ backgroundColor: `#${props.team.color}` }}
       >
         <button
@@ -111,14 +112,13 @@ function Modal(props: MoadlProps) {
             number={props.player.jersey}
             position={props.player.position.name}
           />
-          <div className="relative ">
-            <div className=" w-60 bottom-0 right-0">
-              <img
-                src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${props.team.abbreviation}.png`}
-                className="absolute opacity-50 -z-10 -bottom-10"
-              />
-              <img src={props.player.headshot.href} />
-            </div>
+
+          <div className="relative w-60 bottom-0 right-0">
+            <img
+              src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${props.team.abbreviation}.png`}
+              className="absolute opacity-50 -z-10 -bottom-10"
+            />
+            <img src={props.player.headshot.href} />
           </div>
         </div>
 

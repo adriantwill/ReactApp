@@ -9,6 +9,10 @@ import TeamStats from "../components/TeamStats";
 import TeamStat from "../subcomponents/TeamStat";
 import KeyButton from "../components/KeyButton";
 import TeamButton from "../components/TeamButton";
+import { Database } from "../lib/database.types";
+import { supabase } from "../supabase-client";
+
+type Team = Database["public"]["Tables"]["Team"]["Row"];
 
 export type TeamInfo = {
   color: string;
@@ -46,12 +50,7 @@ type Competitions = {
 };
 
 type Competitors = {
-  team: Team;
-};
-
-type Team = {
-  nickname: string;
-  logos: Logos[];
+  team: { nickname: string; logos: Logos[] };
 };
 
 type Status = {
@@ -129,6 +128,20 @@ function Teams() {
   const toggleModal = () => {
     setModal(!modal);
   };
+
+  const { data: supabaseTeam } = useQuery<Team>({
+    queryKey: ["supabaseTeam"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("Team")
+        .select("*")
+        .eq("espnid", teamId)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { data: teamData } = useQuery<TeamInfo>({
     queryKey: ["teamData"],
     queryFn: async () => {
@@ -192,7 +205,7 @@ function Teams() {
   return (
     <>
       <Dropdown />
-      {modal && teamData && currentPlayer && (
+      {modal && currentPlayer && (
         <Modal
           toggleModal={toggleModal}
           team={teamData}
@@ -236,10 +249,10 @@ function Teams() {
                 tailwind="w-5/12"
                 title="Coaching Staff"
               >
-                <TeamStat title="Head Coach" summary="Sean McVay" />
+                <TeamStat title="Head Coach" summary={supabaseTeam?.hc || ""} />
                 <TeamStat
                   title="Offensive Coordinator"
-                  summary="Mike LaFleur"
+                  summary={supabaseTeam?.oc || ""}
                 />
               </TeamStats>
             </div>

@@ -2,7 +2,10 @@ function TeamStat(props: { title: string; summary: string; rank?: number }) {
   return (
     <div
       className={`flex flex-col items-center gap-1  ${
-        props.title !== "Head Coach" && props.title !== "EPA Per Play"
+        props.title !== "Head Coach" &&
+        props.title !== "EPA Per Play" &&
+        props.title !== "College" &&
+        props.title !== "Weight"
           ? "border-l-2"
           : ""
       }`}

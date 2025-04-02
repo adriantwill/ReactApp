@@ -23,6 +23,8 @@ type Team struct {
 	Abbreviation string `json:"abbreviation"`
 	Division string `json:"division"`
 	Secondary string `json:"secondary_color"`
+	OC string `json:"oc"`
+	HC string `json:"hc"`
 }
 
 type Player struct {
@@ -55,6 +57,12 @@ type PlayerRushing struct {
 	Fumble int `json:"fumble"`
 }
 
+type TeamStat struct {
+	EspnId string `json:"espnid"`
+	Proe float32 `json:"proe"`
+	RzRate float32 `json:"rzrate"`
+}
+
 // Fetch data from ESPN API
 func fetchData(url string) ([]byte, error) {
 	resp, err := http.Get(url)
@@ -71,49 +79,61 @@ func fetchData(url string) ([]byte, error) {
 }
 
 func addTeams(client *supabase.Client){
-	var teamsToInsert []Team
-	data, err := fetchData("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams")
-	if err != nil {
-		log.Printf("Error fetching data: %v", err)
-	}
-	teams := gjson.GetBytes(data, "sports.0.leagues.0.teams")
-	for _, team := range teams.Array() {
-		espnid := team.Get("team.id").String()
-		name := team.Get("team.displayName").String()
-		color := team.Get("team.color").String()
-		seconday := team.Get("team.alternateColor").String()
-		abbreviation := team.Get("team.abbreviation").String()
-		fmt.Println(abbreviation)
-		division := "AFC West"
-		if (abbreviation=="BAL" || abbreviation=="CIN" || abbreviation=="CLE" || abbreviation=="PIT"){
-			division="AFC North"
-		} else if (abbreviation=="TEN" || abbreviation=="IND" || abbreviation=="JAX" || abbreviation=="HOU"){
-			division="AFC South"
-		} else if (abbreviation=="NYJ" || abbreviation=="BUF" || abbreviation=="MIA" || abbreviation=="NE"){
-			division="AFC East"
-		} else if (abbreviation=="SEA" || abbreviation=="SF" || abbreviation=="LAR" || abbreviation=="ARI"){
-			division="NFC West"
-		} else if (abbreviation=="CHI" || abbreviation=="DET" || abbreviation=="GB" || abbreviation=="MIN"){
-			division="NFC North"
-		} else if (abbreviation=="NO" || abbreviation=="ATL" || abbreviation=="CAR" || abbreviation=="TB"){
-			division="NFC South"
-		} else if (abbreviation=="PHI" || abbreviation=="DAL" || abbreviation=="WSH" || abbreviation=="NYG"){
-			division="NFC East"
-		}
-		teamsToInsert = append(teamsToInsert, Team{
-			EspnId: espnid,
-			Name:   name,
-			Color:  color,
-			Abbreviation: abbreviation,
-			Division: division,
-			Secondary: seconday,
+	c := colly.NewCollector(
+	)
+	c.OnHTML("tbody", func(e *colly.HTMLElement) {
+		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+			team := el.ChildText("td:nth-of-type(4) a")
+			oc := el.ChildText("td:nth-of-type(1)")
+			fmt.Println(team)
+			fmt.Println(oc)
+			_,_,err := client.From("Team").Update(map[string]interface{}{"hc": oc}, "", "").Eq("name", team).Execute()
+			if err != nil {
+				log.Printf("Error updating team: %v", err)
+			}
 		})
-	}
-	_,_,err = client.From("Team").Insert(teamsToInsert, true, "espnid", "", "").Execute()
-	if err != nil {
-		log.Printf("Error inserting teams: %v", err)
-		return
-	}
+	})
+	c.Visit("https://www.espn.com/nfl/coaches")
+
+	// var teamsToInsert []Team
+	// data, err := fetchData("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams")
+	// if err != nil {
+	// 	log.Printf("Error fetching data: %v", err)
+	// }
+	// teams := gjson.GetBytes(data, "sports.0.leagues.0.teams")
+	// for _, team := range teams.Array() {
+	// 	espnid := team.Get("team.id").String()
+	// 	// name := team.Get("team.displayName").String()
+	// 	// color := team.Get("team.color").String()
+	// 	// seconday := team.Get("team.alternateColor").String()
+	// 	// abbreviation := team.Get("team.abbreviation").String()
+	// 	// fmt.Println(abbreviation)
+	// 	// division := "AFC West"
+	// 	// if (abbreviation=="BAL" || abbreviation=="CIN" || abbreviation=="CLE" || abbreviation=="PIT"){
+	// 	// 	division="AFC North"
+	// 	// } else if (abbreviation=="TEN" || abbreviation=="IND" || abbreviation=="JAX" || abbreviation=="HOU"){
+	// 	// 	division="AFC South"
+	// 	// } else if (abbreviation=="NYJ" || abbreviation=="BUF" || abbreviation=="MIA" || abbreviation=="NE"){
+	// 	// 	division="AFC East"
+	// 	// } else if (abbreviation=="SEA" || abbreviation=="SF" || abbreviation=="LAR" || abbreviation=="ARI"){
+	// 	// 	division="NFC West"
+	// 	// } else if (abbreviation=="CHI" || abbreviation=="DET" || abbreviation=="GB" || abbreviation=="MIN"){
+	// 	// 	division="NFC North"
+	// 	// } else if (abbreviation=="NO" || abbreviation=="ATL" || abbreviation=="CAR" || abbreviation=="TB"){
+	// 	// 	division="NFC South"
+	// 	// } else if (abbreviation=="PHI" || abbreviation=="DAL" || abbreviation=="WSH" || abbreviation=="NYG"){
+	// 	// 	division="NFC East"
+	// 	// }
+	// 	teamsToInsert = append(teamsToInsert, Team{
+	// 		EspnId: espnid,
+	// 		OC: "",
+	// 	})
+	// }
+	// _,_,err = client.From("Team").Insert(teamsToInsert, true, "espnid", "", "").Execute()
+	// if err != nil {
+	// 	log.Printf("Error inserting teams: %v", err)
+	// 	return
+	// }
 }
 
 func getTeamPlayers(client *supabase.Client){
@@ -228,6 +248,34 @@ func getTop(client *supabase.Client){
 	}
 	fmt.Println(playersToInsert)
 	_,_,err = client.From("Players").Insert(playersToInsert, true, "espnid", "", "").Execute()
+	if err != nil {
+		log.Printf("Error inserting players: %v", err)
+		return
+	}
+}
+
+func proe(client *supabase.Client){
+	c := colly.NewCollector(
+	)
+	var teamsToInsert []TeamStat
+	c.OnHTML("tbody", func(e *colly.HTMLElement) {
+		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+			fmt.Println(el)
+			team := el.ChildText("div.plate_styles-module--teamNameMobile--N3TEQ")
+			id := getTeamID(client,team)
+			if id == "" {
+				return
+			}
+			proe := strings.Split(el.ChildText("td:nth-of-type(5) a div div"), "%")[0] 
+			teamsToInsert = append(teamsToInsert, TeamStat{
+				EspnId: id,
+				Proe: float32(gjson.Parse(proe).Float()),
+			})
+			
+		})
+	})
+	c.Visit("https://www.nfeloapp.com/nfl-power-ratings/nfl-team-tendencies/")
+	_,_,err := client.From("Team_Stat").Insert(teamsToInsert, true, "espnid", "proe", "").Execute()
 	if err != nil {
 		log.Printf("Error inserting players: %v", err)
 		return
@@ -381,6 +429,21 @@ func getPlayerID(client *supabase.Client, name string) string {
 	return players[0].Espnid
 }
 
+func getTeamID(client *supabase.Client, name string) string {
+	var teams []Team
+	data, count, err := client.From("Team").Select("espnid", "exact", false).Eq("abbreviationP", name).Execute()
+	if err != nil || count == 0 {
+		log.Printf("Error querying teams: %v", err)
+		return ""
+	}
+	err = json.Unmarshal(data, &teams)
+	if err != nil {
+		log.Printf("Error unmarshaling data: %v", err)
+		return "";
+	}
+	return teams[0].EspnId
+}
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -394,7 +457,7 @@ func main() {
 		fmt.Println("cannot initalize client", err)
 	}
 	fmt.Println("Hello, World!");
-	nfeloScrape(client)
+	proe(client)
 	
 }
 

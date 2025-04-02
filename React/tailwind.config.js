@@ -13,8 +13,18 @@ export default {
       animation: {
         "loop-scroll": "loop-scroll 60s linear infinite",
         "fade-in-down": "fadeInDown 0.5s ease-out forwards",
+        "scale-in": "scaleIn 0.3s ease-in-out",
+        "fade-in": "fadeIn 0.3s ease-in-out",
       },
       keyframes: {
+        scaleIn: {
+          "0%": { transform: "scale(0.9)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
         "loop-scroll": {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-100%)" },

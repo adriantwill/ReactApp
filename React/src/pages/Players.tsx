@@ -319,20 +319,22 @@ function Players() {
       <Dropdown />
       <div className="animate-fade-in-down bg-primary">
         <div className="" style={{ backgroundColor: `#${team?.color}` }}>
-          <div className="px-32 flex justify-between h-56">
+          <div className="px-32 flex justify-between overflow-hidden">
             <PlayerNameTitle
               name={player.name}
               number={player.number}
               position={fullPosition}
             />
-            <div className="relative w-60 self-end ">
+            <div className="relative w-72 pt-5 self-end">
               <img
                 src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espnid}.png`}
                 className="relative z-10"
+                alt="Player headshot"
               />
               <img
                 src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${team.abbreviation}.png`}
-                className="absolute opacity-50 -bottom-4 left-0"
+                className="absolute inset-0 size-full object-cover opacity-50"
+                alt="Team logo"
               />
             </div>
           </div>
