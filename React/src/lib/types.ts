@@ -37,21 +37,13 @@ export interface FeedViewPostWithRecord extends FeedViewPost {
 }
 
 export interface Games {
-  status: {
-    displayClock: string;
-    type: {
-      id: string;
-      shortDetail: string;
-    };
-  };
-  competitions: {
-    competitors: {
-      team: TeamInfo;
-      score: string;
-      records: {
-        summary: string;
-      }[];
-    }[];
+  status: Status[];
+}
+export interface Competitors {
+  team: TeamInfo;
+  score: string;
+  records: {
+    summary: string;
   }[];
 }
 
@@ -80,11 +72,20 @@ export interface CareerStats {
 export interface NextEvent {
   competitions: {
     competitors: { team: { nickname: string; logos: Logos[] } }[];
-    status: { type: { shortDetail: string; description: string } };
+    status: Status;
   }[];
   week: {
     text: string;
   };
+}
+
+export interface Status {
+  displayClock: string;
+  competitions: {
+    competitors: Competitors[];
+  };
+
+  type: { shortDetail: string; description: string; id: string };
 }
 
 export interface TeamInfo {
@@ -92,6 +93,7 @@ export interface TeamInfo {
   alternateColor: string;
   abbreviation: string;
   displayName: string;
+  logo: string;
   nextEvent: NextEvent[];
   record: { items: { summary: string; stats: { value: number }[] }[] };
   standingSummary: string;
@@ -176,13 +178,17 @@ export interface PlayerInfo {
   };
 }
 
+export interface Statistics {
+  statistics: {
+    labels: string[];
+    splits: { stats: string[] }[];
+  };
+}
+
 export interface Card {
   id: number;
   data: {
-    statistics: {
-      labels: string[];
-      splits: { stats: string[] }[];
-    };
+    statistics: Statistics;
   };
   player: PlayerInfo;
   team: {

@@ -1,4 +1,4 @@
-import { Competitors, Status } from "../pages/FrontPage";
+import { Competitors, Status } from "../lib/types";
 
 function GameCardInfo(props: {
   team: Competitors;
@@ -31,7 +31,7 @@ function GameCardInfo(props: {
         }`}
       >
         {props.status.type.id === "1"
-          ? props.team.records?.[0]?.summary ?? "N/A"
+          ? (props.team.records?.[0]?.summary ?? "N/A")
           : props.team.score}
       </div>
     </div>

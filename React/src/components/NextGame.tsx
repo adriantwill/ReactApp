@@ -34,7 +34,17 @@ function NextGame(props: Props) {
             },
           },
         ],
-        status: { type: { shortDetail: "", description: "" } },
+        status: {
+          type: {
+            shortDetail: "",
+            description: "",
+            id: "",
+          },
+          displayClock: "",
+          competitions: {
+            competitors: [],
+          },
+        },
       },
     ],
     week: { text: "" },
@@ -48,8 +58,8 @@ function NextGame(props: Props) {
         {teamInfo.competitions[0].status.type.description === "Scheduled"
           ? "Upcoming Game"
           : teamInfo.competitions[0].status.type.description === "In Progress"
-          ? "Live Game"
-          : "Final Game"}
+            ? "Live Game"
+            : "Final Game"}
       </h3>
       <div
         style={{ backgroundColor: `#${props.color}` }}

@@ -87,11 +87,11 @@ function RouteComponent() {
         let response;
         if (team.nfl) {
           response = await fetch(
-            `http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${team.team_id}`
+            `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${team.team_id}`
           );
         } else {
           response = await fetch(
-            `http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/${team.team_id}`
+            `https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/${team.team_id}`
           );
         }
         if (!response.ok) {

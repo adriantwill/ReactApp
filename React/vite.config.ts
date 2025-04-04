@@ -7,6 +7,14 @@ export default defineConfig({
   plugins: [
     TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
     react(),
+    {
+      name: "force-https",
+      transform(code, id) {
+        if (id.endsWith(".js") || id.endsWith(".jsx") || id.endsWith(".tsx")) {
+          return code.replace(/http:\/\//g, "https://");
+        }
+      },
+    },
   ],
   base: "/",
 });

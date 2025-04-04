@@ -1,12 +1,12 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import RankingStats from "./RankingStats";
-import { Player, Statistics, TeamStats } from "../pages/Rankings";
 import { TbChevronDown } from "react-icons/tb";
+import { PlayerInfo, Statistics, TeamDetails } from "../lib/types";
 
 function SlimRankingCard(props: {
-  player: Player;
-  team: TeamStats;
+  player: PlayerInfo;
+  team: Partial<TeamDetails>;
   data: Statistics;
   id: number;
   index: number;
@@ -75,7 +75,7 @@ function SlimRankingCard(props: {
           />
           <div className="relative w-32 overflow-hidden self-end mr-1">
             <img
-              src={props.team?.logos[0].href}
+              src={props.team?.logos?.[0]?.href || ""}
               className="absolute opacity-50"
             />
             <img src={props.player?.headshot.href} className="relative" />

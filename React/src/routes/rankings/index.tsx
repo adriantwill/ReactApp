@@ -26,7 +26,7 @@ export const Route = createFileRoute("/rankings/")({
 });
 
 function RouteComponent() {
-  const [tasks, setTasks] = useState<Card[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [activeDragItem, setActiveDragItem] = useState<Card | null>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -174,8 +174,6 @@ function RouteComponent() {
                   </div>
                   {tasks.slice(5, 20).map((task) => (
                     <RankingCard
-                      team={task.team}
-                      data={task.data}
                       player={task.player}
                       id={task.id}
                       key={task.id}
@@ -192,8 +190,6 @@ function RouteComponent() {
               tasks.findIndex((t) => t.id === activeDragItem.id) > 4 && (
                 <DragOverlay>
                   <RankingCard
-                    team={activeDragItem.team}
-                    data={activeDragItem.data}
                     player={activeDragItem.player}
                     id={activeDragItem.id}
                     key={activeDragItem.id}

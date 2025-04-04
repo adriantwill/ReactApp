@@ -1,7 +1,7 @@
-import { Games } from "../pages/FrontPage";
+// import { Games } from "../lib/types";
 import GameCardInfo from "./GameCardInfo";
 
-function Gamecard(props: { data: Games[]; league: string }) {
+function Gamecard(props: { data: any[]; league: string }) {
   const sortedData = [...props.data].sort((a, b) => {
     const statusOrder: { [key: number]: number } = { 2: 0, 1: 1, 3: 2 };
     return (

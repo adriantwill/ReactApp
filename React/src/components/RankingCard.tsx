@@ -1,11 +1,9 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Player, Statistics, TeamStats } from "../pages/Rankings";
+import { PlayerInfo } from "../lib/types";
 
 function SlimRankingCard(props: {
-  player: Player;
-  team: TeamStats;
-  data: Statistics;
+  player: PlayerInfo;
   id: number;
   index: number;
   tailwind: string;

@@ -1,7 +1,7 @@
-import { Player } from "../pages/FrontPage";
+import { CollegePlayer } from "../lib/types";
 
 function DraftFrontPageCard(props: {
-  player: Player;
+  player: CollegePlayer;
   college: { name: string; logo?: string; color: string };
 }) {
   console.log(props.college.color);
