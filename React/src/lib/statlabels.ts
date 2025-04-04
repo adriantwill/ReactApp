@@ -33,12 +33,14 @@ export const passingStats = [
 
 export const rushingStats = [
   {
-    label: "Yards After Contact per Attempt",
+    label: "Yards After Contact",
     description:
       "Expected Points Added (EPA) measures the value of each play based on down, distance, and field position. Positive EPA indicates an above-average play that improved the team's scoring chances.",
   },
-  { label: "Forced Missed Tackles", description: "Real" },
+  { label: "Broken Tackles", description: "Real" },
   { label: "Fumbles", description: "Real" },
   { label: "Explosive Run Rate", description: "Real" },
   { label: "EPA per Rush", description: "Real" },
+  { label: "Success Rate", description: "Real" },
+  { label: "Attempts", description: "Real" },
 ];

@@ -1,60 +1,16 @@
 import { VscChromeClose } from "react-icons/vsc";
 import StatsTable from "./StatsTable";
 import { useQuery } from "@tanstack/react-query";
-import { PlayerInfo, TeamInfo } from "../pages/Teams";
 import PlayerNameTitle from "./PlayerNameTitle";
 import PlayerModalMediumCard from "./PlayerModalMediumCard";
 
-interface MoadlProps {
+import { TeamInfo, PlayerInfo, GameLog } from "../lib/types";
+
+function Modal(props: {
   toggleModal: () => void;
   team: TeamInfo;
   player: PlayerInfo;
-}
-
-type GameLog = {
-  categories: CategoriesLabels[];
-  labels: string[];
-  seasonTypes: SeasonTypes[];
-  events: Record<string, EventDetail>;
-};
-
-type CategoriesLabels = {
-  name: string;
-  displayName: string;
-  count: number;
-};
-
-type SeasonTypes = {
-  categories: Categories[];
-};
-
-type Categories = {
-  events: Events[];
-};
-
-type Events = {
-  stats: string[];
-  eventId: string;
-};
-
-type EventDetail = {
-  id: string;
-  week: number;
-  eventNote: string;
-  atVs: string;
-  homeTeamScore: string;
-  awayTeamScore: string;
-  gameResult: string;
-  gameDate: string;
-  opponent: Opponent;
-};
-
-type Opponent = {
-  id: string;
-  abbreviation: string;
-};
-
-function Modal(props: MoadlProps) {
+}) {
   if (!props.player.debutYear) {
     props.player.debutYear = 2024;
   }
@@ -117,6 +73,9 @@ function Modal(props: MoadlProps) {
             <img
               src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${props.team.abbreviation}.png`}
               className="absolute opacity-50 -z-10 -bottom-10"
+              onError={(e) => {
+                e.currentTarget.src = `https://a.espncdn.com/i/teamlogos/nfl/500/${props.team.abbreviation}.png`;
+              }}
             />
             <img src={props.player.headshot.href} />
           </div>
@@ -146,7 +105,7 @@ function Modal(props: MoadlProps) {
               String(props.player.age),
             ]}
             info={["Weight", "Height", "Age"]}
-            title={"Player Info"}
+            title={"Information"}
           />
         </div>
 

@@ -1,5 +1,4 @@
 import { IoMdOpen } from "react-icons/io";
-import { useNavigate } from "react-router";
 interface PlayerPageSmallCardProps {
   children: React.ReactNode;
   title: string;
@@ -8,7 +7,7 @@ interface PlayerPageSmallCardProps {
 }
 
 function PlayerPageSmallCard(props: PlayerPageSmallCardProps) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <div className="w-full shadow-surround rounded-sm  bg-white">
       <div className="text-center  justify-center font-medium tracking-tighter text-2xl p-1 relative">
@@ -16,7 +15,7 @@ function PlayerPageSmallCard(props: PlayerPageSmallCardProps) {
         {props.title !== "Info" && (
           <IoMdOpen
             className="absolute top-2 right-3 cursor-pointer"
-            onClick={() => navigate(`/key`)}
+            // onClick={() => navigate(`/key`)}
           />
         )}
       </div>

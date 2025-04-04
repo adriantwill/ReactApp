@@ -6,9 +6,7 @@ import { TbRun } from "react-icons/tb";
 import { TbBrain } from "react-icons/tb";
 import { PiFootballHelmet } from "react-icons/pi";
 
-export type TraitName = string;
-
-export const traitIcons: Record<TraitName, IconType> = {
+export const traitIcons: Record<string, IconType> = {
   "pocket passer": PiFootballHelmet,
   gunslinger: PiFootballHelmet,
   "dual threat": PiFootballHelmet,
@@ -30,5 +28,5 @@ export const traitIcons: Record<TraitName, IconType> = {
 };
 
 export const getTraitIcon = (trait: string): IconType => {
-  return traitIcons[trait as TraitName] || traitIcons.error;
+  return traitIcons[trait as string] || traitIcons.error;
 };

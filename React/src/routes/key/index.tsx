@@ -1,23 +1,26 @@
-import Dropdown from "../components/Dropdown";
-import KeyButton from "../components/KeyButton";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import MainPageTitle from "../subcomponents/MainPageTitle";
-import ChacteristicBoxKey from "../components/ChacteristicBoxKey";
-import TraitBoxKey from "../components/TraitBoxKey";
-import { passingCharacteristics } from "../lib/characteristiclabels";
-import { passingTraits } from "../lib/traitslabels";
-import KeyCards from "../components/KeyCards";
-import TermBoxKey from "../components/TermBoxKey";
-import { terms } from "../lib/termlabels";
+import ChacteristicBoxKey from "../../components/ChacteristicBoxKey";
+import KeyButton from "../../components/KeyButton";
+import KeyCards from "../../components/KeyCards";
+import TermBoxKey from "../../components/TermBoxKey";
+import TraitBoxKey from "../../components/TraitBoxKey";
+import { passingCharacteristics } from "../../lib/characteristiclabels";
+import { terms } from "../../lib/termlabels";
+import { passingTraits } from "../../lib/traitslabels";
+import MainPageTitle from "../../subcomponents/MainPageTitle";
 
-function Key() {
+export const Route = createFileRoute("/key/")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const [selectedButton, setSelectedButton] = useState<number>(0);
 
   return (
     <>
-      <Dropdown />
       <div className="animate-fade-in-down bg-primary pb-10">
-        <MainPageTitle title="Player Key" />
+        <MainPageTitle title="Key" />
 
         <div className="max-w-7xl mx-auto space-x-6 my-6">
           {["Passing", "Rushing", "Receiving", "Blocking"].map(
@@ -68,4 +71,3 @@ function Key() {
     </>
   );
 }
-export default Key;

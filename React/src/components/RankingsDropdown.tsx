@@ -1,6 +1,5 @@
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { TbChevronDown, TbChevronUp } from "react-icons/tb";
 
 function RankingsDropdown(props: { title: string; options: string[] }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +13,7 @@ function RankingsDropdown(props: { title: string; options: string[] }) {
         className="inline-flex items-center justify-between px-2 py-1 bg-white border rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
       >
         <span className="mr-2">{selected}</span>
-        <FontAwesomeIcon icon={isOpen ? faAngleUp : faAngleDown} />
+        {isOpen ? <TbChevronUp /> : <TbChevronDown />}
       </button>
 
       {isOpen && (

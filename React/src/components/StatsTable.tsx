@@ -2,55 +2,9 @@ import { useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import TeamButton from "./TeamButton";
 import PlayerModalCardSubTitle from "../subcomponents/PlayerModalCardSubTitle";
+import { CategoriesLabels, GameLog } from "../lib/types";
 
-type StatsProps = {
-  gameLog: GameLog;
-  color: string;
-};
-
-type GameLog = {
-  categories: CategoriesLabels[];
-  labels: string[];
-  seasonTypes: SeasonTypes[];
-  events: { [playerId: string]: EventDetail };
-};
-
-type CategoriesLabels = {
-  name: string;
-  displayName: string;
-  count: number;
-};
-
-type SeasonTypes = {
-  categories: Categories[];
-};
-
-type Categories = {
-  events: Events[];
-};
-
-type Events = {
-  stats: string[];
-  eventId: string;
-};
-
-type EventDetail = {
-  eventNote: string;
-  id: string;
-  week: number;
-  atVs: string;
-  homeTeamScore: string;
-  awayTeamScore: string;
-  gameResult: string;
-  gameDate: string;
-  opponent: Opponent;
-};
-type Opponent = {
-  id: string;
-  abbreviation: string;
-};
-
-function StatsTable(props: StatsProps) {
+function StatsTable(props: { gameLog: GameLog; color: string }) {
   const opponents: CategoriesLabels = {
     name: "opponents",
     displayName: "Opponents",
@@ -91,7 +45,7 @@ function StatsTable(props: StatsProps) {
             />
           ))}
         </div>
-        <div className="relative overflow-auto border rounded-sm h-72">
+        <div className="relative overflow-auto border rounded-sm h-48">
           <table className="w-full text-sm text-center text-gray-500 ">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100  ">
               <tr>

@@ -1,71 +1,17 @@
-import Dropdown from "../components/Dropdown";
+import AtpAgent from "@atproto/api";
+import { FeedViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { useQuery } from "@tanstack/react-query";
-import { AtpAgent } from "@atproto/api";
-import {
-  FeedViewPost,
-  PostView,
-} from "@atproto/api/dist/client/types/app/bsky/feed/defs";
-import Gamecard from "../components/Gamecard";
+import { createFileRoute } from "@tanstack/react-router";
 import BreakingCarosel from "../components/BreakingCarosel";
 import DraftFrontPageCard from "../components/DraftFrontPageCard";
-import InfoSubHeader from "../subcomponents/InfoSubHeader";
+import Gamecard from "../components/Gamecard";
+import { Games, CollegePlayer, FeedViewPostWithRecord } from "../lib/types";
 
-export interface FeedViewPostWithRecord extends FeedViewPost {
-  post: PostView & {
-    record: {
-      text: string;
-      createdAt: string;
-    };
-    embed: {
-      images: {
-        fullsize: string;
-      }[];
-    };
-  };
-}
+export const Route = createFileRoute("/")({
+  component: Index,
+});
 
-export type Games = {
-  status: Status;
-  competitions: Competitions[];
-};
-
-export type Status = {
-  displayClock: string;
-  type: {
-    id: string;
-    shortDetail: string;
-  };
-};
-
-type Competitions = {
-  competitors: Competitors[];
-};
-
-export type Competitors = {
-  team: Team;
-  score: string;
-  records: {
-    summary: string;
-  }[];
-};
-
-type Team = {
-  color: string;
-  abbreviation: string;
-  logo: string;
-};
-
-export interface Player {
-  displayName: string;
-  weight: number;
-  height: number;
-  position: string;
-  headshot: string;
-  college: string;
-  experience: { displayValue: string };
-}
-
-function FrontPage() {
+function Index() {
   const agent = new AtpAgent({ service: "https://bsky.social" });
   const { data } = useQuery<FeedViewPost[]>({
     queryKey: ["likes"],
@@ -139,7 +85,7 @@ function FrontPage() {
 
   const { data: draftPlayers } = useQuery<
     {
-      athlete: Player;
+      athlete: CollegePlayer;
       college: { name: string; logo?: string; color: string };
     }[]
   >({
@@ -200,7 +146,6 @@ function FrontPage() {
   });
   return (
     <>
-      <Dropdown />
       <div className="animate-fade-in-down bg-primary ">
         <div className=" flex mx-10 mb-5 overflow-auto gap-10">
           <Gamecard data={nflData ?? []} league={"NFL"} />
@@ -222,13 +167,15 @@ function FrontPage() {
               Big Board
             </h2>
             <div className="bg-white shadow-surround flex overflow-auto overflow-y-visible gap-10 p-5 rounded-b-sm">
-              {draftPlayers?.slice(0, 10).map((player, index) => (
-                <DraftFrontPageCard
-                  key={index}
-                  player={player.athlete}
-                  college={player.college}
-                />
-              ))}
+              {draftPlayers
+                ?.slice(0, 10)
+                .map((player, index) => (
+                  <DraftFrontPageCard
+                    key={index}
+                    player={player.athlete}
+                    college={player.college}
+                  />
+                ))}
             </div>
           </div>
         </div>
@@ -236,5 +183,3 @@ function FrontPage() {
     </>
   );
 }
-
-export default FrontPage;

@@ -1,73 +1,31 @@
-import { useRef, useState } from "react";
-import Dropdown from "../components/Dropdown";
+import {
+  DragStartEvent,
+  DragEndEvent,
+  DndContext,
+  closestCorners,
+  DragOverlay,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import {
-  closestCorners,
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-} from "@dnd-kit/core";
 import { useQuery } from "@tanstack/react-query";
-import SlimRankingCard from "../components/SlimRankingCard";
-import RankingCard from "../components/RankingCard";
-import RankingsDropdown from "../components/RankingsDropdown";
-import MainPageTitle from "../subcomponents/MainPageTitle";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useRef } from "react";
 import { PiMagnifyingGlass } from "react-icons/pi";
 import { TbShare } from "react-icons/tb";
+import RankingCard from "../../components/RankingCard";
+import RankingsDropdown from "../../components/RankingsDropdown";
+import SlimRankingCard from "../../components/SlimRankingCard";
+import { Card, Leader } from "../../lib/types";
+import MainPageTitle from "../../subcomponents/MainPageTitle";
 
-type Split = {
-  stats: string[];
-};
+export const Route = createFileRoute("/rankings/")({
+  component: RouteComponent,
+});
 
-export type Statistics = {
-  statistics: {
-    labels: string[];
-    splits: Split[];
-  };
-};
-
-export type Player = {
-  id: string;
-  team: {
-    $ref: string;
-  };
-  displayName: string;
-  headshot: {
-    href: string;
-  };
-  position: {
-    abbreviation: string;
-  };
-};
-
-export type TeamStats = {
-  displayName: string;
-  logos: { href: string }[];
-  color: string;
-};
-
-type Card = {
-  id: number;
-  data: Statistics;
-  player: Player;
-  team: TeamStats;
-};
-
-type Leader = {
-  athlete: {
-    $ref: string;
-  };
-  team: {
-    $ref: string;
-  };
-};
-
-function Rankings() {
+function RouteComponent() {
   const [tasks, setTasks] = useState<Card[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [activeDragItem, setActiveDragItem] = useState<Card | null>(null);
@@ -167,7 +125,6 @@ function Rankings() {
   if (isError) return <p>Error fetching data</p>;
   return (
     <>
-      <Dropdown />
       <div className=" flex flex-col items-center bg-primary pb-3">
         <MainPageTitle title="Rankings" />
         <div className="flex flex-col gap-10">
@@ -251,5 +208,3 @@ function Rankings() {
     </>
   );
 }
-
-export default Rankings;

@@ -7,6 +7,7 @@ type PlayerRushingStats = Database["public"]["Tables"]["Rushing_Stat"]["Row"];
 function StatsSection(props: {
   title: string;
   stats: PlayerPassingStats | PlayerRushingStats | undefined;
+  rankdata?: { rank: number }[];
   table: {
     label: string;
     description: string;
@@ -16,6 +17,7 @@ function StatsSection(props: {
   if (!props.stats) {
     return <div className="shadow-surround rounded-md bg-white "></div>;
   }
+  console.log("StatsSection", props.table);
   return (
     <div className="shadow-surround rounded-sm bg-white w-1/2">
       <MediumCardTitle title={props.title} color={props.color} />
@@ -27,9 +29,10 @@ function StatsSection(props: {
               className="flex justify-between items-center py-2 border-b border-gray-200 last:border-0"
               key={index}
             >
-              <div className="flex items-center gap-4">
-                <div className="font-semibold ">
-                  11<sup>th</sup>
+              <div className="flex items-center">
+                <div className="font-semibold w-12">
+                  {props.rankdata?.[index]?.rank || "-"}
+                  <sup>th</sup>
                 </div>
                 <div className="capitalize">{props.table[index].label}</div>
               </div>

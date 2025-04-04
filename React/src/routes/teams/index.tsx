@@ -1,14 +1,18 @@
-import Dropdown from "../components/Dropdown";
-import TeamCard from "../components/TeamCard";
-import InfoSubHeader from "../subcomponents/InfoSubHeader";
-import { Database } from "../lib/database.types";
-import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
-import MainPageTitle from "../subcomponents/MainPageTitle";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import TeamCard from "../../components/TeamCard";
+import InfoSubHeader from "../../subcomponents/InfoSubHeader";
+import MainPageTitle from "../../subcomponents/MainPageTitle";
+import { supabase } from "../../supabase-client";
+import { Database } from "../../lib/database.types";
 
 type Team = Database["public"]["Tables"]["Team"]["Row"];
 
-function AllTeams() {
+export const Route = createFileRoute("/teams/")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const fetchNfcTeams = async () => {
     const { data, error } = await supabase
       .from("Team")
@@ -52,19 +56,22 @@ function AllTeams() {
       <div className="text-center p-10 text-red-500">Error loading teams!</div>
     );
   }
-  console.log(NfcTeams);
-  console.log(AfcTeams);
   return (
     <>
-      <Dropdown />
       <div className="animate-fade-in-down bg-primary">
         <MainPageTitle title="Teams" />
-        <div className="flex justify-center gap-20">
+        <div className="flex justify-center gap-20 pb-10">
           <div className="">
             <InfoSubHeader text="NFC" />
             <div className="flex flex-col gap-10">
               {NfcTeams.map((team: Team) => (
-                <TeamCard key={team.id} team={team} />
+                <Link
+                  key={team.espnid}
+                  to="/teams/$teamId"
+                  params={{ teamId: team.espnid }}
+                >
+                  <TeamCard key={team.id} team={team} />
+                </Link>
               ))}
             </div>
           </div>
@@ -72,7 +79,13 @@ function AllTeams() {
             <InfoSubHeader text="AFC" />
             <div className="flex flex-col gap-10">
               {AfcTeams.map((team: Team) => (
-                <TeamCard key={team.id} team={team} />
+                <Link
+                  key={team.espnid}
+                  to="/teams/$teamId"
+                  params={{ teamId: team.espnid }}
+                >
+                  <TeamCard key={team.id} team={team} />
+                </Link>
               ))}
             </div>
           </div>
@@ -81,4 +94,3 @@ function AllTeams() {
     </>
   );
 }
-export default AllTeams;

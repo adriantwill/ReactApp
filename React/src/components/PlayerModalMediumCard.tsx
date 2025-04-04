@@ -1,13 +1,11 @@
 import PlayerModalCardSubTitle from "../subcomponents/PlayerModalCardSubTitle";
 import TeamStat from "../subcomponents/TeamStat";
 
-type PlayerInfo = {
+function PlayerModalMediumCard(props: {
   items: string[];
   info: string[];
   title: string;
-};
-
-function PlayerModalMediumCard(props: PlayerInfo) {
+}) {
   return (
     <div className={`w-full`}>
       <PlayerModalCardSubTitle title={props.title} />

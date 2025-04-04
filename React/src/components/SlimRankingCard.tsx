@@ -1,9 +1,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RankingStats from "./RankingStats";
 import { Player, Statistics, TeamStats } from "../pages/Rankings";
+import { TbChevronDown } from "react-icons/tb";
 
 function SlimRankingCard(props: {
   player: Player;
@@ -84,9 +83,8 @@ function SlimRankingCard(props: {
         </div>
       </div>
 
-      <FontAwesomeIcon
-        icon={faAngleDown}
-        className={`absolute bottom-0 right-1/2 cursor-pointer fa-lg ${
+      <TbChevronDown
+        className={`absolute bottom-0 right-1/2 cursor-pointer size-6 ${
           props.isExpanded ? "rotate-180" : ""
         }`}
         onClick={handleIconClick}

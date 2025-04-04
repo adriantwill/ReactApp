@@ -40,20 +40,22 @@ type Player struct {
 
 type PlayerPassing struct {
 	Espnid     string `json:"espnid"`
-	EPA float32 `json:"epa"`
+	EPA float32 `json:"epaperplay"`
 	YPA float32 `json:"ypa"`
 	CPOE float32 `json:"cpoe"`
-	TDINT float32 `json:"tdint"`
+	TDINT float32 `json:"tdintratio"`
 	P2S float32 `json:"p2s"`
 	TTT float32 `json:"ttt"`
 }
 
 type PlayerRushing struct {
 	Espnid     string `json:"espnid"`
-	RushEPA float32 `json:"rush_epa"`
-	YAC int `json:"yac"`
-	BrokenTackles int `json:"broken_tackle"`
-	FirstDowns int `json:"first_down"`
+	// YAC int `json:"yac"`
+	// BrokenTackles int `json:"broken_tackle"`
+	// RushEPA float32 `json:"rush_epa"`
+	// Success float32 `json:"success"`
+	// Explosive float32 `json:"explosive"`
+	// Rushes int `json:"attempts"`
 	Fumble int `json:"fumble"`
 }
 
@@ -288,6 +290,15 @@ func nfeloScrape (client *supabase.Client){
 	var playersToInsert []PlayerPassing
 	pffLinks := map[string]string{
 		"Lamar Jackson": "https://www.pff.com/nfl/players/lamar-jackson/46416",
+		"Joe Burrow": "https://www.pff.com/nfl/players/joe-burrow/28022",
+		"Josh Allen": "https://www.pff.com/nfl/players/josh-allen/46601",
+		"Justin Herbert": "https://www.pff.com/nfl/players/justin-herbert/28237",
+		"Patrick Mahomes": "https://www.pff.com/nfl/players/patrick-mahomes/11765",
+		"Matthew Stafford": "https://www.pff.com/nfl/players/matthew-stafford/4924",
+		"Jared Goff": "https://www.pff.com/nfl/players/jared-goff/10635",
+		"Kyler Murray": "https://www.pff.com/nfl/players/kyler-murray/38334",
+		"Caleb Williams": "https://www.pff.com/nfl/players/caleb-williams/144622",
+		"Jordan Love": "https://www.pff.com/nfl/players/jordan-love/40306",
 	}
 
 	c.OnHTML("tbody", func(e *colly.HTMLElement) {
@@ -318,7 +329,6 @@ func nfeloScrape (client *supabase.Client){
 				}
 			})
 			col.Visit(pffLinks[name])
-
 			playersToInsert = append(playersToInsert, PlayerPassing{
 				Espnid: id,
 				EPA: float32(gjson.Parse(epa).Float()),
@@ -332,47 +342,44 @@ func nfeloScrape (client *supabase.Client){
 		})
 	})
 	c.Visit("https://www.nfeloapp.com/qb-rankings/")
-	fmt.Println(playersToInsert)
+	_,_,err := client.From("Rushing_Stats").Insert(playersToInsert, true, "espnid", "", "").Execute()
+	if err != nil {
+		log.Printf("Error inserting players: %v", err)
+		return
+	}
 }
 
 // func dynamicScrape (client *supabase.Client){
 // 	browser := rod.New().MustConnect()
 // 	defer browser.MustClose()
-
-// 	// Open the page
-// 	page := browser.MustPage("https://sumersports.com/players/quarterback/?plays=154")
-
-// 	// Wait for the table to load
+// 	page := browser.MustPage("https://sumersports.com/players/ball-carrier/?position=QB")
 // 	page.MustWaitLoad()
-
-// 	// Select all table rows
 // 	rows := page.MustElements("tbody tr")
-// 	var playersToInsert []PlayerPassing
+// 	var playersToInsert []PlayerRushing
 
 // 	for _, row := range rows {
-// 		// Extract player stats
-// 		qbunsplit := row.MustElement(`[data-stat="quarterback"]`).MustText()
+// 		qbunsplit := row.MustElement(`[data-stat="name"]`).MustText()
 // 		qb := strings.Split(qbunsplit, ". ")[1]
 // 		id := getPlayerID(client,qb)
 // 		if id == "" {
 //             continue
 //         }
 // 		fmt.Println(id)
-// 		epa := row.MustElement(`[data-stat="passing_epa"]`).MustText()
-// 		sack_rate := row.MustElement(`[data-stat="sack_rate"]`).MustText()
-// 		sack_rate = strings.TrimSuffix(sack_rate, "%")
-// 		time_to_throw := row.MustElement(`[data-stat="time_to_throw"]`).MustText()
-// 		ypa := row.MustElement(`[data-stat="ypa"]`).MustText()
-// 		playersToInsert = append(playersToInsert, PlayerPassing{
+// 		epa := row.MustElement(`[data-stat="epa_rush"]`).MustText()
+// 		rushes := row.MustElement(`[data-stat="rushes"]`).MustText()
+// 		explosive := row.MustElement(`[data-stat="explosive_rate"]`).MustText()
+// 		explosive = strings.TrimSuffix(explosive, "%")
+// 		success := row.MustElement(`[data-stat="success_rate"]`).MustText()
+// 		success = strings.TrimSuffix(success, "%")
+// 		playersToInsert = append(playersToInsert, PlayerRushing{
 // 			Espnid: id,
-// 			PassingEPA: float32(gjson.Parse(epa).Float()),
-// 			TTT: float32(gjson.Parse(time_to_throw).Float()),
-// 			YPA: float32(gjson.Parse(ypa).Float()),
-// 			OnTarget: 0.0,
-// 			SackPercent: float32(gjson.Parse(sack_rate).Float()),
+// 			RushEPA: float32(gjson.Parse(epa).Float()),
+// 			Rushes: int(gjson.Parse(rushes).Int()),
+// 			Explosive: float32(gjson.Parse(explosive).Float()),
+// 			Success: float32(gjson.Parse(success).Float()),
 // 		})
 // 	}
-// 	_,_,err := client.From("Passing_Stats").Insert(playersToInsert, true, "espnid", "", "").Execute()
+// 	_,_,err := client.From("Rushing_Stat").Insert(playersToInsert, true, "espnid", "", "").Execute()
 // 	if err != nil {
 // 		log.Printf("Error inserting players: %v", err)
 // 		return
@@ -384,28 +391,27 @@ func webScraperRushing(client *supabase.Client){
 	)
 	var playersToInsert []PlayerRushing
 
-	c.OnHTML("table#adv_rushing tbody", func(e *colly.HTMLElement) {
+	c.OnHTML("table#rushing tbody", func(e *colly.HTMLElement) {
 		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 			name := el.ChildText("td:nth-of-type(1) a")
 			id := getPlayerID(client,name)
 			if id == "" {
 				return
 			}
-			yac := el.ChildText("td:nth-of-type(12)")
-			brkntckl := el.ChildText("td:nth-of-type(14)")
-			fstdwn := el.ChildText("td:nth-of-type(9)")
+			// yac := el.ChildText("td:nth-of-type(12)")
+			// brkntckl := el.ChildText("td:nth-of-type(14)")
+			fumble := el.ChildText("td:nth-of-type(16)")
+			fmt.Println(name, fumble)
 			playersToInsert = append(playersToInsert, PlayerRushing{
 				Espnid: id,
-				RushEPA: 0.0,
-				YAC: int(gjson.Parse(yac).Int()),
-				BrokenTackles: int(gjson.Parse(brkntckl).Int()),
-				FirstDowns: int(gjson.Parse(fstdwn).Int()),
-				Fumble: 0,
+				// YAC: int(gjson.Parse(yac).Int()),
+				// BrokenTackles: int(gjson.Parse(brkntckl).Int()),
+				Fumble: int(gjson.Parse(fumble).Int()),
 			})
 			
 		})
 	})
-	c.Visit("https://www.pro-football-reference.com/years/2024/rushing_advanced.htm")
+	c.Visit("https://www.pro-football-reference.com/years/2024/rushing.htm")
 	_,_,err := client.From("Rushing_Stat").Insert(playersToInsert, true, "espnid", "", "").Execute()
 	if err != nil {
 		log.Printf("Error inserting players: %v", err)
@@ -457,7 +463,7 @@ func main() {
 		fmt.Println("cannot initalize client", err)
 	}
 	fmt.Println("Hello, World!");
-	proe(client)
+	webScraperRushing(client)
 	
 }
 

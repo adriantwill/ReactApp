@@ -1,20 +1,20 @@
-import { useNavigate } from "react-router";
 import { Database } from "../lib/database.types";
 
 type Team = Database["public"]["Tables"]["Team"]["Row"];
 
 function TeamCard(props: { team: Team }) {
-  const navigate = useNavigate();
   return (
     <div
       className="h-40 w-[38rem] rounded-md shadow-surround group cursor-pointer"
       style={{ backgroundColor: `#${props.team.color}` }}
-      onClick={() => navigate(`/teams/${props.team.espnid}`)}
     >
       <div className="flex overflow-hidden pl-5">
         <img
           src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${props.team.abbreviation}.png`}
           className="h-40 group-hover:scale-110 transform transition-transform duration-500 ease-in-out "
+          onError={(e) => {
+            e.currentTarget.src = `https://a.espncdn.com/i/teamlogos/nfl/500/${props.team.abbreviation}.png`;
+          }}
         />
         <div className="justify-center mx-auto flex flex-col text-white">
           <div

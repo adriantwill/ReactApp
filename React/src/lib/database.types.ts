@@ -225,6 +225,39 @@ export type Database = {
         }
         Relationships: []
       }
+      Team_Stat: {
+        Row: {
+          abbreviation: string | null
+          created_at: string
+          epaoffense: number
+          espnid: string
+          id: number
+          proe: number
+          rzrate: number
+          sroffense: number
+        }
+        Insert: {
+          abbreviation?: string | null
+          created_at?: string
+          epaoffense?: number
+          espnid?: string
+          id?: number
+          proe?: number
+          rzrate?: number
+          sroffense?: number
+        }
+        Update: {
+          abbreviation?: string | null
+          created_at?: string
+          epaoffense?: number
+          espnid?: string
+          id?: number
+          proe?: number
+          rzrate?: number
+          sroffense?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -238,6 +271,10 @@ export type Database = {
         Returns: {
           rank: number
         }[]
+      }
+      update_team_rzrate: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {

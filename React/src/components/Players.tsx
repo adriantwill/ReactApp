@@ -1,33 +1,12 @@
-type PlayerInfo = {
-  lastName: string;
-  jersey: string;
-  position: Position;
-  headshot: Headshot;
-};
+import { PlayerInfo, TeamInfo } from "../lib/types";
 
-type Headshot = {
-  href: string;
-};
-
-type Position = {
-  abbreviation: string;
-  name: string;
-};
-
-type TeamInfo = {
-  color: string;
-  alternateColor: string;
-};
-
-type PlayerProp = {
+function Card(props: {
   tailwind?: string;
   data: PlayerInfo;
   team: TeamInfo;
   handleClick: () => void;
   setCurrentPlayer: () => void;
-};
-
-function Card(props: PlayerProp) {
+}) {
   return (
     <div
       style={{ backgroundColor: `#${props.team.color}` }}

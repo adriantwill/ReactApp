@@ -1,4 +1,4 @@
-import { TeamInfo } from "../pages/Teams";
+import { TeamInfo } from "../lib/types";
 
 function Title(props: { teamName: TeamInfo }) {
   return (
@@ -10,6 +10,9 @@ function Title(props: { teamName: TeamInfo }) {
         src={`https://a.espncdn.com/i/teamlogos/nfl/500-dark/${props.teamName.abbreviation}.png`}
         alt="Team logo"
         className="h-5/6"
+        onError={(e) => {
+          e.currentTarget.src = `https://a.espncdn.com/i/teamlogos/nfl/500/${props.teamName.abbreviation}.png`;
+        }}
       />
       <div
         className="h-full w-7 -skew-x-12"

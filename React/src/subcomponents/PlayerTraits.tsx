@@ -1,19 +1,11 @@
-import InfoBox from "./InfoBox";
 import { Database } from "../lib/database.types";
 type PlayerCharacteristics =
   Database["public"]["Tables"]["Passing_Characteristic"]["Row"];
 
-type TraitProps = {
-  characteristicLabel: StatItemProps[];
+function PlayerTraits(props: {
+  characteristicLabel: { label: string; description: string }[];
   playerCharacteristics: PlayerCharacteristics | undefined;
-};
-
-type StatItemProps = {
-  label: string;
-  description: string;
-};
-
-function PlayerTraits(props: TraitProps) {
+}) {
   if (!props.playerCharacteristics) {
     return <div></div>;
   }

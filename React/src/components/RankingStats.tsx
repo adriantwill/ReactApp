@@ -1,9 +1,4 @@
-type Props = {
-  values: string[];
-  type: string;
-};
-
-function RankingStats(props: Props) {
+function RankingStats(props: { values: string[]; type: string }) {
   return (
     <div className="rounded-lg bg-white border border-solid border-black mx-4 mt-0 mb-6 self-start">
       <div className="text-center font-semibold">{props.type} Stats</div>

@@ -1,5 +1,5 @@
 import { Temporal } from "@js-temporal/polyfill";
-import { FeedViewPostWithRecord } from "../pages/FrontPage";
+import { FeedViewPostWithRecord } from "../lib/types";
 
 function BreakingCarosel(props: { likes: FeedViewPostWithRecord[] }) {
   return (
@@ -14,7 +14,7 @@ function BreakingCarosel(props: { likes: FeedViewPostWithRecord[] }) {
           like.post.record.createdAt + "[America/New_York]"
         );
         const formattedDate = `${date.month}/${date.day}`;
-        return diff.days < 3 || index < 5 ? (
+        return diff.days < 3 || index < 4 ? (
           <div className="bg-white w-[25rem] h-[12.5rem] rounded-lg flex border flex-shrink-0 ml-10 relative">
             <img
               src={

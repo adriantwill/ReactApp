@@ -1,24 +1,7 @@
 import { Database } from "../lib/database.types";
 
+import { TeamDetails } from "../lib/types";
 type PlayerTeams = Database["public"]["Tables"]["Player_Team"]["Row"];
-type TeamDetails = {
-  id: string;
-  uid: string;
-  slug: string;
-  abbreviation: string;
-  displayName: string;
-  shortDisplayName: string;
-  name: string;
-  nickname: string;
-  location: string;
-  color: string;
-  alternateColor: string;
-  isActive: boolean;
-  isAllStar: boolean;
-  logos: {
-    href: string;
-  }[];
-};
 
 function TimelinePoint(props: {
   index: number;

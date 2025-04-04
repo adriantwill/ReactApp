@@ -1,6 +1,6 @@
 function InfoSubHeader(props: { text: string }) {
   return (
-    <div className="text-3xl tracking-tighter border-b-2 font-bold border-blue-700 mb-4 inline-block w-fit">
+    <div className="text-3xl tracking-tighter border-b-2 font-bold border-blue-600 mb-4 inline-block w-fit">
       {props.text}
     </div>
   );
