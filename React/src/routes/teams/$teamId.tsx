@@ -11,6 +11,7 @@ import InfoSubHeader from "../../subcomponents/InfoSubHeader";
 import TeamStat from "../../subcomponents/TeamStat";
 import { supabase } from "../../supabase-client";
 import { Database } from "../../lib/database.types";
+import backgroundSVG from "./../../assets/background.svg";
 
 type Team = Database["public"]["Tables"]["Team"]["Row"];
 type TeamStats = Database["public"]["Tables"]["Team_Stat"]["Row"];
@@ -203,7 +204,10 @@ function RouteComponent() {
             <div>
               <InfoSubHeader text="Depth Chart" />
 
-              <div className="bg-[url('./assets/background.svg')] bg-cover bg-center rounded-sm shadow-surround p-6">
+              <div
+                style={{ backgroundImage: `url(${backgroundSVG})` }}
+                className="bg-cover bg-center rounded-sm shadow-surround p-6"
+              >
                 <div className="flex mb-2">
                   <Card
                     team={teamData}
