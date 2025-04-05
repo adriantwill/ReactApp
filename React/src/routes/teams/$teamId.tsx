@@ -95,7 +95,7 @@ function RouteComponent() {
 
     for (const element of positions) {
       const primaryResponse = await fetch(
-        fetchedUrl[element].athletes[0].athlete.$ref
+        fetchedUrl[element].athletes[0].athlete.$ref.replace("http:", "https:")
       );
       const primaryResult = await primaryResponse.json();
       allResults.push(primaryResult);
@@ -106,7 +106,9 @@ function RouteComponent() {
             (athlete: Athlete) => athlete.rank === 2 || athlete.rank === 3
           )
           .map((athlete: Athlete) =>
-            fetch(athlete.athlete.$ref).then((res) => res.json())
+            fetch(athlete.athlete.$ref.replace("http:", "https:")).then((res) =>
+              res.json()
+            )
           );
 
         const wrResults = await Promise.all(wrRequests);

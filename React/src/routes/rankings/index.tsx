@@ -90,7 +90,7 @@ function RouteComponent() {
 
     const tasks = await Promise.all(
       leaders.map(async (leader: Leader, index: number) => {
-        const athleteRef = leader.athlete.$ref;
+        const athleteRef = leader.athlete.$ref.replace("http:", "https:");
         const athleteId = athleteRef
           ? athleteRef.split("/athletes/")[1].split("?")[0]
           : null;
@@ -99,8 +99,12 @@ function RouteComponent() {
           fetch(
             `https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/${athleteId}/overview`
           ).then((res) => res.json()),
-          fetch(leader.athlete.$ref || "").then((res) => res.json()),
-          fetch(leader.team.$ref || "").then((res) => res.json()),
+          fetch(leader.athlete.$ref.replace("http:", "https:") || "").then(
+            (res) => res.json()
+          ),
+          fetch(leader.team.$ref.replace("http:", "https:") || "").then((res) =>
+            res.json()
+          ),
         ]);
 
         return {

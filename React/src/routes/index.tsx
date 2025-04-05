@@ -74,7 +74,7 @@ function Index() {
     queryKey: ["nflDraft"],
     queryFn: async () => {
       const response = await fetch(
-        "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2025/draft/athletes?lang=en&region=us"
+        "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2025/draft/athletes"
       );
       return response.json();
     },
@@ -94,11 +94,13 @@ function Index() {
       if (!nflDraftData?.items?.length) return [];
 
       const playerPromises = nflDraftData.items.map(async (item) => {
-        const response = await fetch(item.$ref);
+        const response = await fetch(item.$ref.replace("http:", "https:"));
         const playerData = await response.json();
 
         try {
-          const athleteResponse = await fetch(playerData.athlete.$ref);
+          const athleteResponse = await fetch(
+            playerData.athlete.$ref.replace("http:", "https:")
+          );
           const athleteData = await athleteResponse.json();
 
           const collegeId = playerData.college.$ref.split("/").pop();
@@ -169,9 +171,9 @@ function Index() {
             <div className="bg-white shadow-surround flex overflow-auto overflow-y-visible gap-10 p-5 rounded-b-sm">
               {draftPlayers
                 ?.slice(0, 10)
-                .map((player, index) => (
+                .map((player) => (
                   <DraftFrontPageCard
-                    key={index}
+                    key={player.athlete.displayName}
                     player={player.athlete}
                     college={player.college}
                   />

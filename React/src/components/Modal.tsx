@@ -37,7 +37,9 @@ function Modal(props: {
   const { data: college } = useQuery<string>({
     queryKey: ["college"],
     queryFn: async () => {
-      const response = await fetch(props.player.college.$ref);
+      const response = await fetch(
+        props.player.college.$ref.replace("http:", "https:")
+      );
       const data = await response.json();
       return data.abbrev;
     },

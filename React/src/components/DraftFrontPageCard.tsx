@@ -4,7 +4,6 @@ function DraftFrontPageCard(props: {
   player: CollegePlayer;
   college: { name: string; logo?: string; color: string };
 }) {
-  console.log(props.college.color);
   return (
     <div className="w-[30rem] mx-auto bg-white rounded-md border overflow-hidden flex-shrink-0">
       <div

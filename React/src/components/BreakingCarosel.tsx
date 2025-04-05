@@ -15,7 +15,10 @@ function BreakingCarosel(props: { likes: FeedViewPostWithRecord[] }) {
         );
         const formattedDate = `${date.month}/${date.day}`;
         return diff.days < 3 || index < 4 ? (
-          <div className="bg-white w-[25rem] h-[12.5rem] rounded-lg flex border flex-shrink-0 ml-10 relative">
+          <div
+            className="bg-white w-[25rem] h-[12.5rem] rounded-lg flex border flex-shrink-0 ml-10 relative"
+            key={like.post.cid}
+          >
             <img
               src={
                 like.post.embed?.images?.[0]?.fullsize ||

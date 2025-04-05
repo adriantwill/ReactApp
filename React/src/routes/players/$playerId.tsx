@@ -121,7 +121,9 @@ function RouteComponent() {
       let itemRefs =
         statsLog.entries.flatMap(
           (item: { statistics: { statistics: { $ref: any } }[] }) =>
-            item.statistics.slice(1).map((stat) => stat.statistics.$ref)
+            item.statistics
+              .slice(1)
+              .map((stat) => stat.statistics.$ref.replace("http:", "https:"))
         ) || [];
       let statsPromises = itemRefs.map((ref: string | URL | Request) =>
         fetch(ref).then((response) => {
@@ -148,7 +150,11 @@ function RouteComponent() {
           (item: { statistics: { team: { $ref: any } }[] }) =>
             item.statistics
               .slice(1)
-              .map((stat) => stat?.team?.$ref.replace(/\/seasons\/\d{4}/, ""))
+              .map((stat) =>
+                stat?.team?.$ref
+                  .replace("http:", "https:")
+                  .replace(/\/seasons\/\d{4}/, "")
+              )
         ) || [];
       statsPromises = itemRefs.map((ref: string | URL | Request) =>
         fetch(ref).then((response) => {
@@ -184,7 +190,7 @@ function RouteComponent() {
     queryKey: ["collegeCareerStats"],
     queryFn: () =>
       fetchCareerStats(
-        `https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/athletes/${playerId}/statisticslog?lang=en&region=us`
+        `https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/athletes/${playerId}/statisticslog`
       ),
   });
 
